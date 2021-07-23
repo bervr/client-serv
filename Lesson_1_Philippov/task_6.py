@@ -26,22 +26,14 @@
 import chardet
 
 
-# try:
-#     with open('test_file.txt', encoding='utf-8') as f_n:
-#         for el_str in f_n:
-#             print(el_str, end='')
-# except UnicodeDecodeError:
-with open('test_file.txt', 'rb') as f_n:
-    test = f_n.read(1)
-    cha = chardet.detect(test)
-    d = f_n.read()
-    print(d)
-    # line = []
-    # while (byte := f_n.read(4)):
-    #     line.append(byte)
-    # my_string = ''.join(line)
-    print(cha['encoding'])
-    print(d.decode(cha['encoding'])
-    # print(cha)
+try:
+    with open('test_file.txt', encoding='utf-8') as f_n:
+        for el_str in f_n:
+            print(el_str, end='')
+except UnicodeDecodeError:
+    with open('test_file.txt', 'rb') as f_n:
+        d = f_n.read()
+        # print(d)
+        cha = chardet.detect(d)
+    print(d.decode(cha['encoding']))
 
-    # print(byte.decode(cha))
