@@ -23,3 +23,22 @@
 
 НАРУШЕНИЕ обозначенных условий - задание не выполнено!!!
 """
+import chardet
+
+
+# try:
+#     with open('test_file.txt', encoding='utf-8') as f_n:
+#         for el_str in f_n:
+#             print(el_str, end='')
+# except UnicodeDecodeError:
+with open('test_file.txt', 'rb') as f_n:
+    test = f_n.read(1)
+    cha = chardet.detect(test)
+    while (byte := f_n.read(1)):
+        print(byte)
+
+
+        # print((''.join(byte)).decode(cha))
+    print(cha)
+
+    # print(byte.decode(cha))

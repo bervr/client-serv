@@ -20,4 +20,4 @@ def check_encode(items):
 
 
 my_list = ['attribute', 'класс', 'функция', 'type']
-check_encode(my_list)
+check_encode("my_list")
