@@ -10,3 +10,7 @@
 --- b'class' - используйте маркировку b''
 --- используйте списки и циклы, не дублируйте функции
 """
+from task_1 import get_type
+
+my_list = [b'class', b'function', b'method']
+get_type(my_list)
