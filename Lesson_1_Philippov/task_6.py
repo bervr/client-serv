@@ -34,11 +34,14 @@ import chardet
 with open('test_file.txt', 'rb') as f_n:
     test = f_n.read(1)
     cha = chardet.detect(test)
-    while (byte := f_n.read(1)):
-        print(byte)
-
-
-        # print((''.join(byte)).decode(cha))
-    print(cha)
+    d = f_n.read()
+    print(d)
+    # line = []
+    # while (byte := f_n.read(4)):
+    #     line.append(byte)
+    # my_string = ''.join(line)
+    print(cha['encoding'])
+    print(d.decode(cha['encoding'])
+    # print(cha)
 
     # print(byte.decode(cha))
