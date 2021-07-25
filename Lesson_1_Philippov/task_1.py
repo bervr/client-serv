@@ -28,13 +28,11 @@ def get_type(arr):
 def str_to_points(arr):
     new_list =[]
     for item in arr:
-        # стрешненько  и не работает
-        new_item = ''.join(str(letter.encode('unicode_escape')).strip("'").replace("b'", '').replace('\\\\', '\\')
-                            for letter in list(item))
-
-        print(new_item)
+        # стрешненько  и не работает, так то точки выводит как текст, но обратно из них текст не делает
+        new_item = str(item.encode('unicode_escape')).strip("'").replace("b'", "").replace("\\\\", "\\")
+        # print(str(new_item))
         new_list.append(new_item)
-    print(new_list)
+    # print(new_list)
     return new_list
 
 
@@ -42,10 +40,11 @@ if __name__ == "__main__":
     my_list = ['разработка', 'сокет', 'декоратор']
     get_type(my_list)
 
-    # get_type(str_to_points(my_list))
-
     # онлайн-конвертер
     my_list = ['\u0440\u0430\u0437\u0440\u0430\u0431\u043e\u0442\u043a\u0430',
                '\u0441\u043e\u043a\u0435\u0442',
                '\u0434\u0435\u043a\u043e\u0440\u0430\u0442\u043e\u0440']
     get_type(my_list)
+
+
+    get_type(str_to_points(my_list))
