@@ -38,30 +38,47 @@ os_code_list, os_type_list. В этой же функции создать гл�
 """
 import csv, chardet, re
 
-start_list = ['Изготовитель системы', 'Название ОС', 'Код продукта', 'Тип системы']
+# start_list = ['Изготовитель системы', 'Название ОС', 'Код продукта', 'Тип системы']
+start_dict = {'sys_prod': 'Изготовитель системы', 'os_name': 'Название ОС', 'os_code': 'Код продукта',
+              'os_type': 'Тип системы'}
+# result = dict.fromkeys(start_dict, []) # <- ох и намучался я с этим списком...
+result = {k: [] for k in start_dict}  # <- так создается по отдельному списку для каждого ключа
 
-def get_data():
+
+def get_data(result, start_dict):
     for i in range(1, 4):
-        with open (f'info_{i}.txt', 'rb') as file:
+        with open(f'info_{i}.txt', 'rb') as file:
             try_encode = file.read()
-            result = chardet.detect(try_encode)
-        with open (f'info_{i}.txt', encoding=result['encoding']) as file:
-            test_list = start_list.copy()
+            codepage = chardet.detect(try_encode)
+        with open(f'info_{i}.txt', encoding=codepage['encoding']) as file:
+            test_dict = start_dict.copy()
             readed = file.readlines()
-            for line in readed:
-                for item in test_list:
-                    if item in line:
-                        # my_catch = re.search(f"'{item}:\s\w*'", line)
-                        my_res = re.split('\s{2,}', line.split(f"'{item}: '")[0], 2)[1]
-                        # print(re.split(f"'{item}:\s*\B", line))
-                        test_list.remove(item)
-                        print(my_res)
+            for i in range(len(test_dict)):
+                key, value = test_dict.popitem()
+                for line in readed:
+                    if value in line:
+                        # my_res = re.split('\s{2,}', line.split(f"'{value}: '")[0], 2)[1]
+                        my_res = re.split(':\s{2,}', line)[1].strip('\n')
+                        result[key].append(my_res)
+                        break
+    with open('main_data', 'w', encoding='utf-8') as new_file:
+        main_data = []
+        main_data.append([','.join(start_dict.values())])
+        for i in range(len(list(result.values())[0])):
+            main_data.append([','.join({key: value[i] for key, value in result.items()}.values())])
+        new_file.write(str(main_data))
+        return main_data
+
+
+def write_to_csv(filename):
+    new_list = get_data(result, start_dict)
+    with open(filename, 'w') as file:
+        file_to_write = csv.writer(file)
+        for row in new_list:
+            file_to_write.writerow(row)
+    
 
 
 
 
-def write_to_csv():
-    pass
-
-
-get_data()
+write_to_csv('report.csv')
