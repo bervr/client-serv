@@ -36,7 +36,9 @@ os_code_list, os_type_list. В этой же функции создать гл�
 
 ПРОШУ ВАС НЕ УДАЛЯТЬ СЛУЖЕБНЫЕ ФАЙЛЫ TXT И ИТОГОВЫЙ ФАЙЛ CSV!!!
 """
-import csv, chardet, re
+import chardet
+import csv
+import re
 
 # start_list = ['Изготовитель системы', 'Название ОС', 'Код продукта', 'Тип системы']
 start_dict = {'sys_prod': 'Изготовитель системы', 'os_name': 'Название ОС', 'os_code': 'Код продукта',
@@ -66,19 +68,28 @@ def get_data(result, start_dict):
         main_data.append([','.join(start_dict.values())])
         for i in range(len(list(result.values())[0])):
             main_data.append([','.join({key: value[i] for key, value in result.items()}.values())])
-        new_file.write(str(main_data))
+        for item in main_data:
+            new_file.writelines(f"{','.join(item)}\n")
         return main_data
 
 
-def write_to_csv(filename):
-    new_list = get_data(result, start_dict)
-    with open(filename, 'w') as file:
+def write_to_csv(to_write_filename, open_file='main_data'):
+    # new_list = get_data(result, start_dict)
+    get_data(result, start_dict)
+    new_list = []
+    with open(open_file, 'r', encoding='utf-8') as file:
+        while True:
+            line = file.readline()
+            if not line:
+                break
+            print(line.strip().split(','))
+            new_list.append(line.strip().split(','))
+    # print(new_list)
+
+    with open(to_write_filename, 'w') as file:
         file_to_write = csv.writer(file)
         for row in new_list:
             file_to_write.writerow(row)
-    
-
-
 
 
 write_to_csv('report.csv')
