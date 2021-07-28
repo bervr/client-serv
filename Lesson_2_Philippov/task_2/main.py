@@ -38,3 +38,27 @@
 и достучаться до списка, который и нужно пополнять
 а потом сохранять все в файл
 """
+import json
+from datetime import datetime
+
+
+def write_order_to_json(item, quantity, price, buyer, date):
+    with open('orders.json') as file:
+        json_obj = json.load(file)
+        # print(json_obj['orders'])
+        new_item = {
+            'item': item,
+            'quantity': quantity,
+            'price': price,
+            'buyer': buyer,
+            'date': date
+        }
+    data = json_obj['orders'].append(new_item)
+    print(json_obj)
+    with open('orders.json', 'w', encoding='utf-8') as file:
+        json.dump(json_obj, file, sort_keys=True, indent=4)
+
+
+
+
+write_order_to_json(1,1,1,['Basiliev','Basil'], f'{datetime.now().date()}' )
