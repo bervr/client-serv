@@ -51,6 +51,16 @@
             "item": 1,
             "price": 1,
             "quantity": 1
+        },
+        {
+            "buyer": [
+                "Basiliev",
+                "Basil"
+            ],
+            "date": "2021-07-28",
+            "item": 1,
+            "price": 1,
+            "quantity": 1
         }
     ]
 }

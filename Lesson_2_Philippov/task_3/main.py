@@ -18,13 +18,26 @@ ASCII(например, €);
 Реализовать считывание данных из созданного файла и проверить,
 совпадают ли они с исходными.
 """
+import yaml
+
 
 test_dict ={
-    'catalog':[
+    'catalog': [
         'audi',
         'volvo',
         'lada'
     ],
-
-
+    'quantity': 11,
+    'prices': {
+        'audi': '12000€',
+        'volvo': '150000₤',
+        'lada': '650000₽'
+    }
 }
+with open('data_write.yaml', 'w') as file:
+    yaml.dump(test_dict, file, allow_unicode=True, default_flow_style=False)
+
+with open('data_write.yaml', 'r') as file:
+    readed = yaml.load(file, Loader=yaml.FullLoader)
+
+print(readed == test_dict)

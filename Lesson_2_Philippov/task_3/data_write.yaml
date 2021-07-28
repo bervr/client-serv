@@ -1,0 +1,9 @@
+catalog:
+- audi
+- volvo
+- lada
+prices:
+  audi: 12000€
+  lada: 650000₽
+  volvo: 150000₤
+quantity: 11
