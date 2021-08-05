@@ -4,17 +4,25 @@ import json
 from common.variables import ACTION, ACCOUNT_NAME, RESPONSE, MAX_CONNECTIONS, PRESENCE, TIME, USER, ERROR, DEFAULT_PORT
 from common.utils import get_message, send_message
 
-class MsgServer():
+def try_one():
+    pass
+
+class MsgServer:
     def process_client_message(self, message):
-        if ACTION in message and message[ACTION] == PRESENCE and TIME in message and USER in message and message[USER][ACCOUNT_NAME] == 'Guest':
-            return {RESPONSE: 200}
-        return {
-            RESPONSE: 400,
-            ERROR: 'Bad Request'
-        }
+        try:
+            if ACTION in message and message[ACTION] == PRESENCE and TIME in message and USER in message and message[USER][ACCOUNT_NAME] == 'Guest':
+                return {RESPONSE: 200}
+            return {
+                RESPONSE: 400,
+                ERROR: 'Bad Request'
+            }
+        except Exception:
+            print('Некорретный формат сообщения')
 
 
-    def __init__(self):
+
+    # def __init__(self):
+    def start(self):
         try:
             if '-p' in sys.argv:
                 listen_port = int(sys.argv[sys.argv.index('-p') + 1])
@@ -40,11 +48,11 @@ class MsgServer():
             print(
                 'После параметра \'a\'- необходимо указать адрес, который будет слушать сервер.')
             sys.exit(1)
-
         transport = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         transport.bind((listen_address, listen_port))
         transport.listen(MAX_CONNECTIONS)
-        print(f'Server running on ip {listen_address}:{listen_port}')
+
+        # print(f'Server running on ip {listen_address}:{listen_port}')
 
         while True:
             client, client_address = transport.accept()
@@ -61,3 +69,4 @@ class MsgServer():
 
 if __name__ == '__main__':
     server = MsgServer()
+    server.start()

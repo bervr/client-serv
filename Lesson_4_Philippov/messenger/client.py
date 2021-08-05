@@ -27,8 +27,8 @@ class MsgClient():
             return f'400 : {message[ERROR]}'
         raise ValueError
 
-
-    def __init__(self):
+    def start(self):
+    # def __init__(self):
         # получаем параметры из командной строки
         # client.py localhost 8079
         try:
@@ -58,3 +58,4 @@ class MsgClient():
 
 if __name__ == '__main__':
     client = MsgClient()
+    client.start()
