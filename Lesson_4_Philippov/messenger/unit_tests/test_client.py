@@ -1,14 +1,17 @@
-import  os, sys
+import os
+import sys
 # import time
 import unittest
+
 sys.path.append(os.path.join(os.getcwd(), '..'))
-from common.variables import ACTION, ACCOUNT_NAME, RESPONSE, PRESENCE, TIME, USER, ERROR, DEFAULT_PORT, \
-    ENCODING
+from common.variables import ACTION, ACCOUNT_NAME, RESPONSE, PRESENCE, TIME, USER, ERROR
 from client import MsgClient
+
 
 class Time:
     def time(self):
         return 1111.111
+
 
 time = Time()
 
@@ -16,7 +19,6 @@ time = Time()
 class TestClient(unittest.TestCase):
     def setUp(self):
         self.client = MsgClient()
-
 
     def test_create_presence(self):
         new_test = self.client.create_presence()

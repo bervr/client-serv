@@ -1,8 +1,10 @@
-import json, os, sys
+import json
+import os
+import sys
 import unittest
+
 sys.path.append(os.path.join(os.getcwd(), '..'))
-from common.variables import ACTION, ACCOUNT_NAME, RESPONSE, PRESENCE, TIME, USER, ERROR, DEFAULT_PORT, \
-    ENCODING
+from common.variables import ACTION, ACCOUNT_NAME, RESPONSE, PRESENCE, TIME, USER, ERROR, ENCODING
 from common.utils import send_message, get_message
 
 
@@ -10,7 +12,7 @@ class TestSocket:
     # тестовый сокет
     def __init__(self, test_data):
         self.test_data = test_data
-        self.encoded_msg= None
+        self.encoded_msg = None
         self.received_msg = None
 
     def send(self, message):
@@ -46,7 +48,7 @@ class TestUtils(unittest.TestCase):
         send_message(test_socket, self.test_dict)
         self.assertEqual(test_socket.encoded_msg, test_socket.received_msg)
         with self.assertRaises(Exception):
-            send_message(test_socket, test_socket )
+            send_message(test_socket, test_socket)
             # строго говоря оно тут не только словарь принимает
 
     def test_get_message(self):
@@ -57,7 +59,6 @@ class TestUtils(unittest.TestCase):
         test_socket = TestSocket('123')
         with self.assertRaises(Exception):
             get_message(test_socket)
-
 
 
 if __name__ == '__main__':

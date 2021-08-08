@@ -1,7 +1,5 @@
 import subprocess
-# os.system('python3 server.py')
-# os.system('python3 client.py')
-import chardet
+
 
 process = []
 def run_msg(args):
