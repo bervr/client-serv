@@ -3,7 +3,7 @@ import os
 import sys
 
 
-# куда будем писать
+
 PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir)
 PATH = os.path.join(PATH, 'client.log')
 
