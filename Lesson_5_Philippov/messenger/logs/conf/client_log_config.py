@@ -2,22 +2,44 @@ import logging
 import os
 import sys
 
-PATH =os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir)
-PATH = os.path.join(PATH, 'client.log')  # куда будем писать
 
-CLIENT_LOGGER = logging.getLogger('client')  # создали логгер
-CLIENT_LOGGER.setLevel(logging.INFO)  # уровень важности
-FILE_HANDLER = logging.FileHandler(PATH)  # создали хендлер, указали куда писать лог
-FILE_HANDLER.setLevel(logging.DEBUG)  # уровень логгирования для данного хендлера
-FORMATTER = logging.Formatter("%(asctime)-25s %(levelname)-9s %(filename)-10s %(message)s")  # формант логгирования
-FILE_HANDLER.setFormatter(FORMATTER)  # привязали формалирование к хендлеру
-CLIENT_LOGGER.addHandler(FILE_HANDLER)  # привязали хендлер к логгеру
+# куда будем писать
+PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir)
+PATH = os.path.join(PATH, 'client.log')
+
+# создали логгер
+CLIENT_LOGGER = logging.getLogger('client')
+
+# задаем уровень важности
+CLIENT_LOGGER.setLevel(logging.INFO)
+
+# создали хендлер, указали куда писать лог
+FILE_HANDLER = logging.FileHandler(PATH)
+
+# уровень логгирования для данного хендлера
+FILE_HANDLER.setLevel(logging.DEBUG)
+
+# задаем формант логгирования
+FORMATTER = logging.Formatter("%(asctime)-25s %(levelname)-9s %(filename)-10s %(message)s")
+
+# привязали формалирование к хендлеру
+FILE_HANDLER.setFormatter(FORMATTER)
+
+# привязали хендлер к логгеру
+CLIENT_LOGGER.addHandler(FILE_HANDLER)
 
 # еще один хедлер для вывода ошибок в консоль:
-STREAM_HANDLER = logging.StreamHandler(sys.stdout)  # создали хендлер
-STREAM_HANDLER.setLevel(logging.CRITICAL)  # уровень логгирования для данного хендлера
-STREAM_HANDLER.setFormatter(FORMATTER)  # привязали формалирование к хендлеру
-CLIENT_LOGGER.addHandler(STREAM_HANDLER)  # привязали хендлер к логгеру
+# создали хендлер
+STREAM_HANDLER = logging.StreamHandler(sys.stdout)
+
+# уровень логгирования для данного хендлера
+STREAM_HANDLER.setLevel(logging.CRITICAL)
+
+# привязали формалирование к хендлеру
+STREAM_HANDLER.setFormatter(FORMATTER)
+
+# привязали хендлер к логгеру
+CLIENT_LOGGER.addHandler(STREAM_HANDLER)
 
 if __name__ == '__main__':
     CLIENT_LOGGER.debug('test debug message')
