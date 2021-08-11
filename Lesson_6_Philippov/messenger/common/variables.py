@@ -11,8 +11,8 @@ MAX_PACKAGE_LENGTH = 1024
 # Кодировка проекта
 ENCODING = 'utf-8'
 # Уровень логирования
-LOGGING_LEVEL = 'INFO'
-# LOGGING_LEVEL = 'DEBUG'
+# LOGGING_LEVEL = 'INFO'
+LOGGING_LEVEL = 'DEBUG'
 
 
 # Прококол JIM основные ключи:

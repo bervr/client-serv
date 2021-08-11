@@ -9,7 +9,7 @@ sys.path.append(os.path.join(os.getcwd(), '..'))
 from decor import func_log
 
 
-
+@func_log
 def get_message(client):
     encoded_response = client.recv(MAX_PACKAGE_LENGTH)
     if isinstance(encoded_response, bytes):
@@ -21,7 +21,7 @@ def get_message(client):
     raise ValueError
 
 
-# @func_log
+@func_log
 def send_message(sock, message):
     js_message = json.dumps(message)
     encoded_message = js_message.encode(ENCODING)

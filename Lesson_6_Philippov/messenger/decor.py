@@ -15,5 +15,5 @@ def func_log(in_function):
         LOGGER.debug(f"вызвана функция {in_function.__name__} с параметрами {args} {kwargs},"
                      f" вызов из модуля {in_function.__name__}")
         return result
-    return wrapper()
+    return wrapper
 

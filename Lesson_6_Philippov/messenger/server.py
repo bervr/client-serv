@@ -6,13 +6,13 @@ import json
 import logs.conf.server_log_config
 from common.variables import ACTION, ACCOUNT_NAME, RESPONSE, MAX_CONNECTIONS, PRESENCE, TIME, USER, ERROR, DEFAULT_PORT
 from common.utils import get_message, send_message
-from decor import func_log
+
 
 SERVER_LOGGER = logging.getLogger('server')  # забрали  логгер из конфига
 
 
+
 class MsgServer:
-    # @func_log
     def process_client_message(self, message):
         SERVER_LOGGER.debug(f'Попытка разобрать клиентское сообщение: {message}')
         try:
@@ -25,6 +25,7 @@ class MsgServer:
             }
         except Exception:
             print('Некорретный формат сообщения')
+
 
     def create_arg_parser(self):
         SERVER_LOGGER.debug('Попытка получения параметров запуска')

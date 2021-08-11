@@ -9,11 +9,13 @@ from common.variables import ACTION, PRESENCE, TIME, USER, ACCOUNT_NAME, \
     RESPONSE, ERROR, DEFAULT_IP_ADDRESS, DEFAULT_PORT
 from common.utils import get_message, send_message
 import common.errors as errors
+from decor import func_log
 
 CLIENT_LOGGER = logging.getLogger('client')  # забрали логгер из конфига
 
 
 class MsgClient():
+    @func_log
     def create_presence(self, account_name='Guest'):
         out = {
             ACTION: PRESENCE,
