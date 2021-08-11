@@ -1,7 +1,13 @@
 """Утилиты"""
 
 import json
+import os
+import sys
+
 from common.variables import MAX_PACKAGE_LENGTH, ENCODING
+sys.path.append(os.path.join(os.getcwd(), '..'))
+from decor import func_log
+
 
 
 def get_message(client):
@@ -15,6 +21,7 @@ def get_message(client):
     raise ValueError
 
 
+# @func_log
 def send_message(sock, message):
     js_message = json.dumps(message)
     encoded_message = js_message.encode(ENCODING)
