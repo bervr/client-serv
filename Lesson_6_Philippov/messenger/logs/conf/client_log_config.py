@@ -1,6 +1,8 @@
 import logging
 import os
 import sys
+sys.path.append(os.path.join(os.getcwd(), '../..'))
+from common.variables import LOGGING_LEVEL
 
 
 
@@ -11,10 +13,10 @@ PATH = os.path.join(PATH, 'client.log')
 CLIENT_LOGGER = logging.getLogger('client')
 
 # задаем уровень важности
-CLIENT_LOGGER.setLevel(logging.INFO)
+CLIENT_LOGGER.setLevel(logging.DEBUG)
 
 # создали хендлер, указали куда писать лог
-FILE_HANDLER = logging.FileHandler(PATH)
+FILE_HANDLER = logging.FileHandler(PATH, encoding = "UTF-8")
 
 # уровень логгирования для данного хендлера
 FILE_HANDLER.setLevel(logging.DEBUG)

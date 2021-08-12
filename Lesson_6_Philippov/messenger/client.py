@@ -4,10 +4,11 @@ import sys
 import json
 import socket
 import time
+import argparse
 import logs.conf.client_log_config
 from common.variables import ACTION, PRESENCE, TIME, USER, ACCOUNT_NAME, \
     RESPONSE, ERROR, DEFAULT_IP_ADDRESS, DEFAULT_PORT
-from common.utils import get_message, send_message
+from common.utils import get_message, send_message, create_arg_parser
 import common.errors as errors
 from decor import func_log
 
@@ -40,30 +41,36 @@ class MsgClient():
     def start(self):
     # def __init__(self):
         # получаем параметры из командной строки
-        # client.py localhost 8079
+        # client.py -a localhost -p 8079
         CLIENT_LOGGER.debug("Запуск клиента")
-        try:
-            server_address = sys.argv[1]
-            server_port = int(sys.argv[2])
-            if server_port < 1024 or server_port > 65535:
-                CLIENT_LOGGER.critical(f'Недопустимый порт сервера {server_port}')
-                raise ValueError
-        except IndexError:
-            server_address = DEFAULT_IP_ADDRESS
-            server_port = DEFAULT_PORT
-            CLIENT_LOGGER.error(f'Установлены дефолтовые значения - '
-                                f'{DEFAULT_IP_ADDRESS if DEFAULT_IP_ADDRESS else "любой"} '
-                                f'ip-адрес  и {DEFAULT_PORT} порт')
-        except ValueError:
-            CLIENT_LOGGER.critical('В качестве порта может быть указано только число в диапазоне от 1024 до 65535.')
-            # print('В качестве порта может быть указано только число в диапазоне от 1024 до 65535.')
-            sys.exit(1)
+        # try:
+            # server_address = sys.argv[1]
+            # server_port = int(sys.argv[2])
+        parser = create_arg_parser()
+        namespace = parser.parse_args(sys.argv[1:])
+        server_address = namespace.a
+        server_port = namespace.p
+        CLIENT_LOGGER.debug(f'Адрес и порт сервера {server_address}:{server_port}')
+
+        #     if server_port < 1024 or server_port > 65535:
+        #         CLIENT_LOGGER.critical(f'Недопустимый порт сервера {server_port}')
+        #         raise ValueError
+        # except IndexError:
+        #     server_address = DEFAULT_IP_ADDRESS
+        #     server_port = DEFAULT_PORT
+        #     CLIENT_LOGGER.error(f'Установлены дефолтовые значения - '
+        #                         f'{DEFAULT_IP_ADDRESS if DEFAULT_IP_ADDRESS else "любой"} '
+        #                         f'ip-адрес  и {DEFAULT_PORT} порт')
+        # except ValueError:
+        #     CLIENT_LOGGER.critical('В качестве порта может быть указано только число в диапазоне от 1024 до 65535.')
+        #     # print('В качестве порта может быть указано только число в диапазоне от 1024 до 65535.')
+        #     sys.exit(1)
 
         # Инициализация сокета и обмен
 
         transport = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         transport.connect((server_address, server_port))
-        CLIENT_LOGGER.info(f'Подключение к серверу с адресом {server_address if server_address else "localhost"} по {server_port} порту')
+        CLIENT_LOGGER.debug(f'Подключение к серверу с адресом {server_address if server_address else "localhost"} по {server_port} порту')
         message_to_server = self.create_presence()
         CLIENT_LOGGER.info(f'Отправка сообщения на сервер - {message_to_server}')
         send_message(transport, message_to_server)

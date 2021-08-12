@@ -5,7 +5,7 @@ import sys
 import json
 import logs.conf.server_log_config
 from common.variables import ACTION, ACCOUNT_NAME, RESPONSE, MAX_CONNECTIONS, PRESENCE, TIME, USER, ERROR, DEFAULT_PORT
-from common.utils import get_message, send_message
+from common.utils import get_message, send_message, create_arg_parser
 
 
 SERVER_LOGGER = logging.getLogger('server')  # забрали  логгер из конфига
@@ -27,17 +27,17 @@ class MsgServer:
             print('Некорретный формат сообщения')
 
 
-    def create_arg_parser(self):
-        SERVER_LOGGER.debug('Попытка получения параметров запуска')
-        parser = argparse.ArgumentParser()
-        parser.add_argument('-p', default=DEFAULT_PORT, type=int, nargs='?')
-        parser.add_argument('-a', default='', nargs='?')
-        return parser
+    # def create_arg_parser(self):
+    #     SERVER_LOGGER.debug('Попытка получения параметров запуска')
+    #     parser = argparse.ArgumentParser()
+    #     parser.add_argument('-p', default=DEFAULT_PORT, type=int, nargs='?')
+    #     parser.add_argument('-a', default='', nargs='?')
+    #     return parser
 
     # def __init__(self):
     def start(self):
         SERVER_LOGGER.info('Попытка запуска сервера')
-        parser = self.create_arg_parser()
+        parser = create_arg_parser()
         namespace = parser.parse_args(sys.argv[1:])
         listen_address = namespace.a
         listen_port = namespace.p
