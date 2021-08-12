@@ -5,10 +5,10 @@ import os
 import sys
 from common.variables import MAX_PACKAGE_LENGTH, ENCODING, DEFAULT_PORT, DEFAULT_IP_ADDRESS
 sys.path.append(os.path.join(os.getcwd(), '..'))
-from decor import func_log, Log, func_call
+from decor import func_log, Log
 
 
-@func_call
+
 @Log()
 def get_message(client):
     encoded_response = client.recv(MAX_PACKAGE_LENGTH)
@@ -21,7 +21,7 @@ def get_message(client):
     raise ValueError
 
 
-@func_call
+
 @func_log
 def send_message(sock, message):
     js_message = json.dumps(message)
