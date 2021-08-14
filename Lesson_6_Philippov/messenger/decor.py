@@ -6,7 +6,6 @@ import logs.conf.server_log_config
 import logs.conf.client_log_config
 
 
-# print(sys.argv[0])
 if sys.argv[0].find('client.py') == -1:
     LOGGER = logging.getLogger('server')
 else:
@@ -21,7 +20,9 @@ def func_log(in_function):
                      f"а точнее из {inspect.stack()[1][3]} с параметрами {args} {kwargs},"
                      f" вызов из модуля {in_function.__name__}", stacklevel=2)
         return result
+
     return wrapper
+
 
 class Log:
     def __call__(self, in_function):
@@ -32,9 +33,5 @@ class Log:
                          f"а точнее из {inspect.stack()[1][3]} с параметрами {args} {kwargs},"
                          f" вызов из модуля {in_function.__name__}", stacklevel=2)
             return result
+
         return wrapper
-
-
-
-
-

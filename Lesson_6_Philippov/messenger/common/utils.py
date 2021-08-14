@@ -4,9 +4,9 @@ import json
 import os
 import sys
 from common.variables import MAX_PACKAGE_LENGTH, ENCODING, DEFAULT_PORT, DEFAULT_IP_ADDRESS
+
 sys.path.append(os.path.join(os.getcwd(), '..'))
 from decor import func_log, Log
-
 
 
 @Log()
@@ -19,7 +19,6 @@ def get_message(client):
             return response
         raise ValueError
     raise ValueError
-
 
 
 @func_log
@@ -49,4 +48,3 @@ def create_arg_parser():
         # CLIENT_LOGGER.critical('В качестве порта может быть указано только число в диапазоне от 1024 до 65535.')
         return 'В качестве порта может быть указано только число в диапазоне от 1024 до 65535.'
         # sys.exit(1)
-

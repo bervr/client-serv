@@ -27,14 +27,7 @@ class MsgServer:
             print('Некорретный формат сообщения')
 
 
-    # def create_arg_parser(self):
-    #     SERVER_LOGGER.debug('Попытка получения параметров запуска')
-    #     parser = argparse.ArgumentParser()
-    #     parser.add_argument('-p', default=DEFAULT_PORT, type=int, nargs='?')
-    #     parser.add_argument('-a', default='', nargs='?')
-    #     return parser
 
-    # def __init__(self):
     def start(self):
         SERVER_LOGGER.info('Попытка запуска сервера')
         parser = create_arg_parser()
@@ -49,8 +42,6 @@ class MsgServer:
         transport = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         transport.bind((listen_address, listen_port))
         transport.listen(MAX_CONNECTIONS)
-
-        # print(f'Server running on ip {listen_address}:{listen_port}')
         SERVER_LOGGER.info(f'Запущен сервер прослушивающий на {listen_address if listen_address else "любом"} ip-адресе'
                            f' и {listen_port} порту')
 

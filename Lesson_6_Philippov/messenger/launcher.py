@@ -1,4 +1,4 @@
-import subprocess
+from subprocess import Popen, CREATE_NEW_CONSOLE
 
 
 process = []
@@ -9,7 +9,7 @@ def run_msg(args):
         if user_answer == 'r':
             for item in args:
                 # print(item)
-                process.append(subprocess.Popen(item, stdout=subprocess.PIPE))
+                process.append(Popen('python3 client.py', creationflags=CREATE_NEW_CONSOLE))
                 print(f'запускаем {item[1]}')
                 # for line in process[0].stdout:
                 #     result = chardet.detect(line)
