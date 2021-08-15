@@ -29,7 +29,7 @@ def send_message(sock, message):
 
 
 def create_arg_parser():
-    # SERVER_LOGGER.debug('Попытка получения параметров запуска')
+    # LOGGER.debug('Попытка получения параметров запуска')
     try:
         parser = argparse.ArgumentParser()
         parser.add_argument('-p', default=DEFAULT_PORT, type=int, nargs='?')
@@ -40,11 +40,11 @@ def create_arg_parser():
     except IndexError:
         parser.p = DEFAULT_PORT
         parser.a = DEFAULT_IP_ADDRESS
-        # CLIENT_LOGGER.error(f'Установлены дефолтовые значения - '
+        # LOGGER.error(f'Установлены дефолтовые значения - '
         #                     f'{DEFAULT_IP_ADDRESS if DEFAULT_IP_ADDRESS else "любой"} '
         #                     f'ip-адрес  и {DEFAULT_PORT} порт')
         return parser
     except ValueError:
-        # CLIENT_LOGGER.critical('В качестве порта может быть указано только число в диапазоне от 1024 до 65535.')
+        # LOGGER.critical('В качестве порта может быть указано только число в диапазоне от 1024 до 65535.')
         return 'В качестве порта может быть указано только число в диапазоне от 1024 до 65535.'
         # sys.exit(1)

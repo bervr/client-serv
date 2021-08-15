@@ -14,7 +14,7 @@ PATH = os.path.join(PATH, 'server.log')
 SERVER_LOGGER = logging.getLogger('server')
 
 #
-# SERVER_LOGGER.setLevel(logging.INFO)
+# LOGGER.setLevel(logging.INFO)
 
 # уровень логгирования для данного хендлера
 FILE_ROTATE_HANDLER = logging.handlers.TimedRotatingFileHandler(PATH, encoding='utf-8', interval=1, when='D')

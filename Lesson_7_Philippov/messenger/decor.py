@@ -15,7 +15,7 @@ else:
 def func_log(in_function):
     def wrapper(*args, **kwargs):
         result = in_function(*args, **kwargs)
-        LOGGER.debug(f"вызвана функция {in_function.__name__} "
+        LOGGER.debug(f"Вызвана функция {in_function.__name__} "
                      f"из функции {traceback.format_stack()[0].strip().split()[-1]} "
                      f"а точнее из {inspect.stack()[1][3]} с параметрами {args} {kwargs},"
                      f" вызов из модуля {in_function.__name__}", stacklevel=2)
@@ -28,7 +28,7 @@ class Log:
     def __call__(self, in_function):
         def wrapper(*args, **kwargs):
             result = in_function(*args, **kwargs)
-            LOGGER.debug(f"вызвана функция {in_function.__name__} "
+            LOGGER.debug(f"Вызвана функция {in_function.__name__} "
                          f"из функции {traceback.format_stack()[0].strip().split()[-1]} "
                          f"а точнее из {inspect.stack()[1][3]} с параметрами {args} {kwargs},"
                          f" вызов из модуля {in_function.__name__}", stacklevel=2)

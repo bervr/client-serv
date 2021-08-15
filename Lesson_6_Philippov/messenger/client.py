@@ -53,16 +53,16 @@ class MsgClient():
         CLIENT_LOGGER.debug(f'Адрес и порт сервера {server_address}:{server_port}')
 
         #     if server_port < 1024 or server_port > 65535:
-        #         CLIENT_LOGGER.critical(f'Недопустимый порт сервера {server_port}')
+        #         LOGGER.critical(f'Недопустимый порт сервера {server_port}')
         #         raise ValueError
         # except IndexError:
         #     server_address = DEFAULT_IP_ADDRESS
         #     server_port = DEFAULT_PORT
-        #     CLIENT_LOGGER.error(f'Установлены дефолтовые значения - '
+        #     LOGGER.error(f'Установлены дефолтовые значения - '
         #                         f'{DEFAULT_IP_ADDRESS if DEFAULT_IP_ADDRESS else "любой"} '
         #                         f'ip-адрес  и {DEFAULT_PORT} порт')
         # except ValueError:
-        #     CLIENT_LOGGER.critical('В качестве порта может быть указано только число в диапазоне от 1024 до 65535.')
+        #     LOGGER.critical('В качестве порта может быть указано только число в диапазоне от 1024 до 65535.')
         #     # print('В качестве порта может быть указано только число в диапазоне от 1024 до 65535.')
         #     sys.exit(1)
 

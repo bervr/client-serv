@@ -7,7 +7,7 @@ DEFAULT_IP_ADDRESS = '127.0.0.1'
 # Максимальная очередь подключений
 MAX_CONNECTIONS = 5
 # Максимальная длинна сообщения в байтах
-MAX_PACKAGE_LENGTH = 1024
+MAX_PACKAGE_LENGTH = 4096
 # Кодировка проекта
 ENCODING = 'utf-8'
 # Уровень логирования
@@ -20,8 +20,13 @@ ACTION = 'action'
 TIME = 'time'
 USER = 'user'
 ACCOUNT_NAME = 'account_name'
+SENDER = 'sender'
 
 # Прочие ключи, используемые в протоколе
 PRESENCE = 'presence'
 RESPONSE = 'response'
 ERROR = 'error'
+MESSAGE = 'message'
+MESSAGE_TEXT = 'message_text'
+MESSAGE_KEY = 1
+ACCOUNT_KEY = 0
