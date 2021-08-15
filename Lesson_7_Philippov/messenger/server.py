@@ -27,7 +27,8 @@ class MsgServer:
             return
         elif ACTION in message and message[ACTION] == MESSAGE and TIME in message and MESSAGE_TEXT in message[USER]:
             LOGGER.debug(f"От клиета {message[USER][ACCOUNT_NAME]} получено сообщение {message[USER][MESSAGE_TEXT]}")
-            self.messages.append((message[USER][ACCOUNT_NAME], message[USER][MESSAGE_TEXT]))  # кортеж для уменьшения объема памяти
+            self.messages.append(
+                (message[USER][ACCOUNT_NAME], message[USER][MESSAGE_TEXT]))  # кортеж для уменьшения объема памяти
             return
         else:
             LOGGER.debug(f"Некорректный запрос, вернуть 400")
@@ -54,7 +55,7 @@ class MsgServer:
             transport.settimeout(0.1)
         except OSError as err:
             LOGGER.error(f'Адрес {listen_address} и порт {listen_port} не  могут быть использованы для запуска,'
-                         f' потому что уже используются другой программой',  err)
+                         f' потому что уже используются другой программой', err)
             sys.exit(1)
         else:
             print(f'Запущен сервер прослушивающий на {listen_address if listen_address else "любом"} ip-адресе и '
@@ -77,7 +78,8 @@ class MsgServer:
             # проверяем есть ли новые клиенты или данные от уже подключеных
             try:
                 if self.clients:
-                    incoming_data_list, to_send_data_list, errors_list = select.select(self.clients, self.clients, [], 0)
+                    incoming_data_list, to_send_data_list, errors_list = select.select(self.clients, self.clients, [],
+                                                                                       0)
                     # print(incoming_data_list, to_send_data_list, self.clients)
             except OSError:
                 pass
@@ -110,19 +112,6 @@ class MsgServer:
                     except:
                         LOGGER.info(f'{one_client.getpeername()} отключился от сервера')
                         self.clients.remove(one_client)
-
-            # message_from_client = get_message(client)
-            # LOGGER.debug(f'Получено соощение {message_from_client}')
-            # print(message_from_client)
-            # response = self.process_client_message(message_from_client)
-            # LOGGER.info(f'Сформирован ответ {response}')
-            # send_message(client, response)
-            # LOGGER.debug(f'Закрывается соединение с слиентом {client_address}')
-            # client.close()
-        # except (ValueError, json.JSONDecodeError):
-        #     # print('Принято некорретное сообщение от клиента.')
-        #     LOGGER.error(f'Не удалось декодировать JSON от клиента  {client_address}, соедиение закрывается')
-        #     client.close()
 
 
 if __name__ == '__main__':

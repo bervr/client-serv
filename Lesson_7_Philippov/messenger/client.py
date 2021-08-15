@@ -15,7 +15,7 @@ from decor import func_log
 LOGGER = logging.getLogger('client')  # забрали логгер из конфига
 
 
-class MsgClient():
+class MsgClient:
     @func_log
     def create_presence(self, account_name='Guest'):
         out = {
@@ -81,7 +81,6 @@ class MsgClient():
         except errors.ReqFieldMissingError as missing_error:
             LOGGER.error(f'В ответе сервера отсутствует необходимое поле {missing_error.missing_field}')
             sys.exit(1)
-
 
         message_to_server = self.create_presence()
         LOGGER.info(f'Отправка сообщения на сервер - {message_to_server}')

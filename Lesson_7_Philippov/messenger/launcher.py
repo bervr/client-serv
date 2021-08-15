@@ -1,12 +1,14 @@
 import platform
 from subprocess import Popen
+
 if platform.system() == 'Windows':
     from subprocess import CREATE_NEW_CONSOLE
+
     enterpriter = 'python'
 else:
     enterpriter = 'python3'
-# print(platform.system())
 process = []
+
 
 def run_one(that: str):
     print(that)
