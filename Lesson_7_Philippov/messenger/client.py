@@ -72,6 +72,16 @@ class MsgClient():
         except ConnectionRefusedError:
             LOGGER.error(f'Не удалось подключится к серверу {server_address}:{server_port}, '
                          f'возможн он не запущен или что-то с сетью')
+        except json.JSONDecodeError:
+            LOGGER.error('Не удалось декодировать полученную Json строку.')
+            sys.exit(1)
+        except errors.ServerError as error:
+            LOGGER.error(f'При установке соединения сервер вернул ошибку: {error.text}')
+            sys.exit(1)
+        except errors.ReqFieldMissingError as missing_error:
+            LOGGER.error(f'В ответе сервера отсутствует необходимое поле {missing_error.missing_field}')
+            sys.exit(1)
+
 
         message_to_server = self.create_presence()
         LOGGER.info(f'Отправка сообщения на сервер - {message_to_server}')
