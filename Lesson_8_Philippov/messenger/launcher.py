@@ -21,6 +21,9 @@ def run_one(that: str):
 while True:
     user_answer = input("Запустить сервер(s)\nЗапустить клиентов (c)\nЗакрыть все (x)\nВыйти(q): ")
     if user_answer == 'q':
+        for p in process:
+            p.kill()
+        process.clear()
         break
     elif user_answer == 's':
         run_one(f'{enterpriter} server.py')
