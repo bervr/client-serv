@@ -11,6 +11,7 @@ from common.variables import ACTION, PRESENCE, TIME, USER, ACCOUNT_NAME, \
 from common.utils import get_message, send_message, create_arg_parser
 import common.errors as errors
 from decor import func_log
+from threading import Thread
 
 LOGGER = logging.getLogger('client')  # забрали логгер из конфига
 
@@ -66,6 +67,8 @@ class MsgClient:
         try:
             self.transport = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.transport.connect((server_address, server_port))
+            # print(self.transport)
+            print(self.transport.getsockname()[1])
             LOGGER.debug(
                 f'Подключение к серверу с адресом {server_address if server_address else "localhost"} '
                 f'по {server_port} порту')
