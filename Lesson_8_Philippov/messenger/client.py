@@ -71,7 +71,7 @@ class MsgClient:
                 answer = get_message(self.transport)
                 print(f'User{answer["sender"]}: {answer["message_text"]}')
                 LOGGER.info(f'Сообщение из чята от {answer["sender"]}: {answer["message_text"]}')
-                print(f'Сообщение из чята от {answer["sender"]}: {answer["message_text"]}')
+                # print(f'Сообщение из чята от {answer["sender"]}: {answer["message_text"]}')
             except (ConnectionError, ConnectionResetError, ConnectionAbortedError):
                 LOGGER.error(f'Соединение с сервером {self.server_address} было утеряно')
                 sys.exit(1)
@@ -89,7 +89,7 @@ class MsgClient:
         try:
             self.transport = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.transport.connect((self.server_address, self.server_port))
-            print(self.transport.getsockname()[1])
+            print(f'User{self.transport.getsockname()[1]}')
             self.client_name = self.transport.getsockname()[1]
             LOGGER.debug(
                 f'Подключение к серверу с адресом {self.server_address if self.server_address else "localhost"} '
