@@ -3,7 +3,6 @@ from subprocess import Popen
 
 if platform.system() == 'Windows':
     from subprocess import CREATE_NEW_CONSOLE
-
     enterpriter = 'python'
 else:
     enterpriter = 'gnome-terminal -- python3'
@@ -18,12 +17,22 @@ def run_one(that: str):
         process.append(Popen(that, shell=True))
 
 
-while True:
-    user_answer = input("Запустить сервер(s)\nЗапустить клиентов (c)\nЗакрыть все (x)\nВыйти(q): ")
-    if user_answer == 'q':
+def kill_processes():
+    if platform.system() == 'Windows':
         for p in process:
             p.kill()
         process.clear()
+    else:
+        while process:
+            p = process.pop()
+            p.kill()
+            p.terminate()
+
+
+while True:
+    user_answer = input("Запустить сервер(s)\nЗапустить клиентов (c)\nЗакрыть все (x)\nВыйти(q): ")
+    if user_answer == 'q':
+        kill_processes()
         break
     elif user_answer == 's':
         run_one(f'{enterpriter} server.py')
@@ -33,6 +42,6 @@ while True:
             run_one(f'{enterpriter} client.py')
 
     elif user_answer == 'x':
-        for p in process:
-            p.kill()
-        process.clear()
+        kill_processes()
+
+
