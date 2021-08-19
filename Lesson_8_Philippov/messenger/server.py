@@ -8,7 +8,7 @@ import time
 
 import logs.conf.server_log_config
 from common.variables import ACTION, ACCOUNT_NAME, MAX_CONNECTIONS, PRESENCE, TIME, USER, ERROR, MESSAGE_TEXT, \
-    MESSAGE, SENDER, MESSAGE_KEY, ACCOUNT_KEY, DESTINATION, RESPONSE_200,RESPONSE_400, EXIT
+    MESSAGE, SENDER, MESSAGE_KEY, ACCOUNT_KEY, DESTINATION, RESPONSE_200, RESPONSE_400, EXIT
 from common.utils import get_message, send_message, create_arg_parser
 
 LOGGER = logging.getLogger('server')  # забрали  логгер из конфига
@@ -28,7 +28,6 @@ class MsgServer:
         if not 1023 < self.listen_port < 65535:
             LOGGER.critical(f'Невозможно запустить сервер на порту {self.listen_port}, порт занят или недопустим')
             sys.exit(1)
-        
 
     def process_client_message(self, message, client):
         """ метод разбирающий клиентские сообщения. Принимает на вход словарь сообщения, проверяет их корректность,
@@ -50,7 +49,7 @@ class MsgServer:
                     client.close()
                 return
             except Exception as err:
-                print(1,err)
+                print(1, err)
         # если пришел EXIT:
         elif ACTION in message and message[ACTION] == EXIT and ACCOUNT_NAME in message:
             this_one = self.names[message[ACCOUNT_NAME]]
@@ -77,28 +76,34 @@ class MsgServer:
             send_message(client, response)
             return
 
-    def process_message(message, names, listen_socks):
+    def process_message(self, message, to_send_data_list):
         """
         метод адресной отправки сообщения определённому клиенту, принимает на вход сообщение,
-        список зарегистрированых пользователей и слушающие сокеты. Ничего не возвращает.
+        и слушающие сокеты. Ничего не возвращает.
         Вызывает отправку сообщения нужному клиенту
-        :param message:
-        :param names:
-        :param listen_socks:
-        :return:
         """
-        if message[DESTINATION] in names and names[message[DESTINATION]] in listen_socks:
-            send_message(names[message[DESTINATION]], message)
+        if message[DESTINATION] in self.names and self.names[message[DESTINATION]] in to_send_data_list:
+            send_message(self.names[message[DESTINATION]], message)
             LOGGER.info(f'Отправлено сообщение пользователю {message[DESTINATION]} '
                         f'от пользователя {message[SENDER]}.')
-        elif message[DESTINATION] in names and names[message[DESTINATION]] not in listen_socks:
+
+        elif message[DESTINATION] in self.names and message[DESTINATION] == 'ALL':
+            LOGGER.debug(f'Отправляем  сообщение {message} всем клиентам')
+            for one_client in to_send_data_list:
+                try:
+                    send_message(one_client, message)
+                    LOGGER.debug(f'Отправлено сообщение {message} клиенту {one_client.getpeername()}')
+                except:
+                    LOGGER.info(f'{one_client.getpeername()} отключился от сервера')
+                    self.clients.remove(one_client)
+
+        elif message[DESTINATION] in self.names and self.names[message[DESTINATION]] not in to_send_data_list:
             raise ConnectionError
         else:
             LOGGER.error(
                 f'Пользователь {message[DESTINATION]} не зарегистрирован на сервере, '
                 f'отправка сообщения невозможна.')
-        
-    
+
     def start(self):
         LOGGER.info('Попытка запуска сервера')
         try:
@@ -107,16 +112,21 @@ class MsgServer:
             transport.listen(MAX_CONNECTIONS)
             transport.settimeout(0.1)
         except OSError as err:
-            LOGGER.error(f'Адрес {self.listen_address} и порт {self.listen_port} не  могут быть использованы для запуска,'
-                         f' потому что уже используются другой программой', err)
+            LOGGER.error(
+                f'Адрес {self.listen_address} и порт {self.listen_port} не  могут быть использованы для запуска,'
+                f' потому что уже используются другой программой', err)
             sys.exit(1)
         else:
-            print(f'Запущен сервер прослушивающий на {self.listen_address if self.listen_address else "любом"} ip-адресе и '
-                  f'{self.listen_port} порту')
-            LOGGER.info(f'Запущен сервер прослушивающий на {self.listen_address if self.listen_address else "любом"} ip-адресе'
-                        f' и {self.listen_port} порту')
+            print(
+                f'Запущен сервер прослушивающий на {self.listen_address if self.listen_address else "любом"} '
+                f'ip-адресе и {self.listen_port} порту')
+            LOGGER.info(
+                f'Запущен сервер прослушивающий на {self.listen_address if self.listen_address else "любом"} ip-адресе'
+                f' и {self.listen_port} порту')
 
         while True:
+
+            # Принимаем подключения
             try:
                 client, client_address = transport.accept()
             except OSError:
@@ -149,22 +159,33 @@ class MsgServer:
 
             # print(self.messages)
 
-            # проверяем есть ли ожидающие сообщений клиенты и сообщения для отправки и  отправляем их клиентам
-            if to_send_data_list and self.messages:
-                message = {
-                    ACTION: MESSAGE,
-                    TIME: time.time(),
-                    SENDER: self.messages[0][ACCOUNT_KEY],
-                    MESSAGE_TEXT: self.messages[0][MESSAGE_KEY],
-                }
-                del self.messages[0]
-                for one_client in to_send_data_list:
-                    try:
-                        LOGGER.info(f'Отправляем сообщение {message} клиенту {one_client}')
-                        send_message(one_client, message)
-                    except:
-                        LOGGER.info(f'{one_client.getpeername()} отключился от сервера')
-                        self.clients.remove(one_client)
+            # проверяем есть ли ожидающие сообщений клиенты и сообщения для отправки, и отправляем их клиентам
+            # if to_send_data_list and self.messages:
+            #     message = {
+            #         ACTION: MESSAGE,
+            #         TIME: time.time(),
+            #         SENDER: self.messages[0][ACCOUNT_KEY],
+            #         MESSAGE_TEXT: self.messages[0][MESSAGE_KEY],
+            #     }
+            #     del self.messages[0]
+            #     for one_client in to_send_data_list:
+            #         try:
+            #             LOGGER.info(f'Отправляем сообщение {message} клиенту {one_client}')
+            #             send_message(one_client, message)
+            #         except:
+            #             LOGGER.info(f'{one_client.getpeername()} отключился от сервера')
+            #             self.clients.remove(one_client)
+
+            for one_message in self.messages:
+                try:
+                    LOGGER.debug(f'Обработка сообщения {one_message}')
+                    self.process_message(one_message,to_send_data_list)
+                except Exception:
+                    LOGGER.info(f'Соединение с {one_message[DESTINATION]} разорвано')
+                    self.clients.remove(self.names[one_message[DESTINATION]])
+                    del self.names[one_message[DESTINATION]]
+            self.messages.clear()
+
 
 
 if __name__ == '__main__':

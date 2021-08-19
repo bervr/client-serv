@@ -7,7 +7,7 @@ import time
 import argparse
 import logs.conf.client_log_config
 from common.variables import ACTION, PRESENCE, TIME, USER, ACCOUNT_NAME, \
-    RESPONSE, ERROR, MESSAGE_TEXT, MESSAGE, EXIT, SENDER, DESTINATION
+    RESPONSE, ERROR, MESSAGE_TEXT, MESSAGE, EXIT, SENDER, DESTINATION, RESPONSE_200
 from common.utils import get_message, send_message, create_arg_parser
 import common.errors as errors
 from decor import func_log
@@ -29,8 +29,33 @@ class MsgClient:
         LOGGER.debug(f'Сформирован presence: {out}')
         return out
 
-    def create_message(self, account_name='Guest', destination='ALL'):
-        message = input('Введите сообщения для отправки или !!! для выхода: ')
+    def hello_user(self):
+        answer = None
+        while answer != RESPONSE_200:
+            user_name = input('Введите свое имя или нажмите Enter чтобы попробовать продолжить анонимно: ')
+            if user_name != '':
+                self.client_name = user_name
+            message_to_server = self.create_presence(self.client_name)
+            send_message(self.transport, message_to_server)
+            LOGGER.info(f'Отправка сообщения на сервер - {message_to_server}')
+            try:
+                answer = self.process_ans(get_message(self.transport))
+                LOGGER.info(f'Получен ответ от сервера {answer}')
+            except (ValueError, json.JSONDecodeError):
+                # print('Не удалось декодировать сообщение сервера.')
+                LOGGER.critical(f'Не удалось декодировать сообщение от сервера')
+            else:
+                print(f'Вы видны всем под именем {self.client_name}')
+
+    def get_destination(self):
+        new_dst = input('Кому вы хотите отправить сообщение? Нажмите Enter если всем\n')
+        if new_dst == '':
+            new_dst = 'ALL'
+        return new_dst
+
+    def create_message(self, destination, account_name='Guest'):
+        message = input('Введите сообщения для отправки или !!! для выхода:\n')
+
         if message == '!!!':
             self.create_exit_message(self.client_name)
             self.transport.close()
@@ -52,7 +77,7 @@ class MsgClient:
     def process_ans(self, message):
         if RESPONSE in message:
             if message[RESPONSE] == 200:
-                return '200 : OK'
+                return RESPONSE_200
             return f'400 : {message[ERROR]}'
         raise errors.ReqFieldMissingError(RESPONSE)
 
@@ -62,7 +87,7 @@ class MsgClient:
         LOGGER.info('Режим работы - отправка сообщений')
         while True:
             try:
-                send_message(self.transport, self.create_message(self.client_name))
+                send_message(self.transport, self.create_message(self.get_destination(), self.client_name))
             except (ConnectionError, ConnectionResetError, ConnectionAbortedError):
                 LOGGER.error(f'Соединение с сервером {self.server_address} было утеряно')
                 sys.exit(1)
@@ -73,7 +98,7 @@ class MsgClient:
             try:
                 answer = get_message(self.transport)
                 # print(answer)
-                print(f'User{answer[SENDER]}: {answer["message_text"]}')
+                print(f'\nUser {answer[SENDER]} sent: {answer["message_text"]}')
                 LOGGER.info(f'Сообщение из чята от {answer[SENDER]}: {answer["message_text"]}')
                 # print(f'Сообщение из чята от {answer["sender"]}: {answer["message_text"]}')
             except (ConnectionError, ConnectionResetError, ConnectionAbortedError):
@@ -102,7 +127,7 @@ class MsgClient:
         try:
             self.transport = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.transport.connect((self.server_address, self.server_port))
-            print(f'User{self.transport.getsockname()[1]}')
+            # print(f'User{self.transport.getsockname()[1]}')
             self.client_name = self.transport.getsockname()[1]
             LOGGER.debug(
                 f'Подключение к серверу с адресом {self.server_address if self.server_address else "localhost"} '
@@ -120,15 +145,9 @@ class MsgClient:
             LOGGER.error(f'В ответе сервера отсутствует необходимое поле {missing_error.missing_field}')
             sys.exit(1)
 
-        message_to_server = self.create_presence(self.client_name)
-        LOGGER.info(f'Отправка сообщения на сервер - {message_to_server}')
-        send_message(self.transport, message_to_server)
-        try:
-            answer = self.process_ans(get_message(self.transport))
-            LOGGER.info(f'Получен ответ от сервера {answer}')
-        except (ValueError, json.JSONDecodeError):
-            # print('Не удалось декодировать сообщение сервера.')
-            LOGGER.critical(f'Не удалось декодировать сообщение от сервера')
+        # message_to_server = self.create_presence(self.client_name)
+        self.hello_user()
+        # send_message(self.transport, message_to_server)
 
     def start(self):
         send_thread = Thread(target=self.client_sending, daemon=True)
