@@ -1,5 +1,8 @@
 import platform
 from subprocess import Popen
+# сколько клиентов запускать
+client_count = 3
+
 
 if platform.system() == 'Windows':
     from subprocess import CREATE_NEW_CONSOLE
@@ -30,7 +33,7 @@ def kill_processes():
 
 
 while True:
-    user_answer = input("Запустить сервер(s)\nЗапустить клиентов (c)\nЗакрыть все (x)\nВыйти(q): ")
+    user_answer = input("Запустить сервер(s)\nЗапустить клиентов (c)\nЗапустить все (а)\nЗакрыть все (x)\nВыйти(q): ")
     if user_answer == 'q':
         kill_processes()
         break
@@ -38,7 +41,12 @@ while True:
         run_one(f'{enterpriter} server.py')
 
     elif user_answer == 'c':
-        for _ in range(7):
+        for _ in range(client_count):
+            run_one(f'{enterpriter} client.py')
+
+    elif user_answer == 'a':
+        run_one(f'{enterpriter} server.py')
+        for _ in range(client_count):
             run_one(f'{enterpriter} client.py')
 
     elif user_answer == 'x':

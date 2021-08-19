@@ -21,6 +21,8 @@ TIME = 'time'
 USER = 'user'
 ACCOUNT_NAME = 'account_name'
 SENDER = 'sender'
+DESTINATION = 'to'
+
 
 # Прочие ключи, используемые в протоколе
 PRESENCE = 'presence'
@@ -30,3 +32,13 @@ MESSAGE = 'message'
 MESSAGE_TEXT = 'message_text'
 MESSAGE_KEY = 1
 ACCOUNT_KEY = 0
+EXIT = 'exit'
+
+# Словари - ответы:
+# 200
+RESPONSE_200 = {RESPONSE: 200}
+# 400
+RESPONSE_400 = {
+    RESPONSE: 400,
+    ERROR: None
+}

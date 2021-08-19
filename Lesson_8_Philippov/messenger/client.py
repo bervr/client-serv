@@ -7,7 +7,7 @@ import time
 import argparse
 import logs.conf.client_log_config
 from common.variables import ACTION, PRESENCE, TIME, USER, ACCOUNT_NAME, \
-    RESPONSE, ERROR, MESSAGE_TEXT, MESSAGE
+    RESPONSE, ERROR, MESSAGE_TEXT, MESSAGE, EXIT, SENDER, DESTINATION
 from common.utils import get_message, send_message, create_arg_parser
 import common.errors as errors
 from decor import func_log
@@ -29,13 +29,16 @@ class MsgClient:
         LOGGER.debug(f'Сформирован presence: {out}')
         return out
 
-    def create_message(self, account_name='Guest'):
+    def create_message(self, account_name='Guest', destination='ALL'):
         message = input('Введите сообщения для отправки или !!! для выхода: ')
         if message == '!!!':
+            self.create_exit_message(self.client_name)
             self.transport.close()
             LOGGER.info('Пользователь завершил работу приложения')
             sys.exit(0)
         out = {
+            DESTINATION: destination,
+            SENDER: account_name,
             ACTION: MESSAGE,
             TIME: time.time(),
             USER: {
@@ -69,23 +72,33 @@ class MsgClient:
         while True:
             try:
                 answer = get_message(self.transport)
-                print(f'User{answer["sender"]}: {answer["message_text"]}')
-                LOGGER.info(f'Сообщение из чята от {answer["sender"]}: {answer["message_text"]}')
+                # print(answer)
+                print(f'User{answer[SENDER]}: {answer["message_text"]}')
+                LOGGER.info(f'Сообщение из чята от {answer[SENDER]}: {answer["message_text"]}')
                 # print(f'Сообщение из чята от {answer["sender"]}: {answer["message_text"]}')
             except (ConnectionError, ConnectionResetError, ConnectionAbortedError):
                 LOGGER.error(f'Соединение с сервером {self.server_address} было утеряно')
                 sys.exit(1)
 
-    def start(self):
+    @func_log
+    def create_exit_message(account_name):
+        return {
+            ACTION: EXIT,
+            TIME: time.time(),
+            ACCOUNT_NAME: account_name
+        }
+
+    def __init__(self):
         # получаем параметры из командной строки
         # client.py -a localhost -p 8079 -m send/listen
-        LOGGER.debug("Запуск клиента")
+        LOGGER.debug("Попытка получить параметры запуска клиента")
         parser = create_arg_parser()
         namespace = parser.parse_args(sys.argv[1:])
         self.server_address = namespace.a
         self.server_port = namespace.p
         client_mode = namespace.m
         LOGGER.debug(f'Адрес и порт сервера {self.server_address}:{self.server_port}')
+
         try:
             self.transport = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.transport.connect((self.server_address, self.server_port))
@@ -117,6 +130,7 @@ class MsgClient:
             # print('Не удалось декодировать сообщение сервера.')
             LOGGER.critical(f'Не удалось декодировать сообщение от сервера')
 
+    def start(self):
         send_thread = Thread(target=self.client_sending, daemon=True)
         receive_thread = Thread(target=self.client_receiving, daemon=True)
         send_thread.start()
