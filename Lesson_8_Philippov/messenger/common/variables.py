@@ -21,7 +21,7 @@ TIME = 'time'
 USER = 'user'
 ACCOUNT_NAME = 'account_name'
 SENDER = 'sender'
-DESTINATION = 'to'
+DESTINATION = 'destination'
 
 
 # Прочие ключи, используемые в протоколе

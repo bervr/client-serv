@@ -98,8 +98,8 @@ class MsgClient:
             try:
                 answer = get_message(self.transport)
                 # print(answer)
-                print(f'\nUser {answer[SENDER]} sent: {answer["message_text"]}')
-                LOGGER.info(f'Сообщение из чята от {answer[SENDER]}: {answer["message_text"]}')
+                print(f'\nUser {answer[SENDER]} sent: {answer[USER][MESSAGE_TEXT]}')
+                LOGGER.info(f'Сообщение из чята от {answer[SENDER]}: {answer[USER][MESSAGE_TEXT]}')
                 # print(f'Сообщение из чята от {answer["sender"]}: {answer["message_text"]}')
             except (ConnectionError, ConnectionResetError, ConnectionAbortedError):
                 LOGGER.error(f'Соединение с сервером {self.server_address} было утеряно')

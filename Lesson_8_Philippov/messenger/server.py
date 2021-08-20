@@ -38,7 +38,7 @@ class MsgServer:
             # если клиента нет с вписке подключеных то добавляем
             try:
                 if message[USER][ACCOUNT_NAME] not in self.names.keys():
-                    self.names[message[USER][ACCOUNT_NAME]] = client
+                    self.names[str(message[USER][ACCOUNT_NAME])] = client
                     print(f'Подключен клиент {message[USER][ACCOUNT_NAME]}')
                     send_message(client, RESPONSE_200)
                 else:
@@ -63,8 +63,7 @@ class MsgServer:
                 and DESTINATION in message and SENDER in message:
             # print(message)
             LOGGER.debug(f"От клиета {message[SENDER]} получено сообщение {message[USER][MESSAGE_TEXT]}")
-            self.messages.append(
-                (message[SENDER], message[USER][MESSAGE_TEXT]))  # кортеж для уменьшения объема памяти
+            self.messages.append(message)
             # send_message(client, RESPONSE_200)
             return
 
@@ -82,17 +81,24 @@ class MsgServer:
         и слушающие сокеты. Ничего не возвращает.
         Вызывает отправку сообщения нужному клиенту
         """
-        if message[DESTINATION] in self.names and self.names[message[DESTINATION]] in to_send_data_list:
+        # print(self.names[message[DESTINATION]])
+        # # print(self.names)
+        # print(to_send_data_list)
+        # print(message[DESTINATION])
+        # print(self.names.keys())
+
+        if message[DESTINATION] in self.names.keys() and self.names[message[DESTINATION]] in to_send_data_list:
+            # print(self.names[message[DESTINATION]])
             send_message(self.names[message[DESTINATION]], message)
             LOGGER.info(f'Отправлено сообщение пользователю {message[DESTINATION]} '
                         f'от пользователя {message[SENDER]}.')
 
-        elif message[DESTINATION] in self.names and message[DESTINATION] == 'ALL':
+        elif message[DESTINATION] == 'ALL':
             LOGGER.debug(f'Отправляем  сообщение {message} всем клиентам')
             for one_client in to_send_data_list:
                 try:
                     send_message(one_client, message)
-                    LOGGER.debug(f'Отправлено сообщение {message} клиенту {one_client.getpeername()}')
+                    LOGGER.debug(f'Отправлено сообщение {message} клиенту {one_client}')
                 except:
                     LOGGER.info(f'{one_client.getpeername()} отключился от сервера')
                     self.clients.remove(one_client)
@@ -100,9 +106,13 @@ class MsgServer:
         elif message[DESTINATION] in self.names and self.names[message[DESTINATION]] not in to_send_data_list:
             raise ConnectionError
         else:
+
             LOGGER.error(
                 f'Пользователь {message[DESTINATION]} не зарегистрирован на сервере, '
                 f'отправка сообщения невозможна.')
+            LOGGER.debug(
+                f'на сервере остались {self.names.keys()} ')
+
 
     def start(self):
         LOGGER.info('Попытка запуска сервера')
@@ -185,6 +195,7 @@ class MsgServer:
                     self.clients.remove(self.names[one_message[DESTINATION]])
                     del self.names[one_message[DESTINATION]]
             self.messages.clear()
+
 
 
 
