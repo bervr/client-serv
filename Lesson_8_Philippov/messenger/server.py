@@ -8,7 +8,8 @@ import time
 
 import logs.conf.server_log_config
 from common.variables import ACTION, ACCOUNT_NAME, MAX_CONNECTIONS, PRESENCE, TIME, USER, ERROR, MESSAGE_TEXT, \
-    MESSAGE, SENDER, MESSAGE_KEY, ACCOUNT_KEY, DESTINATION, RESPONSE_200, RESPONSE_400, EXIT
+    MESSAGE, SENDER, MESSAGE_KEY, ACCOUNT_KEY, DESTINATION, RESPONSE_200, RESPONSE_400, EXIT, GETCLIENTS, \
+    STATUS, LIST, RESPONSE_CLIENTS, RESPONSE
 from common.utils import get_message, send_message, create_arg_parser
 
 LOGGER = logging.getLogger('server')  # забрали  логгер из конфига
@@ -50,6 +51,25 @@ class MsgServer:
                 return
             except Exception as err:
                 print(1, err)
+
+        if ACTION in message and message[ACTION] == GETCLIENTS and TIME in message and USER in message:
+            # запрашиваем список  подключеных клиентов
+            user_list = list(self.names.keys())
+            # print(user_list)
+            # если клиенты есть добавляем строку в ответ, если нет - возвращаем 204
+            if user_list != '':
+                RESPONSE_CLIENTS[RESPONSE] = 201
+                RESPONSE_CLIENTS[LIST] = user_list
+            else:
+                RESPONSE_CLIENTS[RESPONSE] = 204
+                LOGGER.debug(f'Нет клиентов подключеных к серверу')
+            try:
+                send_message(client, RESPONSE_CLIENTS)
+                LOGGER.debug(f'Отправка списка клиентов подключеных к серверу {user_list}')
+                return
+            except Exception as err:
+                print(1, err)
+
         # если пришел EXIT:
         elif ACTION in message and message[ACTION] == EXIT and ACCOUNT_NAME in message:
             this_one = self.names[message[ACCOUNT_NAME]]

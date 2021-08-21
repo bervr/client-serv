@@ -1,5 +1,8 @@
 import platform
+import subprocess
 from subprocess import Popen
+import os
+import signal
 # сколько клиентов запускать
 client_count = 3
 
@@ -13,11 +16,11 @@ process = []
 
 
 def run_one(that: str):
-    print(that)
+    # print(that)
     if platform.system() == 'Windows':
         process.append(Popen(that, creationflags=CREATE_NEW_CONSOLE))
     else:
-        process.append(Popen(that, shell=True))
+        process.append(Popen(that, shell=True, stdout=subprocess.PIPE))
 
 
 def kill_processes():
@@ -28,8 +31,18 @@ def kill_processes():
     else:
         while process:
             p = process.pop()
+            # print(p)
+
             p.kill()
             p.terminate()
+            # for pid in p.stdout:   #todo
+            #     print(p.stdout)
+            #     os.kill(int(pid), signal.SIGTERM)
+            #     try:
+            #         os.kill(int(pid),0)
+            #         raise Exception("Can't kill the process")
+            #     except OSError as err:
+            #         continue
 
 
 while True:

@@ -7,7 +7,7 @@ import time
 import argparse
 import logs.conf.client_log_config
 from common.variables import ACTION, PRESENCE, TIME, USER, ACCOUNT_NAME, \
-    RESPONSE, ERROR, MESSAGE_TEXT, MESSAGE, EXIT, SENDER, DESTINATION, RESPONSE_200
+    RESPONSE, ERROR, MESSAGE_TEXT, MESSAGE, EXIT, SENDER, DESTINATION, RESPONSE_200, GETCLIENTS, LIST, RESPONSE_204
 from common.utils import get_message, send_message, create_arg_parser
 import common.errors as errors
 from decor import func_log
@@ -32,7 +32,11 @@ class MsgClient:
     def hello_user(self):
         answer = None
         while answer != RESPONSE_200:
-            user_name = input('Введите свое имя или нажмите Enter чтобы попробовать продолжить анонимно: ')
+            user_name = input('Введите свое имя или нажмите Enter чтобы попробовать продолжить анонимно:\n')
+            # if user_name == '???':
+            #     self.get_clients()
+            #     answer = None
+            #     continue
             if user_name != '':
                 self.client_name = user_name
             message_to_server = self.create_presence(self.client_name)
@@ -48,19 +52,31 @@ class MsgClient:
                 print(f'Вы видны всем под именем {self.client_name}')
 
     def get_destination(self):
-        new_dst = input('Кому вы хотите отправить сообщение? Нажмите Enter если всем\n')
-        if new_dst == '':
-            new_dst = 'ALL'
-        return new_dst
+        while True:
+            new_dst = input('??? чтобы запросить список клиентов.\n'
+                            '!!! для выхода\n'
+                            'Кому вы хотите отправить сообщение? Нажмите Enter если всем\n')
+            if new_dst == '???':
+                self.get_clients()
+                self.process_ans(get_message(self.transport))
+                print(self.remote_users)
+                continue
+            elif new_dst == '!!!':
+                self.user_exit()
+            elif new_dst == '':
+                new_dst = 'ALL'
+            return new_dst
+
+    def user_exit(self):
+        self.create_exit_message(self.client_name)
+        self.transport.close()
+        LOGGER.info('Пользователь завершил работу приложения')
+        sys.exit(0)
 
     def create_message(self, destination, account_name='Guest'):
-        message = input('Введите сообщения для отправки или !!! для выхода:\n')
-
+        message = input('Введите сообщение для отправки или !!! для выхода:\n')
         if message == '!!!':
-            self.create_exit_message(self.client_name)
-            self.transport.close()
-            LOGGER.info('Пользователь завершил работу приложения')
-            sys.exit(0)
+            self.user_exit()
         out = {
             DESTINATION: destination,
             SENDER: account_name,
@@ -78,11 +94,20 @@ class MsgClient:
         if RESPONSE in message:
             if message[RESPONSE] == 200:
                 return RESPONSE_200
+            elif message[RESPONSE] == 201:
+                # print(self.client_name, type(self.client_name))
+
+                # убираем из ответного списка себя
+                self.remote_users = [x for x in message[LIST] if x != str(self.client_name)]
+                # self.remote_users = message[LIST]
+                print(self.remote_users)
+                return
+            elif message[RESPONSE] == 204:
+                return RESPONSE_204
+
             return f'400 : {message[ERROR]}'
         raise errors.ReqFieldMissingError(RESPONSE)
 
-    # def __init__(self):
-    #     LOGGER.debug("Инициализация клиента")
     def client_sending(self):
         LOGGER.info('Режим работы - отправка сообщений')
         while True:
@@ -92,18 +117,31 @@ class MsgClient:
                 LOGGER.error(f'Соединение с сервером {self.server_address} было утеряно')
                 sys.exit(1)
 
+
     def client_receiving(self):
         LOGGER.info('Режим работы - прием сообщений')
         while True:
             try:
                 answer = get_message(self.transport)
                 # print(answer)
-                print(f'\nUser {answer[SENDER]} sent: {answer[USER][MESSAGE_TEXT]}')
-                LOGGER.info(f'Сообщение из чята от {answer[SENDER]}: {answer[USER][MESSAGE_TEXT]}')
-                # print(f'Сообщение из чята от {answer["sender"]}: {answer["message_text"]}')
+                if RESPONSE in answer:
+                    self.process_ans(answer)
+                    # print(self.remote_users)
+                else:
+                    print(f'\nUser {answer[SENDER]} sent: {answer[USER][MESSAGE_TEXT]}')
+                    LOGGER.info(f'Сообщение из чята от {answer[SENDER]}: {answer[USER][MESSAGE_TEXT]}')
+                    # print(f'Сообщение из чята от {answer["sender"]}: {answer["message_text"]}')
             except (ConnectionError, ConnectionResetError, ConnectionAbortedError):
                 LOGGER.error(f'Соединение с сервером {self.server_address} было утеряно')
                 sys.exit(1)
+
+    def get_clients(self):
+        request = self.create_presence(self.client_name)
+        request[ACTION] = GETCLIENTS
+        # print(request)
+        send_message(self.transport, request)
+        LOGGER.info(f'Отправка сообщения на сервер - {request}')
+
 
     @func_log
     def create_exit_message(account_name):
@@ -119,8 +157,10 @@ class MsgClient:
         LOGGER.debug("Попытка получить параметры запуска клиента")
         parser = create_arg_parser()
         namespace = parser.parse_args(sys.argv[1:])
+        self.remote_users = []
         self.server_address = namespace.a
         self.server_port = namespace.p
+        self.client_name = ''
         client_mode = namespace.m
         LOGGER.debug(f'Адрес и порт сервера {self.server_address}:{self.server_port}')
 
@@ -150,12 +190,12 @@ class MsgClient:
         # send_message(self.transport, message_to_server)
 
     def start(self):
-        send_thread = Thread(target=self.client_sending, daemon=True)
         receive_thread = Thread(target=self.client_receiving, daemon=True)
-        send_thread.start()
+        send_thread = Thread(target=self.client_sending, daemon=True)
         receive_thread.start()
-        send_thread.join()
+        send_thread.start()
         receive_thread.join()
+        send_thread.join()
 
 
 if __name__ == '__main__':

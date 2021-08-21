@@ -29,10 +29,13 @@ PRESENCE = 'presence'
 RESPONSE = 'response'
 ERROR = 'error'
 MESSAGE = 'message'
+GETCLIENTS = 'getclients'
 MESSAGE_TEXT = 'message_text'
 MESSAGE_KEY = 1
 ACCOUNT_KEY = 0
 EXIT = 'exit'
+STATUS = 'status_message'
+LIST = 'user_list'
 
 # Словари - ответы:
 # 200
@@ -41,4 +44,8 @@ RESPONSE_200 = {RESPONSE: 200}
 RESPONSE_400 = {
     RESPONSE: 400,
     ERROR: None
+}
+RESPONSE_204 = {RESPONSE: 204}
+RESPONSE_CLIENTS = {
+    RESPONSE: 201
 }
