@@ -29,6 +29,12 @@ class MsgClient:
         LOGGER.debug(f'Сформирован presence: {out}')
         return out
 
+    @func_log
+    def add_client_name(self, name):
+        if name != '':
+            self.client_name = name
+        print(self.client_name)
+
     def hello_user(self):
         answer = None
         while answer != RESPONSE_200:
@@ -37,8 +43,7 @@ class MsgClient:
             #     self.get_clients()
             #     answer = None
             #     continue
-            if user_name != '':
-                self.client_name = user_name
+            self.add_client_name(user_name)
             message_to_server = self.create_presence(self.client_name)
             send_message(self.transport, message_to_server)
             LOGGER.info(f'Отправка сообщения на сервер - {message_to_server}')
@@ -186,10 +191,10 @@ class MsgClient:
             sys.exit(1)
 
         # message_to_server = self.create_presence(self.client_name)
-        self.hello_user()
         # send_message(self.transport, message_to_server)
 
     def start(self):
+        self.hello_user()
         receive_thread = Thread(target=self.client_receiving, daemon=True)
         send_thread = Thread(target=self.client_sending, daemon=True)
         receive_thread.start()
