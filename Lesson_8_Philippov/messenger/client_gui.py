@@ -14,6 +14,7 @@ from functools import partial
 
 
 class NewClient(MsgClient):
+    # пока не работает
 
     def hello_user(self, name):
         answer = None
