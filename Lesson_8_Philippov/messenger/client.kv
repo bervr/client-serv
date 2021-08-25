@@ -1,0 +1,79 @@
+<LoginInput@TextInput>:
+    color:(0,0,0,1)
+    multiline: False
+    font_size: 40
+    valign: 'middle'
+    halign: 'left'
+    text_size: self.size
+
+<FirstScreen>:
+    login:login
+    server:server
+    port:port
+    BoxLayout:
+        canvas:
+            Color:
+                rgba:(1,1,1,1)
+            Rectangle:
+                pos:self.pos
+                size:self.size
+        orientation:'vertical'
+        BoxLayout:
+            orientation:'vertical'
+            size_hint:(1,0.8)
+            LoginInput:
+                id: login
+                hint_text:'login'
+            LoginInput:
+                id: server
+                text: '127.0.0.1'
+            LoginInput:
+                id: port
+                text: '7777'
+        Button:
+            text:'Next'
+            size_hint:(1,0.2)
+            on_press:root.do_login()
+
+
+<SecondScreen>:
+    contacts: contacts
+    your_name: your_name
+    BoxLayout:
+        canvas:
+            Color:
+                rgba:(1,1,1,1)
+            Rectangle:
+                pos:self.pos
+                size:self.size
+        orientation:'vertical'
+        BoxLayout:
+            BoxLayout:
+                orientation:'vertical'
+                GridLayout:
+                    id:contacts
+                    cols:1
+                    Label:
+                        id:your_name
+                        background_color:(0,0,0,1)
+                        markup: True
+                    Button:
+                        text: 'All'
+                        on_press:root.select_user(self)
+                Button:
+                    text:'Выйти'
+                    size_hint:(1,0.1)
+                    on_press:root.previous_button()
+            GridLayout:
+                cols:1
+                Label:
+                    text:'[color=000000]Push button "previous"[/color]'
+                    markup: True
+                TextInput:
+                    size_hint:(1,0.2)
+                    hint_text:"напишите сообщение"
+                Button:
+                    text:'Отправить'
+                    size_hint:(1,0.2)
+
+

@@ -3,7 +3,7 @@ import logging.handlers
 import os
 import sys
 # дабавим путь для импорта переменной
-
+sys.path.append(os.path.join(os.getcwd(), '../..'))
 from common.variables import LOGGING_LEVEL
 
 # задаем путь куда будем писать

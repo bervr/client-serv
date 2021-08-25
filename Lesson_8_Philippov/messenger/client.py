@@ -33,7 +33,9 @@ class MsgClient:
     def add_client_name(self, name):
         if name != '':
             self.client_name = name
-        print(self.client_name)
+            LOGGER.info(f'установлено имя {self.client_name}')
+        # print(self.client_name)
+        return self.client_name
 
     def hello_user(self):
         answer = None
@@ -122,7 +124,6 @@ class MsgClient:
                 LOGGER.error(f'Соединение с сервером {self.server_address} было утеряно')
                 sys.exit(1)
 
-
     def client_receiving(self):
         LOGGER.info('Режим работы - прием сообщений')
         while True:
@@ -147,7 +148,6 @@ class MsgClient:
         send_message(self.transport, request)
         LOGGER.info(f'Отправка сообщения на сервер - {request}')
 
-
     @func_log
     def create_exit_message(account_name):
         return {
@@ -156,24 +156,23 @@ class MsgClient:
             ACCOUNT_NAME: account_name
         }
 
-    def __init__(self):
-        # получаем параметры из командной строки
-        # client.py -a localhost -p 8079 -m send/listen
+    def get_start_params(self):
         LOGGER.debug("Попытка получить параметры запуска клиента")
         parser = create_arg_parser()
         namespace = parser.parse_args(sys.argv[1:])
-        self.remote_users = []
+
         self.server_address = namespace.a
         self.server_port = namespace.p
-        self.client_name = ''
+
         client_mode = namespace.m
         LOGGER.debug(f'Адрес и порт сервера {self.server_address}:{self.server_port}')
 
+    def get_connect(self):
         try:
             self.transport = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.transport.connect((self.server_address, self.server_port))
             # print(f'User{self.transport.getsockname()[1]}')
-            self.client_name = self.transport.getsockname()[1]
+            self.client_name = self.transport.getsockname()[1] if self.client_name == '' else self.client_name
             LOGGER.debug(
                 f'Подключение к серверу с адресом {self.server_address if self.server_address else "localhost"} '
                 f'по {self.server_port} порту')
@@ -189,6 +188,15 @@ class MsgClient:
         except errors.ReqFieldMissingError as missing_error:
             LOGGER.error(f'В ответе сервера отсутствует необходимое поле {missing_error.missing_field}')
             sys.exit(1)
+
+    def __init__(self):
+        # получаем параметры из командной строки
+        # client.py -a localhost -p 8079 -m send/listen
+        self.remote_users = []
+        self.client_name = ''
+        self.get_start_params()
+        self.get_connect()
+
 
         # message_to_server = self.create_presence(self.client_name)
         # send_message(self.transport, message_to_server)
