@@ -33,7 +33,10 @@
         Button:
             text:'Next'
             size_hint:(1,0.2)
-            on_press:root.do_login()
+            on_press:app.new_msg = root.hello_user()
+            on_release:root.manager.current='second'
+
+
 
 
 <SecondScreen>:
@@ -50,14 +53,15 @@
         BoxLayout:
             BoxLayout:
                 orientation:'vertical'
+                Label:
+                    id:your_name
+                    background_color:(0,0,0,1)
+                    markup: True
                 GridLayout:
                     id:contacts
                     cols:1
-                    Label:
-                        id:your_name
-                        background_color:(0,0,0,1)
-                        markup: True
                     Button:
+                        # size_hint:(1,0.1)
                         text: 'All'
                         on_press:root.select_user(self)
                 Button:
