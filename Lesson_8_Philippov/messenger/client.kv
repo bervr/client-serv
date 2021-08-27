@@ -33,7 +33,7 @@
         Button:
             text:'Next'
             size_hint:(1,0.2)
-            on_press:app.new_msg = root.hello_user()
+            on_press:app.new_msg = root.get_params()
             on_release:root.manager.current='second'
 
 
@@ -54,20 +54,32 @@
             BoxLayout:
                 orientation:'vertical'
                 Label:
+                    size_hint:(1,0.1)
                     id:your_name
                     background_color:(0,0,0,1)
                     markup: True
-                GridLayout:
-                    id:contacts
-                    cols:1
+                BoxLayout:
+                    size_hint:(1,0.1)
+                    Button:
+                        # size_hint:(1,0.1)
+                        text: 'Update'
+                        on_press:root.render_contacts()
                     Button:
                         # size_hint:(1,0.1)
                         text: 'All'
                         on_press:root.select_user(self)
+                ScrollView:
+                    do_scroll_x: False
+                    do_scroll_y: True
+            # size_hint: (1, None)
+                    GridLayout:
+                        id:contacts
+                        cols:1
+
                 Button:
                     text:'Выйти'
                     size_hint:(1,0.1)
-                    on_press:root.previous_button()
+                    on_press:root.revert()
             GridLayout:
                 cols:1
                 Label:

@@ -5,7 +5,10 @@ from kivy.uix.label import Label
 from kivy.uix.button import Button
 from client import MsgClient
 import logs.conf.client_log_config
+import json
 import logging
+from common.utils import get_message, send_message
+from common.variables import RESPONSE_200
 
 LOGGER = logging.getLogger('client')  # забрали логгер из конфига
 
@@ -15,36 +18,54 @@ class FirstScreen(Screen):
         super().__init__(**kwargs)
         self.obj = new_msg
 
-    def hello_user(self):
-        # super().__init__(**kwargs)
+    def get_params(self):
         self.obj.client_name = self.login.text
         self.obj.server_port = self.port.text
         self.obj.server_address = self.server.text
-        # print(self.login.text, self.login.text)
-        print(self.obj.client_name, self.obj.server_address, self.obj.server_port)
-        # user_name = self.client_name
-        # return self.hello_user()
-        # print(self.client_name, 'hello user')
-        # self.get_start_params()
+        # print(self.obj.client_name, self.obj.server_address, self.obj.server_port)
         return self.obj
-
-    def o_two(self):
-        self.hello_user()
-        self.manager.current = 'second'
 
 
 class SecondScreen(Screen):
     def __init__(self, new_msg, **kwargs):
         super().__init__(**kwargs)
         self.msg_obj = new_msg
-        self.clients = [123, 456, 789, 987, 654, 321, 505]
-        self.render_contacts()
-        # print(self.msg_obj.client_name)
-        # print(MsgClient().client_name)
-        # self.contacts.add_widget(Button(text='all', on_press=self.select_user))
+        self.clients = [123, 456, 789, 987, 654, 321, 505, 18, 14, 45]
+        # self.clients = []
+
+
+        on_pre_enter: (self.render_contacts())
+
+    def hello_user(self):
+        answer = None
+        if answer != RESPONSE_200:
+            self.obj.add_client_name(self.obj.client_name)
+            message_to_server = self.obj.create_presence(self.obj.client_name)
+            send_message(self.obj.transport, message_to_server)
+            LOGGER.info(f'Отправка сообщения на сервер - {message_to_server}')
+            try:
+                answer = self.obj.process_ans(get_message(self.obj.transport))
+                LOGGER.info(f'Получен ответ от сервера {answer}')
+            except (ValueError, json.JSONDecodeError):
+                # print('Не удалось декодировать сообщение сервера.')
+                LOGGER.critical(f'Не удалось декодировать сообщение от сервера')
+            else:
+                print(f'Вы видны всем под именем {self.obj.client_name}')
+        else:
+            self.app.first_screen.login.text = 'fail'
+            self.manager.current = 'first'
+
+    def revert(self):
+        self.parent.screens[0].login.text = 'fail'
+        self.manager.current = 'first'
+
+
+
+
 
     def render_contacts(self):
         for i in range(len(self.ids.contacts.children)):
+
             self.ids.contacts.remove_widget(self.ids.contacts.children[-1])
 
         self.your_name.text = f"[color=000000]Вы видны всем под именем: " \
@@ -52,19 +73,23 @@ class SecondScreen(Screen):
         # self.contacts.add_widget(
         #     Button(text='ALL', on_press=self.select_user)
         # )
-
-        for i in self.clients:
-            self.contacts.add_widget(
-                Button(text=f'{i}', on_press=self.select_user)
-            )
+        if self.clients !=[]:
+            for i in self.clients:
+                self.contacts.add_widget(
+                    Button(text=f'{i}', size_hint_y=None, height=40, on_press=self.select_user)
+                )
+                # todo scrollview
 
     def previous_button(self):
         self.manager.current = 'first'
 
     def select_user(self, instance):
-        # self.manager.current = 'third'
         print(instance.text)
         print(self.msg_obj.client_name)
+
+    def update_userlist(self):
+        pass
+
 
 
 class ClientApp(App):
@@ -83,4 +108,3 @@ class ClientApp(App):
 
 if __name__ == "__main__":
     ClientApp().run()
-    # Compare().run()
