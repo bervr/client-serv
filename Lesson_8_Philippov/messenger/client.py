@@ -34,29 +34,46 @@ class MsgClient:
         if name != '':
             self.client_name = name
             LOGGER.info(f'установлено имя {self.client_name}')
+        else:
+            self.client_name = self.transport.getsockname()[1]
+
         # print(self.client_name)
         return self.client_name
 
-    def hello_user(self):
-        answer = None
+    def hello_user(self, answer=None):
         while answer != RESPONSE_200:
+            if answer == '400 : Имя пользователя уже занято':
+                LOGGER.error('400 : Имя пользователя уже занято')
+                print('400 : Имя пользователя уже занято')
+            # self.client_name = ''
             user_name = input('Введите свое имя или нажмите Enter чтобы попробовать продолжить анонимно:\n')
             # if user_name == '???':
             #     self.get_clients()
             #     answer = None
             #     continue
-            self.add_client_name(user_name)
-            message_to_server = self.create_presence(self.client_name)
-            send_message(self.transport, message_to_server)
-            LOGGER.info(f'Отправка сообщения на сервер - {message_to_server}')
-            try:
-                answer = self.process_ans(get_message(self.transport))
-                LOGGER.info(f'Получен ответ от сервера {answer}')
-            except (ValueError, json.JSONDecodeError):
-                # print('Не удалось декодировать сообщение сервера.')
-                LOGGER.critical(f'Не удалось декодировать сообщение от сервера')
-            else:
-                print(f'Вы видны всем под именем {self.client_name}')
+            answer = self.hello(user_name)  # todo 'если при первом вводе имени выбрать занятое то потом нельзя зайти анонимно'
+            print(answer)
+        print(f'Вы видны всем под именем {self.client_name}')
+
+    def hello(self, user_name):
+        # print('start ', self.client_name)
+        self.add_client_name(user_name)
+        # print('stop ', self.client_name)
+        message_to_server = self.create_presence(self.client_name)
+        print(message_to_server)
+        send_message(self.transport, message_to_server)
+        LOGGER.info(f'Отправка сообщения на сервер - {message_to_server}')
+        try:
+            answer = self.process_ans(get_message(self.transport))
+            LOGGER.info(f'Получен ответ от сервера {answer}')
+        except (ValueError, json.JSONDecodeError):
+            print('Не удалось декодировать сообщение сервера.')
+            LOGGER.critical(f'Не удалось декодировать сообщение от сервера')
+            return
+        else:
+            return answer
+
+
 
     def get_destination(self):
         while True:
@@ -172,7 +189,7 @@ class MsgClient:
             self.transport = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.transport.connect((self.server_address, self.server_port))
             # print(f'User{self.transport.getsockname()[1]}')
-            self.client_name = self.transport.getsockname()[1] if self.client_name == '' else self.client_name
+
             LOGGER.debug(
                 f'Подключение к серверу с адресом {self.server_address if self.server_address else "localhost"} '
                 f'по {self.server_port} порту')
@@ -197,12 +214,11 @@ class MsgClient:
         self.get_start_params()
         self.get_connect()
 
-
-        # message_to_server = self.create_presence(self.client_name)
-        # send_message(self.transport, message_to_server)
-
     def start(self):
         self.hello_user()
+        self.start_threads()
+
+    def start_threads(self):
         receive_thread = Thread(target=self.client_receiving, daemon=True)
         send_thread = Thread(target=self.client_sending, daemon=True)
         receive_thread.start()

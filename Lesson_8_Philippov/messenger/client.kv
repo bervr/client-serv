@@ -24,6 +24,7 @@
             LoginInput:
                 id: login
                 hint_text:'login'
+                markup: True
             LoginInput:
                 id: server
                 text: '127.0.0.1'
@@ -33,15 +34,17 @@
         Button:
             text:'Next'
             size_hint:(1,0.2)
-            on_press:app.new_msg = root.get_params()
-            on_release:root.manager.current='second'
-
-
+            on_press:
+                app.new_msg = root.get_params()
+                root.manager.current='second'
 
 
 <SecondScreen>:
     contacts: contacts
     your_name: your_name
+    on_pre_enter:
+        root.check_name()
+        root.render_contacts()
     BoxLayout:
         canvas:
             Color:
