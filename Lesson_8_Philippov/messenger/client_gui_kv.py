@@ -1,3 +1,4 @@
+import datetime
 import sys
 import time
 from threading import Thread
@@ -80,14 +81,14 @@ class SecondScreen(Screen):
     def select_user(self, instance):
         """ выбор контакта с которым бутем переписываться, подгрузка его истории"""
         self.msg_obj.destination = instance.text
-        print(instance.text)
+        # print(instance.text)
         self.print_chat()
         # print(self.msg_obj.client_name)
 
     def send(self):
         self.msg_obj.message = self.send_text.text
         self.msg_obj.to_send = True
-        # self.msg_obj.save_to_history()
+        self.msg_obj.save_to_history()
         self.send_text.text = ''
         self.print_chat()
 
@@ -104,30 +105,42 @@ class MyMsg(MsgClient):
         self.message = ''
         self.to_send = False
         self.history = {}  # {contact:{1:[time, from, text],2:[time, from, text],..}}
-        self.history = {'bervr': {1: [2297592, 'bervr', 'привет'],
-                                  2: [2297592, 'bervr', 'как дела?'],
-                                  3: [2297592, 'me', 'привет'],
-                                  4: [2297592, 'me', 'норм, как сам?'],
-                                  5: [2297592, 'bervr', 'дело есть...'],
-                                  }}
+        self.history = {'bervr': {0: [datetime.datetime(2017, 4, 5, 0, 17, 8, 24239), 'bervr', 'привет'],
+              1: [datetime.datetime(2017, 4, 5, 0, 17, 8, 24239), 'bervr', 'как дела?'],
+              2: [datetime.datetime(2017, 4, 5, 0, 17, 8, 24239), 'me', 'привет'],
+              3: [datetime.datetime(2017, 4, 5, 0, 17, 8, 24239), 'me', 'норм, как сам?'],
+              4: [datetime.datetime(2017, 4, 5, 10, 17, 8, 24239), 'bervr', 'дело есть...'],
+              }}
 
     def save_to_history(self, who='me'):
-        chat = self.history.get(self.destination)
+        if who == 'me':
+            chat = self.history.get(self.destination)
+        elif who not in self.history.keys():
+            self.history[who] = {}
+            chat = self.history.get(who)
+        else:
+            chat = self.history.get(who)
         msg_count = len(chat.keys())
-        chat[msg_count] = [time.time(), who, self.message]
+        chat[msg_count] = [datetime.datetime.today(), who, self.message]
+
+
+
+
 
     def parse_chat(self):
         chat = self.history.get(self.destination)
         text = ''
-        for key, value in chat.items():
-            if value[1] =='me':
-                twit = f'[color={MYCOLOR}]{time.ctime(value[0])} from {value[1]}: {value[2]}[/color]\n'
-            else:
-                twit = f'[color={NOTMYCOLOR}]{time.ctime(value[0])} from {value[1]}: {value[2]}[/color]\n'
+        try:
+            for key, value in chat.items():
+                if value[1] =='me':
+                    twit = f'[color={MYCOLOR}]{(value[0]).strftime("%Y-%m-%d %H:%M:%S")} from {value[1]}: {value[2]}[/color]\n'
+                else:
+                    twit = f'[color={NOTMYCOLOR}]{(value[0]).strftime("%Y-%m-%d %H:%M:%S")} from {value[1]}: {value[2]}[/color]\n'
 
-            # print(twit)
-            text += twit
-        print(text)
+                # print(twit)
+                text += twit
+        except Exception:
+            pass
         return text
 
 
@@ -155,7 +168,8 @@ class MyMsg(MsgClient):
                     self.process_ans(answer)
                     # print(self.remote_users)
                 else:
-                    print(f'\nUser {answer[SENDER]} sent: {answer[USER][MESSAGE_TEXT]}')
+                    self.save_to_history(answer[SENDER])
+                    # print(f'\nUser {answer[SENDER]} sent: {answer[USER][MESSAGE_TEXT]}')
                     LOGGER.info(f'Сообщение из чята от {answer[SENDER]}: {answer[USER][MESSAGE_TEXT]}')
                     # print(f'Сообщение из чята от {answer["sender"]}: {answer["message_text"]}')
             except (ConnectionError, ConnectionResetError, ConnectionAbortedError):
