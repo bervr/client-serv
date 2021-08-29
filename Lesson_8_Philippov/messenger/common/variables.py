@@ -36,6 +36,8 @@ ACCOUNT_KEY = 0
 EXIT = 'exit'
 STATUS = 'status_message'
 LIST = 'user_list'
+MYCOLOR = '0900FF'
+NOTMYCOLOR = '000000'
 
 # Словари - ответы:
 # 200

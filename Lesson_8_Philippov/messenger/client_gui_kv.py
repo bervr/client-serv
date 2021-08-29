@@ -13,7 +13,7 @@ import json
 import logging
 from common.utils import get_message, send_message
 from common.variables import RESPONSE_200, RESPONSE, SENDER, USER, MESSAGE_TEXT, ACCOUNT_NAME, TIME, ACTION, \
-    DESTINATION, MESSAGE
+    DESTINATION, MESSAGE, MYCOLOR, NOTMYCOLOR
 
 LOGGER = logging.getLogger('client')  # забрали логгер из конфига
 
@@ -81,7 +81,20 @@ class SecondScreen(Screen):
         """ выбор контакта с которым бутем переписываться, подгрузка его истории"""
         self.msg_obj.destination = instance.text
         print(instance.text)
+        self.print_chat()
         # print(self.msg_obj.client_name)
+
+    def send(self):
+        self.msg_obj.message = self.send_text.text
+        self.msg_obj.to_send = True
+        # self.msg_obj.save_to_history()
+        self.send_text.text = ''
+        self.print_chat()
+
+    def print_chat(self):
+        self.chat.text = ''
+        self.chat.text = self.msg_obj.parse_chat()
+
 
 
 class MyMsg(MsgClient):
@@ -90,7 +103,33 @@ class MyMsg(MsgClient):
         self.destination = None
         self.message = ''
         self.to_send = False
-        self.history = {}  # {contact:{1:}}
+        self.history = {}  # {contact:{1:[time, from, text],2:[time, from, text],..}}
+        self.history = {'bervr': {1: [2297592, 'bervr', 'привет'],
+                                  2: [2297592, 'bervr', 'как дела?'],
+                                  3: [2297592, 'me', 'привет'],
+                                  4: [2297592, 'me', 'норм, как сам?'],
+                                  5: [2297592, 'bervr', 'дело есть...'],
+                                  }}
+
+    def save_to_history(self, who='me'):
+        chat = self.history.get(self.destination)
+        msg_count = len(chat.keys())
+        chat[msg_count] = [time.time(), who, self.message]
+
+    def parse_chat(self):
+        chat = self.history.get(self.destination)
+        text = ''
+        for key, value in chat.items():
+            if value[1] =='me':
+                twit = f'[color={MYCOLOR}]{time.ctime(value[0])} from {value[1]}: {value[2]}[/color]\n'
+            else:
+                twit = f'[color={NOTMYCOLOR}]{time.ctime(value[0])} from {value[1]}: {value[2]}[/color]\n'
+
+            # print(twit)
+            text += twit
+        print(text)
+        return text
+
 
     def create_message(self):
         out = {

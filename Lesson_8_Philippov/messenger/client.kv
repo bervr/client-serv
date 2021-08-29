@@ -42,6 +42,8 @@
 <SecondScreen>:
     contacts: contacts
     your_name: your_name
+    send_text: send_text
+    chat: chat
     on_pre_enter:
         root.check_name()
         root.render_contacts()
@@ -86,13 +88,17 @@
             GridLayout:
                 cols:1
                 Label:
+                    id:chat
                     text:'[color=000000]Push button "previous"[/color]'
                     markup: True
                 TextInput:
+                    id:send_text
                     size_hint:(1,0.2)
                     hint_text:"напишите сообщение"
                 Button:
                     text:'Отправить'
                     size_hint:(1,0.2)
+                    on_press:root.send()
+
 
 
