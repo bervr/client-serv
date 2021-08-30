@@ -67,6 +67,7 @@ class SecondScreen(Screen):
 
         self.your_name.text = f"[color=000000]Вы видны всем под именем: " \
                               f"{self.msg_obj.client_name if self.msg_obj.client_name else 'Guest'}[/color]"
+        print(self.msg_obj.history)
 
         if self.msg_obj.remote_users != []:
             for i in self.msg_obj.remote_users:
@@ -88,7 +89,7 @@ class SecondScreen(Screen):
     def send(self):
         self.msg_obj.message = self.send_text.text
         self.msg_obj.to_send = True
-        self.msg_obj.save_to_history()
+        self.msg_obj.save_to_history(self.msg_obj.destination)
         self.send_text.text = ''
         self.print_chat()
 
@@ -112,19 +113,15 @@ class MyMsg(MsgClient):
               4: [datetime.datetime(2017, 4, 5, 10, 17, 8, 24239), 'bervr', 'дело есть...'],
               }}
 
-    def save_to_history(self, who='me'):
-        if who == 'me':
-            chat = self.history.get(self.destination)
-        elif who not in self.history.keys():
-            self.history[who] = {}
-            chat = self.history.get(who)
-        else:
-            chat = self.history.get(who)
+    def save_to_history(self, another, who='me'):
+        """ сохраняем историю чата, на вход принимает имя контакта, и имя отправителя"""
+        if another not in self.history.keys():
+            self.history[another] = {}
+        chat = self.history.get(another)
         msg_count = len(chat.keys())
         chat[msg_count] = [datetime.datetime.today(), who, self.message]
-
-
-
+        # print(chat)
+        # print(self.history)
 
 
     def parse_chat(self):
@@ -168,7 +165,11 @@ class MyMsg(MsgClient):
                     self.process_ans(answer)
                     # print(self.remote_users)
                 else:
-                    self.save_to_history(answer[SENDER])
+                    if answer[SENDER] != self.client_name:
+                        if answer[DESTINATION] == 'ALL':
+                            self.save_to_history('ALL', answer[SENDER])
+                        else:
+                            self.save_to_history(answer[SENDER], answer[SENDER])
                     # print(f'\nUser {answer[SENDER]} sent: {answer[USER][MESSAGE_TEXT]}')
                     LOGGER.info(f'Сообщение из чята от {answer[SENDER]}: {answer[USER][MESSAGE_TEXT]}')
                     # print(f'Сообщение из чята от {answer["sender"]}: {answer["message_text"]}')
