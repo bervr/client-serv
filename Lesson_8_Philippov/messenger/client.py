@@ -52,7 +52,7 @@ class MsgClient:
             #     answer = None
             #     continue
             answer = self.hello(user_name)  # todo 'если при первом вводе имени выбрать занятое то потом нельзя зайти анонимно'
-            print(answer)
+            # print(answer)
         print(f'Вы видны всем под именем {self.client_name}')
 
     def hello(self, user_name):
@@ -60,7 +60,7 @@ class MsgClient:
         self.add_client_name(user_name)
         # print('stop ', self.client_name)
         message_to_server = self.create_presence(self.client_name)
-        print(message_to_server)
+        # print(message_to_server)
         send_message(self.transport, message_to_server)
         LOGGER.info(f'Отправка сообщения на сервер - {message_to_server}')
         try:

@@ -61,16 +61,19 @@ class SecondScreen(Screen):
         """ загружаем с сервера и перерисовываем контакты"""
         # self.update_userlist()
         self.msg_obj.get_clients()
+        not_viewed = self.msg_obj.find_new_messages()
         # print(self.msg_obj.remote_users)
         for i in range(len(self.ids.contacts.children)):
             self.ids.contacts.remove_widget(self.ids.contacts.children[-1])
 
         self.your_name.text = f"[color=000000]Вы видны всем под именем: " \
                               f"{self.msg_obj.client_name if self.msg_obj.client_name else 'Guest'}[/color]"
-        print(self.msg_obj.history)
+        # print(self.msg_obj.history)
 
         if self.msg_obj.remote_users != []:
             for i in self.msg_obj.remote_users:
+                if i in not_viewed:
+                    print('!!!!есть непрочитанные')
                 self.contacts.add_widget(
                     Button(text=f'{i}', size_hint_y=None, height=40, on_press=self.select_user)
                 )
@@ -89,7 +92,7 @@ class SecondScreen(Screen):
     def send(self):
         self.msg_obj.message = self.send_text.text
         self.msg_obj.to_send = True
-        self.msg_obj.save_to_history(self.msg_obj.destination)
+        self.msg_obj.save_to_history(self.msg_obj.message, True, self.msg_obj.destination)
         self.send_text.text = ''
         self.print_chat()
 
@@ -104,40 +107,54 @@ class MyMsg(MsgClient):
         super().__init__(*args, **kwargs)
         self.destination = None
         self.message = ''
+        self.incoming_message = ''
         self.to_send = False
         self.history = {}  # {contact:{1:[time, from, text],2:[time, from, text],..}}
-        self.history = {'bervr': {0: [datetime.datetime(2017, 4, 5, 0, 17, 8, 24239), 'bervr', 'привет'],
-              1: [datetime.datetime(2017, 4, 5, 0, 17, 8, 24239), 'bervr', 'как дела?'],
-              2: [datetime.datetime(2017, 4, 5, 0, 17, 8, 24239), 'me', 'привет'],
-              3: [datetime.datetime(2017, 4, 5, 0, 17, 8, 24239), 'me', 'норм, как сам?'],
-              4: [datetime.datetime(2017, 4, 5, 10, 17, 8, 24239), 'bervr', 'дело есть...'],
-              }}
+        self.history = {'bervr': {'viewed': False, 'messages': {
+              0: [datetime.datetime(2017, 4, 5, 0, 17, 8, 24239), 'bervr', 'привет'],
+              # 1: [datetime.datetime(2017, 4, 5, 0, 17, 8, 24239), 'bervr', 'как дела?'],
+              # 2: [datetime.datetime(2017, 4, 5, 0, 17, 8, 24239), 'me', 'привет'],
+              # 3: [datetime.datetime(2017, 4, 5, 0, 17, 8, 24239), 'me', 'норм, как сам?'],
+              # 4: [datetime.datetime(2017, 4, 5, 10, 17, 8, 24239), 'bervr', 'дело есть...'],
+              }}}
 
-    def save_to_history(self, another, who='me'):
-        """ сохраняем историю чата, на вход принимает имя контакта, и имя отправителя"""
+    def save_to_history(self, message, viewed, another, who='me'):
+        """ сохраняем историю чата, на вход принимает имя контакта, и имя отправителя, статус прочитанности"""
         if another not in self.history.keys():
             self.history[another] = {}
         chat = self.history.get(another)
-        msg_count = len(chat.keys())
-        chat[msg_count] = [datetime.datetime.today(), who, self.message]
-        # print(chat)
-        # print(self.history)
+        chat['viewed'] = viewed
+        chat['messages'] = {}
+        add_msg = self.history.get(another).get('messages')
+        msg_count = len(add_msg.keys())+1
+        add_msg.update({msg_count: [datetime.datetime.today(), who, message]}) # todo не увеличивается счетчик
+        # add_msg[msg_count] =
+        print(chat)
+        print(self.history)
 
+    def find_new_messages(self):
+        not_viewed = []
+        for key, value in self.history.items():
+            if not value['viewed']:
+                not_viewed.append(key)
+        return not_viewed
 
     def parse_chat(self):
         chat = self.history.get(self.destination)
         text = ''
-        try:
-            for key, value in chat.items():
-                if value[1] =='me':
-                    twit = f'[color={MYCOLOR}]{(value[0]).strftime("%Y-%m-%d %H:%M:%S")} from {value[1]}: {value[2]}[/color]\n'
-                else:
-                    twit = f'[color={NOTMYCOLOR}]{(value[0]).strftime("%Y-%m-%d %H:%M:%S")} from {value[1]}: {value[2]}[/color]\n'
+        if chat:
+            chat['viewed'] = True
+            try:
+                for key, value in chat['messages'].items():
+                    if value[1] == 'me':
+                        twit = f'[color={MYCOLOR}]{(value[0]).strftime("%Y-%m-%d %H:%M:%S")} from {value[1]}: {value[2]}[/color]\n'
+                    else:
+                        twit = f'[color={NOTMYCOLOR}]{(value[0]).strftime("%Y-%m-%d %H:%M:%S")} from {value[1]}: {value[2]}[/color]\n'
 
-                # print(twit)
-                text += twit
-        except Exception:
-            pass
+                    # print(twit)
+                    text += twit
+            except Exception:
+                pass
         return text
 
 
@@ -166,12 +183,14 @@ class MyMsg(MsgClient):
                     # print(self.remote_users)
                 else:
                     if answer[SENDER] != self.client_name:
+                        self.incoming_message = answer[USER][MESSAGE_TEXT]
                         if answer[DESTINATION] == 'ALL':
-                            self.save_to_history('ALL', answer[SENDER])
+                            self.save_to_history(self.incoming_message, False, 'ALL', answer[SENDER])
                         else:
-                            self.save_to_history(answer[SENDER], answer[SENDER])
+                            self.save_to_history(self.incoming_message, False, answer[SENDER], answer[SENDER])
                     # print(f'\nUser {answer[SENDER]} sent: {answer[USER][MESSAGE_TEXT]}')
                     LOGGER.info(f'Сообщение из чята от {answer[SENDER]}: {answer[USER][MESSAGE_TEXT]}')
+
                     # print(f'Сообщение из чята от {answer["sender"]}: {answer["message_text"]}')
             except (ConnectionError, ConnectionResetError, ConnectionAbortedError):
                 LOGGER.error(f'Соединение с сервером {self.server_address} было утеряно')
@@ -189,7 +208,7 @@ class MyMsg(MsgClient):
                     sys.exit(1)
 
     def start_threads(self):
-        """ переопределили родительский метод чтобы программа не блокировалась при запуске слушателей"""
+        """ переопределили родительский метод чтобы графика не блокировалась при запуске слушателей"""
         receive_thread = Thread(target=self.client_receiving, daemon=True)
         send_thread = Thread(target=self.client_sending, daemon=True)
         receive_thread.start()
