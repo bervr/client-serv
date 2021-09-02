@@ -43,6 +43,7 @@
     contacts: contacts
     your_name: your_name
     send_text: send_text
+    all_button: all_button
     chat: chat
     on_pre_enter:
         root.check_name()
@@ -68,8 +69,9 @@
                     Button:
                         # size_hint:(1,0.1)
                         text: 'Update'
-                        on_press:root.render_contacts()
+                        on_press:root.update()
                     Button:
+                        id:all_button
                         # size_hint:(1,0.1)
                         text: 'ALL'
                         on_press:root.select_user(self)

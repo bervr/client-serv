@@ -7,7 +7,10 @@ from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen, FadeTransition
 from kivy.lang import Builder
 from kivy.uix.label import Label
+from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
+from kivy.uix.image import Image
+
 from client import MsgClient
 import logs.conf.client_log_config
 import json
@@ -25,10 +28,10 @@ class FirstScreen(Screen):
         self.obj = new_msg
 
     def get_params(self):
+        """ получаем параметры запуска - сервер, порт и логин"""
         self.obj.client_name = self.login.text
         self.obj.server_port = self.port.text
         self.obj.server_address = self.server.text
-        # print(self.obj.client_name, self.obj.server_address, self.obj.server_port)
         return self.obj
 
 
@@ -37,7 +40,7 @@ class SecondScreen(Screen):
         super().__init__(**kwargs)
         self.msg_obj = new_msg
         # self.clients = [123, 456, 789, 987, 654, 321, 505, 18, 14, 45]
-        # # self.clients = []
+        # тестовые контакты
 
     def check_name(self):
         """проверяем что это имя не занято"""
@@ -57,39 +60,55 @@ class SecondScreen(Screen):
         #                       f"{self.msg_obj.client_name} это имя уже занято[/color]"
         self.manager.current = 'first'
 
-    def render_contacts(self):
-        """ загружаем с сервера и перерисовываем контакты"""
-        # self.update_userlist()
+    def update(self):
+        """загружаем с сервера контакты"""
         self.msg_obj.get_clients()
+        self.render_contacts()
+
+    def render_contacts(self):
+        """ перерисовываем контакты"""
         not_viewed = self.msg_obj.find_new_messages()
-        # print(self.msg_obj.remote_users)
         for i in range(len(self.ids.contacts.children)):
             self.ids.contacts.remove_widget(self.ids.contacts.children[-1])
 
         self.your_name.text = f"[color=000000]Вы видны всем под именем: " \
                               f"{self.msg_obj.client_name if self.msg_obj.client_name else 'Guest'}[/color]"
-        # print(self.msg_obj.history)
 
         if self.msg_obj.remote_users != []:
             for i in self.msg_obj.remote_users:
                 if i in not_viewed:
-                    print('!!!!есть непрочитанные')
-                self.contacts.add_widget(
-                    Button(text=f'{i}', size_hint_y=None, height=40, on_press=self.select_user)
-                )
+                    self.contacts.add_widget(
+                        Button(text=f'{i}',
+                               # Image(source='letter.png', allow_stretch= True, y=self.parent.y, x=self.parent.x, size=(25, 25)),
+                               size_hint_y=None, height=40, on_press=self.select_user))
+                else:
+                    self.contacts.add_widget(
+                        Button(text=f'{i}',  size_hint_y=None, height=40, on_press=self.select_user)
+                    )
                 # todo scrollview
 
     def previous_button(self):
         self.manager.current = 'first'
 
     def select_user(self, instance):
-        """ выбор контакта с которым бутем переписываться, подгрузка его истории"""
+        """ выбор контакта с которым бутем переписываться, показ его истории,
+        покраска кнопки и вызов сброса покраски остальных кнопок, а также сброс конверта"""
         self.msg_obj.destination = instance.text
-        # print(instance.text)
+        instance.background_color = (.0, .88, .88, .85)
+        self.clear_selection(instance)
         self.print_chat()
-        # print(self.msg_obj.client_name)
+
+    def clear_selection(self, instance):
+        """ очистка раскраски  не выбраных в данный момент кнопок"""
+        if instance != self.all_button:
+            self.all_button.background_color = (.88, .88, .88, .85)
+        for i in range(len(self.ids.contacts.children)):
+            if instance != self.ids.contacts.children[i]:
+                self.ids.contacts.children[i].background_color = (.88, .88, .88, .85)
+
 
     def send(self):
+        """ отправка введенного сообщения и сохранение в историю"""
         self.msg_obj.message = self.send_text.text
         self.msg_obj.to_send = True
         self.msg_obj.save_to_history(self.msg_obj.message, True, self.msg_obj.destination)
@@ -97,6 +116,7 @@ class SecondScreen(Screen):
         self.print_chat()
 
     def print_chat(self):
+        """ вывод истории текста на экран"""
         self.chat.text = ''
         self.chat.text = self.msg_obj.parse_chat()
 
@@ -225,22 +245,21 @@ class ClientApp(App):
 
     def build(self):
         """ выстраиваем интерфейс"""
-        # Добавляю красивый переход FadeTransition
-        sm = ScreenManager(transition=FadeTransition())  # Создаю менеджер экранов sm
+        # добавляем красивый переход FadeTransition
+        sm = ScreenManager(transition=FadeTransition())
+        # создаем менеджер экранов sm
         # обязательно нужно дать имя экрану, ведь по этому имени и будет производиться переключение
         # в kv файле для преключения нужно использовать root.manager.current, а в коде self.manager.current
         self.new_msg = MyMsg()
-        # new_msg = MsgClient()
 
         first_screen = FirstScreen(self.new_msg, name='first')
         second_screen = SecondScreen(self.new_msg, name='second')
         sm.add_widget(first_screen)
         sm.add_widget(second_screen)
         self.title = 'MeowMessenger'
-        # self.icon = 'myicon.png'
+        self.icon = 'letter.png'
         return sm
 
 
 if __name__ == "__main__":
     ClientApp().run()
-    # ClientApp().run_threads()
