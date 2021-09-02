@@ -122,12 +122,12 @@ class MyMsg(MsgClient):
         """ сохраняем историю чата, на вход принимает имя контакта, и имя отправителя, статус прочитанности"""
         if another not in self.history.keys():
             self.history[another] = {}
+            self.history.get(another)['messages'] = {}
         chat = self.history.get(another)
         chat['viewed'] = viewed
-        chat['messages'] = {}
         add_msg = self.history.get(another).get('messages')
         msg_count = len(add_msg.keys())+1
-        add_msg.update({msg_count: [datetime.datetime.today(), who, message]}) # todo не увеличивается счетчик
+        add_msg.update({msg_count: [datetime.datetime.today(), who, message]})
         # add_msg[msg_count] =
         print(chat)
         print(self.history)
@@ -184,6 +184,7 @@ class MyMsg(MsgClient):
                 else:
                     if answer[SENDER] != self.client_name:
                         self.incoming_message = answer[USER][MESSAGE_TEXT]
+                        print(self.incoming_message)
                         if answer[DESTINATION] == 'ALL':
                             self.save_to_history(self.incoming_message, False, 'ALL', answer[SENDER])
                         else:
