@@ -54,10 +54,10 @@ class SecondScreen(Screen):
 
     def revert(self):
         """ возвращает на экран логина"""
-        print('имя уже занято')  # todo  починить надпись о том что имя уже занято
-        # self.parent.screens[0].login.text = ''
-        # self.parent.screens[0].login.hint_text = f"[color=363636]Нельзя зарегистрироваться под именем  " \
-        #                       f"{self.msg_obj.client_name} это имя уже занято[/color]"
+        print('имя уже занято')
+        self.manager.screens[0].login.text = ''
+        self.manager.screens[0].login.hint_text = f"Нельзя зарегистрироваться под именем\n " \
+                              f"{self.msg_obj.client_name} это имя уже занято"
         self.manager.current = 'first'
 
     def update(self):
@@ -79,11 +79,12 @@ class SecondScreen(Screen):
                 if i in not_viewed:
                     self.contacts.add_widget(
                         Button(text=f'{i}',
-                               # Image(source='letter.png', allow_stretch= True, y=self.parent.y, x=self.parent.x, size=(25, 25)),
-                               size_hint_y=None, height=40, on_press=self.select_user))
+                               size_hint_y=None, height=40, on_press=self.select_user),
+                        # Image(source='letter.png', allow_stretch=True, y=self.parent.y, x=self.parent.x, size=(25, 25)),
+                    )
                 else:
                     self.contacts.add_widget(
-                        Button(text=f'{i}',  size_hint_y=None, height=40, on_press=self.select_user)
+                        Button(text=f'{i}', size_hint_y=None, height=40, on_press=self.select_user)
                     )
                 # todo scrollview
 
@@ -106,7 +107,6 @@ class SecondScreen(Screen):
             if instance != self.ids.contacts.children[i]:
                 self.ids.contacts.children[i].background_color = (.88, .88, .88, .85)
 
-
     def send(self):
         """ отправка введенного сообщения и сохранение в историю"""
         self.msg_obj.message = self.send_text.text
@@ -121,7 +121,6 @@ class SecondScreen(Screen):
         self.chat.text = self.msg_obj.parse_chat()
 
 
-
 class MyMsg(MsgClient):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -131,12 +130,12 @@ class MyMsg(MsgClient):
         self.to_send = False
         self.history = {}  # {contact:{1:[time, from, text],2:[time, from, text],..}}
         self.history = {'bervr': {'viewed': False, 'messages': {
-              0: [datetime.datetime(2017, 4, 5, 0, 17, 8, 24239), 'bervr', 'привет'],
-              # 1: [datetime.datetime(2017, 4, 5, 0, 17, 8, 24239), 'bervr', 'как дела?'],
-              # 2: [datetime.datetime(2017, 4, 5, 0, 17, 8, 24239), 'me', 'привет'],
-              # 3: [datetime.datetime(2017, 4, 5, 0, 17, 8, 24239), 'me', 'норм, как сам?'],
-              # 4: [datetime.datetime(2017, 4, 5, 10, 17, 8, 24239), 'bervr', 'дело есть...'],
-              }}}
+            0: [datetime.datetime(2017, 4, 5, 0, 17, 8, 24239), 'bervr', 'привет'],
+            # 1: [datetime.datetime(2017, 4, 5, 0, 17, 8, 24239), 'bervr', 'как дела?'],
+            # 2: [datetime.datetime(2017, 4, 5, 0, 17, 8, 24239), 'me', 'привет'],
+            # 3: [datetime.datetime(2017, 4, 5, 0, 17, 8, 24239), 'me', 'норм, как сам?'],
+            # 4: [datetime.datetime(2017, 4, 5, 10, 17, 8, 24239), 'bervr', 'дело есть...'],
+        }}}
 
     def save_to_history(self, message, viewed, another, who='me'):
         """ сохраняем историю чата, на вход принимает имя контакта, и имя отправителя, статус прочитанности"""
@@ -146,7 +145,7 @@ class MyMsg(MsgClient):
         chat = self.history.get(another)
         chat['viewed'] = viewed
         add_msg = self.history.get(another).get('messages')
-        msg_count = len(add_msg.keys())+1
+        msg_count = len(add_msg.keys()) + 1
         add_msg.update({msg_count: [datetime.datetime.today(), who, message]})
         # add_msg[msg_count] =
         print(chat)
@@ -176,7 +175,6 @@ class MyMsg(MsgClient):
             except Exception:
                 pass
         return text
-
 
     def create_message(self):
         out = {
