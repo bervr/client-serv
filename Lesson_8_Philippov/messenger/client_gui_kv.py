@@ -4,6 +4,7 @@ import time
 from threading import Thread
 
 from kivy.app import App
+from kivy.base import runTouchApp
 from kivy.uix.screenmanager import ScreenManager, Screen, FadeTransition
 from kivy.lang import Builder
 from kivy.uix.label import Label
@@ -18,8 +19,21 @@ import logging
 from common.utils import get_message, send_message
 from common.variables import RESPONSE_200, RESPONSE, SENDER, USER, MESSAGE_TEXT, ACCOUNT_NAME, TIME, ACTION, \
     DESTINATION, MESSAGE, MYCOLOR, NOTMYCOLOR
+from kivy.uix.button import Button
+from kivy.properties import StringProperty
 
 LOGGER = logging.getLogger('client')  # забрали логгер из конфига
+
+
+class LetterButton(Button):
+    pass
+ #but if you want to set the image of the button remove the pass and uncomment the following:
+    #image_path = StringProperty('')
+
+    def __init__(self,image_path, **kwargs):
+        super(LetterButton, self).__init__(**kwargs)
+        self.image_path = image_path
+
 
 
 class FirstScreen(Screen):
@@ -33,6 +47,7 @@ class FirstScreen(Screen):
         self.obj.server_port = self.port.text
         self.obj.server_address = self.server.text
         return self.obj
+
 
 
 class SecondScreen(Screen):
@@ -77,16 +92,14 @@ class SecondScreen(Screen):
         if self.msg_obj.remote_users != []:
             for i in self.msg_obj.remote_users:
                 if i in not_viewed:
-                    self.contacts.add_widget(
+                    self.contacts.add_widget( # todo иконка непрочитаных на кнопке
                         Button(text=f'{i}',
-                               size_hint_y=None, height=40, on_press=self.select_user),
-                        # Image(source='letter.png', allow_stretch=True, y=self.parent.y, x=self.parent.x, size=(25, 25)),
-                    )
+                               size_hint_y=None, height=40, on_press=self.select_user,
+                    ))
                 else:
                     self.contacts.add_widget(
                         Button(text=f'{i}', size_hint_y=None, height=40, on_press=self.select_user)
                     )
-                # todo scrollview
 
     def previous_button(self):
         self.manager.current = 'first'
@@ -98,6 +111,7 @@ class SecondScreen(Screen):
         instance.background_color = (.0, .88, .88, .85)
         self.clear_selection(instance)
         self.print_chat()
+        self.chat_name.text = f"[color=000000]Чат с {instance.text}:[/color]"
 
     def clear_selection(self, instance):
         """ очистка раскраски  не выбраных в данный момент кнопок"""
@@ -260,4 +274,4 @@ class ClientApp(App):
 
 
 if __name__ == "__main__":
-    ClientApp().run()
+    runTouchApp(ClientApp().run())

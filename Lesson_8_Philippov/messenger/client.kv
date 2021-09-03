@@ -6,6 +6,7 @@
     halign: 'left'
     text_size: self.size
 
+
 <FirstScreen>:
     login:login
     server:server
@@ -45,6 +46,7 @@
     send_text: send_text
     all_button: all_button
     chat: chat
+    chat_name: chat_name
     on_pre_enter:
         root.check_name()
         root.update()
@@ -78,10 +80,14 @@
                 ScrollView:
                     do_scroll_x: False
                     do_scroll_y: True
-            # size_hint: (1, None)
+                    size_hint_y:None
+                    height:root.width / 2
+                    # size_hint: (1, None)
                     GridLayout:
                         id:contacts
                         cols:1
+                        size_hint_y: None
+                        height:self.minimum_height
 
                 Button:
                     text:'Выйти'
@@ -89,6 +95,11 @@
                     on_press:root.revert()
             GridLayout:
                 cols:1
+                Label:
+                    size_hint:(1,0.1)
+                    id:chat_name
+                    background_color:(0,0,0,1)
+                    markup: True
                 Label:
                     # text_size: 1, 1
                     id:chat

@@ -36,8 +36,6 @@ class MsgClient:
             LOGGER.info(f'установлено имя {self.client_name}')
         else:
             self.client_name = self.transport.getsockname()[1]
-
-        # print(self.client_name)
         return self.client_name
 
     def hello_user(self, answer=None):
@@ -52,15 +50,11 @@ class MsgClient:
             #     answer = None
             #     continue
             answer = self.hello(user_name)  # todo 'если при первом вводе имени выбрать занятое то потом нельзя зайти анонимно'
-            # print(answer)
         print(f'Вы видны всем под именем {self.client_name}')
 
     def hello(self, user_name):
-        # print('start ', self.client_name)
         self.add_client_name(user_name)
-        # print('stop ', self.client_name)
         message_to_server = self.create_presence(self.client_name)
-        # print(message_to_server)
         send_message(self.transport, message_to_server)
         LOGGER.info(f'Отправка сообщения на сервер - {message_to_server}')
         try:
@@ -83,7 +77,6 @@ class MsgClient:
             if new_dst == '???':
                 self.get_clients()
                 self.process_ans(get_message(self.transport))
-                print(self.remote_users)
                 continue
             elif new_dst == '!!!':
                 self.user_exit()
@@ -119,12 +112,9 @@ class MsgClient:
             if message[RESPONSE] == 200:
                 return RESPONSE_200
             elif message[RESPONSE] == 201:
-                # print(self.client_name, type(self.client_name))
 
                 # убираем из ответного списка себя
                 self.remote_users = [x for x in message[LIST] if x != str(self.client_name)]
-                # self.remote_users = message[LIST]
-                print(self.remote_users)
                 return
             elif message[RESPONSE] == 204:
                 return RESPONSE_204
@@ -146,14 +136,11 @@ class MsgClient:
         while True:
             try:
                 answer = get_message(self.transport)
-                # print(answer)
                 if RESPONSE in answer:
                     self.process_ans(answer)
-                    # print(self.remote_users)
                 else:
                     print(f'\nUser {answer[SENDER]} sent: {answer[USER][MESSAGE_TEXT]}')
                     LOGGER.info(f'Сообщение из чята от {answer[SENDER]}: {answer[USER][MESSAGE_TEXT]}')
-                    # print(f'Сообщение из чята от {answer["sender"]}: {answer["message_text"]}')
             except (ConnectionError, ConnectionResetError, ConnectionAbortedError):
                 LOGGER.error(f'Соединение с сервером {self.server_address} было утеряно')
                 sys.exit(1)
@@ -161,7 +148,6 @@ class MsgClient:
     def get_clients(self):
         request = self.create_presence(self.client_name)
         request[ACTION] = GETCLIENTS
-        # print(request)
         send_message(self.transport, request)
         LOGGER.info(f'Отправка сообщения на сервер - {request}')
 
@@ -188,7 +174,6 @@ class MsgClient:
         try:
             self.transport = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.transport.connect((self.server_address, self.server_port))
-            # print(f'User{self.transport.getsockname()[1]}')
 
             LOGGER.debug(
                 f'Подключение к серверу с адресом {self.server_address if self.server_address else "localhost"} '

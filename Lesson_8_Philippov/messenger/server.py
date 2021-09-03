@@ -1,12 +1,21 @@
 import argparse
 import logging
+import platform
 import select
 import socket
 import sys
 import json
 import time
+import platform
+import subprocess
+from subprocess import Popen
+
+import chardet
 
 import logs.conf.server_log_config
+import os
+import signal
+
 from common.variables import ACTION, ACCOUNT_NAME, MAX_CONNECTIONS, PRESENCE, TIME, USER, ERROR, MESSAGE_TEXT, \
     MESSAGE, SENDER, MESSAGE_KEY, ACCOUNT_KEY, DESTINATION, RESPONSE_200, RESPONSE_400, EXIT, GETCLIENTS, \
     STATUS, LIST, RESPONSE_CLIENTS, RESPONSE
@@ -29,6 +38,25 @@ class MsgServer:
         if not 1023 < self.listen_port < 65535:
             LOGGER.critical(f'Невозможно запустить сервер на порту {self.listen_port}, порт занят или недопустим')
             sys.exit(1)
+
+    def kill_server(self): # todo вышибать  прецесс сервера при занятии порта по эексепшену
+        # new_ping = subprocess.Popen(item, stdout=subprocess.PIPE)
+        # for line in new_ping.stdout:
+        #     result = chardet.detect(line)
+        #     line = line.decode(result['encoding']).encode('utf-8')
+        #     print(line.decode('utf-8'))
+
+        that = ["netstat", "-aon", "|", "findstr", self.listen_port]
+        # if platform.system() == 'Windows':
+        str =  subprocess.Popen(that, stdout=subprocess.PIPE)
+        # else:
+        #    str =  subprocess.Popen(that, stdout=subprocess.PIPE)
+        result = chardet.detect(str)
+        for line in str.stdout:
+            print(line)
+            line = line.decode(result['encoding']).encode('utf-8')
+            print(line)
+
 
     def process_client_message(self, message, client):
         """ метод разбирающий клиентские сообщения. Принимает на вход словарь сообщения, проверяет их корректность,
@@ -101,12 +129,6 @@ class MsgServer:
         и слушающие сокеты. Ничего не возвращает.
         Вызывает отправку сообщения нужному клиенту
         """
-        # print(self.names[message[DESTINATION]])
-        # # print(self.names)
-        # print(to_send_data_list)
-        # print(message[DESTINATION])
-        # print(self.names.keys())
-
         if message[DESTINATION] in self.names.keys() and self.names[message[DESTINATION]] in to_send_data_list:
             # print(self.names[message[DESTINATION]])
             send_message(self.names[message[DESTINATION]], message)
@@ -154,6 +176,8 @@ class MsgServer:
                 f'Запущен сервер прослушивающий на {self.listen_address if self.listen_address else "любом"} ip-адресе'
                 f' и {self.listen_port} порту')
 
+        # self.kill_server()
+
         while True:
 
             # Принимаем подключения
@@ -187,25 +211,6 @@ class MsgServer:
                         LOGGER.info(f'{sended_from_client.getpeername()} отключился от сервера')
                         self.clients.remove(sended_from_client)
 
-            # print(self.messages)
-
-            # проверяем есть ли ожидающие сообщений клиенты и сообщения для отправки, и отправляем их клиентам
-            # if to_send_data_list and self.messages:
-            #     message = {
-            #         ACTION: MESSAGE,
-            #         TIME: time.time(),
-            #         SENDER: self.messages[0][ACCOUNT_KEY],
-            #         MESSAGE_TEXT: self.messages[0][MESSAGE_KEY],
-            #     }
-            #     del self.messages[0]
-            #     for one_client in to_send_data_list:
-            #         try:
-            #             LOGGER.info(f'Отправляем сообщение {message} клиенту {one_client}')
-            #             send_message(one_client, message)
-            #         except:
-            #             LOGGER.info(f'{one_client.getpeername()} отключился от сервера')
-            #             self.clients.remove(one_client)
-
             for one_message in self.messages:
                 try:
                     LOGGER.debug(f'Обработка сообщения {one_message}')
@@ -215,8 +220,6 @@ class MsgServer:
                     self.clients.remove(self.names[one_message[DESTINATION]])
                     del self.names[one_message[DESTINATION]]
             self.messages.clear()
-
-
 
 
 if __name__ == '__main__':
