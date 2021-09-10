@@ -217,8 +217,11 @@ class MsgServer:
                     self.process_message(one_message,to_send_data_list)
                 except Exception:
                     LOGGER.info(f'Соединение с {one_message[DESTINATION]} разорвано')
-                    self.clients.remove(self.names[one_message[DESTINATION]])
-                    del self.names[one_message[DESTINATION]]
+                    try:
+                        self.clients.remove(self.names[one_message[DESTINATION]])
+                        del self.names[one_message[DESTINATION]]
+                    except Exception:
+                        pass # todo добавить отбойник что сообщение не доставлено, или сохранение в очередь
             self.messages.clear()
 
 

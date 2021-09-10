@@ -1,3 +1,5 @@
+#:import hex kivy.utils.get_color_from_hex
+
 <LoginInput@TextInput>:
     color:(0,0,0,1)
     multiline: False
@@ -53,13 +55,22 @@
     BoxLayout:
         canvas:
             Color:
-                rgba:(1,1,1,1)
+                rgba:(0,0,0,1)
             Rectangle:
                 pos:self.pos
                 size:self.size
         orientation:'vertical'
         BoxLayout:
+            padding_top: "1dp"
+            spacing: "1dp"
             BoxLayout:
+                canvas:
+                    Color:
+                        rgba:(1,1,1,1)
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+                # size_hint: .95, .95
                 orientation:'vertical'
                 Label:
                     size_hint:(1,0.1)
@@ -94,6 +105,13 @@
                     size_hint:(1,0.1)
                     on_press:root.revert()
             GridLayout:
+                canvas:
+                    Color:
+                        rgba:(1,1,1,1)
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+                # size_hint: .95, .95
                 cols:1
                 Label:
                     size_hint:(1,0.1)

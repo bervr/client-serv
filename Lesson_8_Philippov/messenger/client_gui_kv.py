@@ -162,8 +162,8 @@ class MyMsg(MsgClient):
         msg_count = len(add_msg.keys()) + 1
         add_msg.update({msg_count: [datetime.datetime.today(), who, message]})
         # add_msg[msg_count] =
-        print(chat)
-        print(self.history)
+        # print(chat)
+        # print(self.history)
 
     def find_new_messages(self):
         not_viewed = []
