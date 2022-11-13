@@ -1,0 +1,136 @@
+#:import hex kivy.utils.get_color_from_hex
+
+<LoginInput@TextInput>:
+    color:(0,0,0,1)
+    multiline: False
+    font_size: 40
+    valign: 'middle'
+    halign: 'left'
+    text_size: self.size
+
+
+<FirstScreen>:
+    login:login
+    server:server
+    port:port
+    BoxLayout:
+        canvas:
+            Color:
+                rgba:(1,1,1,1)
+            Rectangle:
+                pos:self.pos
+                size:self.size
+        orientation:'vertical'
+        BoxLayout:
+            orientation:'vertical'
+            size_hint:(1,0.8)
+            LoginInput:
+                id: login
+                hint_text:'login'
+                markup: True
+            LoginInput:
+                id: server
+                text: '127.0.0.1'
+            LoginInput:
+                id: port
+                text: '7777'
+        Button:
+            text:'Next'
+            size_hint:(1,0.2)
+            on_press:
+                app.new_msg = root.get_params()
+                root.manager.current='second'
+
+
+<SecondScreen>:
+    contacts: contacts
+    your_name: your_name
+    send_text: send_text
+    all_button: all_button
+    chat: chat
+    chat_name: chat_name
+    on_pre_enter:
+        root.check_name()
+        root.update()
+    BoxLayout:
+        canvas:
+            Color:
+                rgba:(0,0,0,1)
+            Rectangle:
+                pos:self.pos
+                size:self.size
+        orientation:'vertical'
+        BoxLayout:
+            padding_top: "1dp"
+            spacing: "1dp"
+            BoxLayout:
+                canvas:
+                    Color:
+                        rgba:(1,1,1,1)
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+                # size_hint: .95, .95
+                orientation:'vertical'
+                Label:
+                    size_hint:(1,0.1)
+                    id:your_name
+                    background_color:(0,0,0,1)
+                    markup: True
+                BoxLayout:
+                    size_hint:(1,0.1)
+                    Button:
+                        # size_hint:(1,0.1)
+                        text: 'Update'
+                        on_press:root.update()
+                    Button:
+                        id:all_button
+                        # size_hint:(1,0.1)
+                        text: 'ALL'
+                        on_press:root.select_user(self)
+                ScrollView:
+                    do_scroll_x: False
+                    do_scroll_y: True
+                    size_hint_y:None
+                    height:root.width / 2
+                    # size_hint: (1, None)
+                    GridLayout:
+                        id:contacts
+                        cols:1
+                        size_hint_y: None
+                        height:self.minimum_height
+
+                Button:
+                    text:'Выйти'
+                    size_hint:(1,0.1)
+                    on_press:root.revert()
+            GridLayout:
+                canvas:
+                    Color:
+                        rgba:(1,1,1,1)
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+                # size_hint: .95, .95
+                cols:1
+                Label:
+                    size_hint:(1,0.1)
+                    id:chat_name
+                    background_color:(0,0,0,1)
+                    markup: True
+                Label:
+                    # text_size: 1, 1
+                    id:chat
+                    text:'[color=000000]Push button "previous"[/color]'
+                    markup: True
+                TextInput:
+                    id:send_text
+                    size_hint:(1,0.2)
+                    hint_text:"напишите сообщение"
+                Button:
+                    text:'Отправить'
+                    size_hint:(1,0.2)
+                    on_press:root.send()
+
+
+
