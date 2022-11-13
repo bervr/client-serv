@@ -34,15 +34,17 @@ def create_arg_parser():
         parser = argparse.ArgumentParser()
         parser.add_argument('-p', default=DEFAULT_PORT, type=int, nargs='?')
         parser.add_argument('-a', default=DEFAULT_IP_ADDRESS, nargs='?')
-        parser.add_argument('-m', default='listen', nargs='?')
         return parser
         if server_port < 1024 or server_port > 65535:
             raise ValueError
-    # except IndexError:
-        # parser.p = DEFAULT_PORT
-        # parser.a = DEFAULT_IP_ADDRESS
-        # parser.m = 'listen'
-        # return parser
+    except IndexError:
+        parser.p = DEFAULT_PORT
+        parser.a = DEFAULT_IP_ADDRESS
+        # LOGGER.error(f'Установлены дефолтовые значения - '
+        #                     f'{DEFAULT_IP_ADDRESS if DEFAULT_IP_ADDRESS else "любой"} '
+        #                     f'ip-адрес  и {DEFAULT_PORT} порт')
+        return parser
     except ValueError:
+        # LOGGER.critical('В качестве порта может быть указано только число в диапазоне от 1024 до 65535.')
         return 'В качестве порта может быть указано только число в диапазоне от 1024 до 65535.'
         # sys.exit(1)

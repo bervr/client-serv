@@ -1,0 +1,429 @@
+2021-08-14 10:38:47,118   INFO      server.py  Попытка запуска сервера
+2021-08-14 10:38:47,121   INFO      server.py  Запущен сервер прослушивающий на 127.0.0.1 ip-адресе и 7777 порту
+2021-08-14 10:39:00,200   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 57294)
+2021-08-14 10:39:00,215   DEBUG     server.py  вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 57294)>,) {}, вызов из модуля get_message
+2021-08-14 10:39:00,216   DEBUG     server.py  Получено соощение {'action': 'presence', 'time': 1628923140.2011108, 'user': {'account_name': 'Guest'}}
+2021-08-14 10:39:00,216   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'presence', 'time': 1628923140.2011108, 'user': {'account_name': 'Guest'}}
+2021-08-14 10:39:00,216   INFO      server.py  Сформирован ответ {'response': 200}
+2021-08-14 10:39:00,218   DEBUG     server.py  вызвана функция send_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 57294)>, {'response': 200}) {}, вызов из модуля send_message
+2021-08-14 10:39:00,218   DEBUG     server.py  Закрывается соединение с слиентом ('127.0.0.1', 57294)
+2021-08-14 10:39:00,239   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 57296)
+2021-08-14 10:39:00,246   DEBUG     server.py  вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 57296)>,) {}, вызов из модуля get_message
+2021-08-14 10:39:00,246   DEBUG     server.py  Получено соощение {'action': 'presence', 'time': 1628923140.2397287, 'user': {'account_name': 'Guest'}}
+2021-08-14 10:39:00,246   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'presence', 'time': 1628923140.2397287, 'user': {'account_name': 'Guest'}}
+2021-08-14 10:39:00,246   INFO      server.py  Сформирован ответ {'response': 200}
+2021-08-14 10:39:00,252   DEBUG     server.py  вызвана функция send_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 57296)>, {'response': 200}) {}, вызов из модуля send_message
+2021-08-14 10:39:00,252   DEBUG     server.py  Закрывается соединение с слиентом ('127.0.0.1', 57296)
+2021-08-14 10:39:00,284   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 57298)
+2021-08-14 10:39:00,291   DEBUG     server.py  вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 57298)>,) {}, вызов из модуля get_message
+2021-08-14 10:39:00,291   DEBUG     server.py  Получено соощение {'action': 'presence', 'time': 1628923140.2849445, 'user': {'account_name': 'Guest'}}
+2021-08-14 10:39:00,292   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'presence', 'time': 1628923140.2849445, 'user': {'account_name': 'Guest'}}
+2021-08-14 10:39:00,292   INFO      server.py  Сформирован ответ {'response': 200}
+2021-08-14 10:39:00,292   DEBUG     server.py  вызвана функция send_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 57298)>, {'response': 200}) {}, вызов из модуля send_message
+2021-08-14 10:39:00,292   DEBUG     server.py  Закрывается соединение с слиентом ('127.0.0.1', 57298)
+2021-08-14 10:39:00,293   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 57300)
+2021-08-14 10:39:00,301   DEBUG     server.py  вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 57300)>,) {}, вызов из модуля get_message
+2021-08-14 10:39:00,301   DEBUG     server.py  Получено соощение {'action': 'presence', 'time': 1628923140.2937133, 'user': {'account_name': 'Guest'}}
+2021-08-14 10:39:00,301   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'presence', 'time': 1628923140.2937133, 'user': {'account_name': 'Guest'}}
+2021-08-14 10:39:00,301   INFO      server.py  Сформирован ответ {'response': 200}
+2021-08-14 10:39:00,301   DEBUG     server.py  вызвана функция send_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 57300)>, {'response': 200}) {}, вызов из модуля send_message
+2021-08-14 10:39:00,302   DEBUG     server.py  Закрывается соединение с слиентом ('127.0.0.1', 57300)
+2021-08-14 10:39:00,302   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 57302)
+2021-08-14 10:39:00,316   DEBUG     server.py  вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 57302)>,) {}, вызов из модуля get_message
+2021-08-14 10:39:00,316   DEBUG     server.py  Получено соощение {'action': 'presence', 'time': 1628923140.299675, 'user': {'account_name': 'Guest'}}
+2021-08-14 10:39:00,316   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'presence', 'time': 1628923140.299675, 'user': {'account_name': 'Guest'}}
+2021-08-14 10:39:00,316   INFO      server.py  Сформирован ответ {'response': 200}
+2021-08-14 10:39:00,317   DEBUG     server.py  вызвана функция send_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 57302)>, {'response': 200}) {}, вызов из модуля send_message
+2021-08-14 10:39:00,317   DEBUG     server.py  Закрывается соединение с слиентом ('127.0.0.1', 57302)
+2021-08-14 10:39:00,317   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 57304)
+2021-08-14 10:39:00,318   DEBUG     server.py  вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 57304)>,) {}, вызов из модуля get_message
+2021-08-14 10:39:00,318   DEBUG     server.py  Получено соощение {'action': 'presence', 'time': 1628923140.305611, 'user': {'account_name': 'Guest'}}
+2021-08-14 10:39:00,319   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'presence', 'time': 1628923140.305611, 'user': {'account_name': 'Guest'}}
+2021-08-14 10:39:00,319   INFO      server.py  Сформирован ответ {'response': 200}
+2021-08-14 10:39:00,319   DEBUG     server.py  вызвана функция send_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 57304)>, {'response': 200}) {}, вызов из модуля send_message
+2021-08-14 10:39:00,322   DEBUG     server.py  Закрывается соединение с слиентом ('127.0.0.1', 57304)
+2021-08-14 10:39:00,322   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 57306)
+2021-08-14 10:39:00,349   DEBUG     server.py  вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 57306)>,) {}, вызов из модуля get_message
+2021-08-14 10:39:00,349   DEBUG     server.py  Получено соощение {'action': 'presence', 'time': 1628923140.3197527, 'user': {'account_name': 'Guest'}}
+2021-08-14 10:39:00,350   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'presence', 'time': 1628923140.3197527, 'user': {'account_name': 'Guest'}}
+2021-08-14 10:39:00,350   INFO      server.py  Сформирован ответ {'response': 200}
+2021-08-14 10:39:00,350   DEBUG     server.py  вызвана функция send_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 57306)>, {'response': 200}) {}, вызов из модуля send_message
+2021-08-14 10:39:00,350   DEBUG     server.py  Закрывается соединение с слиентом ('127.0.0.1', 57306)
+2021-08-14 10:39:00,351   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 57308)
+2021-08-14 10:39:00,357   DEBUG     server.py  вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 57308)>,) {}, вызов из модуля get_message
+2021-08-14 10:39:00,357   DEBUG     server.py  Получено соощение {'action': 'presence', 'time': 1628923140.3518515, 'user': {'account_name': 'Guest'}}
+2021-08-14 10:39:00,358   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'presence', 'time': 1628923140.3518515, 'user': {'account_name': 'Guest'}}
+2021-08-14 10:39:00,358   INFO      server.py  Сформирован ответ {'response': 200}
+2021-08-14 10:39:00,359   DEBUG     server.py  вызвана функция send_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 57308)>, {'response': 200}) {}, вызов из модуля send_message
+2021-08-14 10:39:00,359   DEBUG     server.py  Закрывается соединение с слиентом ('127.0.0.1', 57308)
+2021-08-14 10:39:00,361   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 57310)
+2021-08-14 10:39:00,367   DEBUG     server.py  вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 57310)>,) {}, вызов из модуля get_message
+2021-08-14 10:39:00,367   DEBUG     server.py  Получено соощение {'action': 'presence', 'time': 1628923140.3614407, 'user': {'account_name': 'Guest'}}
+2021-08-14 10:39:00,367   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'presence', 'time': 1628923140.3614407, 'user': {'account_name': 'Guest'}}
+2021-08-14 10:39:00,367   INFO      server.py  Сформирован ответ {'response': 200}
+2021-08-14 10:39:00,367   DEBUG     server.py  вызвана функция send_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 57310)>, {'response': 200}) {}, вызов из модуля send_message
+2021-08-14 10:39:00,367   DEBUG     server.py  Закрывается соединение с слиентом ('127.0.0.1', 57310)
+2021-08-14 10:39:00,371   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 57312)
+2021-08-14 10:39:00,380   DEBUG     server.py  вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 57312)>,) {}, вызов из модуля get_message
+2021-08-14 10:39:00,380   DEBUG     server.py  Получено соощение {'action': 'presence', 'time': 1628923140.372377, 'user': {'account_name': 'Guest'}}
+2021-08-14 10:39:00,380   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'presence', 'time': 1628923140.372377, 'user': {'account_name': 'Guest'}}
+2021-08-14 10:39:00,380   INFO      server.py  Сформирован ответ {'response': 200}
+2021-08-14 10:39:00,380   DEBUG     server.py  вызвана функция send_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 57312)>, {'response': 200}) {}, вызов из модуля send_message
+2021-08-14 10:39:00,380   DEBUG     server.py  Закрывается соединение с слиентом ('127.0.0.1', 57312)
+2021-08-14 10:55:44,413   INFO      server.py  Попытка запуска сервера
+2021-08-14 10:56:08,546   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 57364)
+2021-08-14 10:56:08,561   DEBUG     server.py  вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 57364)>,) {}, вызов из модуля get_message
+2021-08-14 10:56:08,561   DEBUG     server.py  Получено соощение {'action': 'presence', 'time': 1628924168.5494537, 'user': {'account_name': 'Guest'}}
+2021-08-14 10:56:08,561   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'presence', 'time': 1628924168.5494537, 'user': {'account_name': 'Guest'}}
+2021-08-14 10:56:08,561   INFO      server.py  Сформирован ответ {'response': 200}
+2021-08-14 10:56:08,562   DEBUG     server.py  вызвана функция send_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 57364)>, {'response': 200}) {}, вызов из модуля send_message
+2021-08-14 10:56:08,562   DEBUG     server.py  Закрывается соединение с слиентом ('127.0.0.1', 57364)
+2021-08-14 10:56:08,562   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 57366)
+2021-08-14 10:56:08,563   DEBUG     server.py  вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 57366)>,) {}, вызов из модуля get_message
+2021-08-14 10:56:08,563   DEBUG     server.py  Получено соощение {'action': 'presence', 'time': 1628924168.5541463, 'user': {'account_name': 'Guest'}}
+2021-08-14 10:56:08,563   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'presence', 'time': 1628924168.5541463, 'user': {'account_name': 'Guest'}}
+2021-08-14 10:56:08,563   INFO      server.py  Сформирован ответ {'response': 200}
+2021-08-14 10:56:08,563   DEBUG     server.py  вызвана функция send_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 57366)>, {'response': 200}) {}, вызов из модуля send_message
+2021-08-14 10:56:08,564   DEBUG     server.py  Закрывается соединение с слиентом ('127.0.0.1', 57366)
+2021-08-14 10:56:08,564   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 57368)
+2021-08-14 10:56:08,581   DEBUG     server.py  вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 57368)>,) {}, вызов из модуля get_message
+2021-08-14 10:56:08,581   DEBUG     server.py  Получено соощение {'action': 'presence', 'time': 1628924168.5613039, 'user': {'account_name': 'Guest'}}
+2021-08-14 10:56:08,581   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'presence', 'time': 1628924168.5613039, 'user': {'account_name': 'Guest'}}
+2021-08-14 10:56:08,581   INFO      server.py  Сформирован ответ {'response': 200}
+2021-08-14 10:56:08,583   DEBUG     server.py  вызвана функция send_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 57368)>, {'response': 200}) {}, вызов из модуля send_message
+2021-08-14 10:56:08,583   DEBUG     server.py  Закрывается соединение с слиентом ('127.0.0.1', 57368)
+2021-08-14 10:56:08,587   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 57370)
+2021-08-14 10:56:08,611   DEBUG     server.py  вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 57370)>,) {}, вызов из модуля get_message
+2021-08-14 10:56:08,611   DEBUG     server.py  Получено соощение {'action': 'presence', 'time': 1628924168.5907652, 'user': {'account_name': 'Guest'}}
+2021-08-14 10:56:08,611   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'presence', 'time': 1628924168.5907652, 'user': {'account_name': 'Guest'}}
+2021-08-14 10:56:08,611   INFO      server.py  Сформирован ответ {'response': 200}
+2021-08-14 10:56:08,612   DEBUG     server.py  вызвана функция send_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 57370)>, {'response': 200}) {}, вызов из модуля send_message
+2021-08-14 10:56:08,612   DEBUG     server.py  Закрывается соединение с слиентом ('127.0.0.1', 57370)
+2021-08-14 10:56:08,626   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 57372)
+2021-08-14 10:56:08,648   DEBUG     server.py  вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 57372)>,) {}, вызов из модуля get_message
+2021-08-14 10:56:08,648   DEBUG     server.py  Получено соощение {'action': 'presence', 'time': 1628924168.6282835, 'user': {'account_name': 'Guest'}}
+2021-08-14 10:56:08,649   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'presence', 'time': 1628924168.6282835, 'user': {'account_name': 'Guest'}}
+2021-08-14 10:56:08,649   INFO      server.py  Сформирован ответ {'response': 200}
+2021-08-14 10:56:08,649   DEBUG     server.py  вызвана функция send_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 57372)>, {'response': 200}) {}, вызов из модуля send_message
+2021-08-14 10:56:08,649   DEBUG     server.py  Закрывается соединение с слиентом ('127.0.0.1', 57372)
+2021-08-14 10:56:08,649   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 57374)
+2021-08-14 10:56:08,664   DEBUG     server.py  вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 57374)>,) {}, вызов из модуля get_message
+2021-08-14 10:56:08,664   DEBUG     server.py  Получено соощение {'action': 'presence', 'time': 1628924168.6397877, 'user': {'account_name': 'Guest'}}
+2021-08-14 10:56:08,665   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'presence', 'time': 1628924168.6397877, 'user': {'account_name': 'Guest'}}
+2021-08-14 10:56:08,665   INFO      server.py  Сформирован ответ {'response': 200}
+2021-08-14 10:56:08,666   DEBUG     server.py  вызвана функция send_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 57374)>, {'response': 200}) {}, вызов из модуля send_message
+2021-08-14 10:56:08,666   DEBUG     server.py  Закрывается соединение с слиентом ('127.0.0.1', 57374)
+2021-08-14 10:56:08,666   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 57376)
+2021-08-14 10:56:08,667   DEBUG     server.py  вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 57376)>,) {}, вызов из модуля get_message
+2021-08-14 10:56:08,667   DEBUG     server.py  Получено соощение {'action': 'presence', 'time': 1628924168.6449902, 'user': {'account_name': 'Guest'}}
+2021-08-14 10:56:08,668   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'presence', 'time': 1628924168.6449902, 'user': {'account_name': 'Guest'}}
+2021-08-14 10:56:08,668   INFO      server.py  Сформирован ответ {'response': 200}
+2021-08-14 10:56:08,669   DEBUG     server.py  вызвана функция send_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 57376)>, {'response': 200}) {}, вызов из модуля send_message
+2021-08-14 10:56:08,669   DEBUG     server.py  Закрывается соединение с слиентом ('127.0.0.1', 57376)
+2021-08-14 10:56:08,669   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 57378)
+2021-08-14 10:56:08,669   DEBUG     server.py  вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 57378)>,) {}, вызов из модуля get_message
+2021-08-14 10:56:08,670   DEBUG     server.py  Получено соощение {'action': 'presence', 'time': 1628924168.6529534, 'user': {'account_name': 'Guest'}}
+2021-08-14 10:56:08,671   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'presence', 'time': 1628924168.6529534, 'user': {'account_name': 'Guest'}}
+2021-08-14 10:56:08,671   INFO      server.py  Сформирован ответ {'response': 200}
+2021-08-14 10:56:08,671   DEBUG     server.py  вызвана функция send_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 57378)>, {'response': 200}) {}, вызов из модуля send_message
+2021-08-14 10:56:08,671   DEBUG     server.py  Закрывается соединение с слиентом ('127.0.0.1', 57378)
+2021-08-14 10:56:08,671   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 57380)
+2021-08-14 10:56:08,684   DEBUG     server.py  вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 57380)>,) {}, вызов из модуля get_message
+2021-08-14 10:56:08,684   DEBUG     server.py  Получено соощение {'action': 'presence', 'time': 1628924168.661515, 'user': {'account_name': 'Guest'}}
+2021-08-14 10:56:08,684   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'presence', 'time': 1628924168.661515, 'user': {'account_name': 'Guest'}}
+2021-08-14 10:56:08,684   INFO      server.py  Сформирован ответ {'response': 200}
+2021-08-14 10:56:08,685   DEBUG     server.py  вызвана функция send_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 57380)>, {'response': 200}) {}, вызов из модуля send_message
+2021-08-14 10:56:08,685   DEBUG     server.py  Закрывается соединение с слиентом ('127.0.0.1', 57380)
+2021-08-14 10:56:08,685   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 57382)
+2021-08-14 10:56:08,704   DEBUG     server.py  вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 57382)>,) {}, вызов из модуля get_message
+2021-08-14 10:56:08,704   DEBUG     server.py  Получено соощение {'action': 'presence', 'time': 1628924168.67923, 'user': {'account_name': 'Guest'}}
+2021-08-14 10:56:08,705   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'presence', 'time': 1628924168.67923, 'user': {'account_name': 'Guest'}}
+2021-08-14 10:56:08,705   INFO      server.py  Сформирован ответ {'response': 200}
+2021-08-14 10:56:08,706   DEBUG     server.py  вызвана функция send_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 57382)>, {'response': 200}) {}, вызов из модуля send_message
+2021-08-14 10:56:08,706   DEBUG     server.py  Закрывается соединение с слиентом ('127.0.0.1', 57382)
+2021-08-14 10:57:04,805   INFO      server.py  Попытка запуска сервера
+2021-08-14 11:38:02,403   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 57432)
+2021-08-14 11:38:02,408   DEBUG     server.py  вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 57432)>,) {}, вызов из модуля get_message
+2021-08-14 11:38:02,408   DEBUG     server.py  Получено соощение {'action': 'presence', 'time': 1628926682.4038644, 'user': {'account_name': 'Guest'}}
+2021-08-14 11:38:02,408   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'presence', 'time': 1628926682.4038644, 'user': {'account_name': 'Guest'}}
+2021-08-14 11:38:02,408   INFO      server.py  Сформирован ответ {'response': 200}
+2021-08-14 11:38:02,408   DEBUG     server.py  вызвана функция send_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 57432)>, {'response': 200}) {}, вызов из модуля send_message
+2021-08-14 11:38:02,408   DEBUG     server.py  Закрывается соединение с слиентом ('127.0.0.1', 57432)
+2021-08-14 11:38:33,163   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 57434)
+2021-08-14 11:38:33,171   DEBUG     server.py  вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 57434)>,) {}, вызов из модуля get_message
+2021-08-14 11:38:33,171   DEBUG     server.py  Получено соощение {'action': 'presence', 'time': 1628926713.1640644, 'user': {'account_name': 'Guest'}}
+2021-08-14 11:38:33,171   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'presence', 'time': 1628926713.1640644, 'user': {'account_name': 'Guest'}}
+2021-08-14 11:38:33,171   INFO      server.py  Сформирован ответ {'response': 200}
+2021-08-14 11:38:33,171   DEBUG     server.py  вызвана функция send_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 57434)>, {'response': 200}) {}, вызов из модуля send_message
+2021-08-14 11:38:33,172   DEBUG     server.py  Закрывается соединение с слиентом ('127.0.0.1', 57434)
+2021-08-14 11:38:51,943   INFO      server.py  Попытка запуска сервера
+2021-08-14 11:39:57,307   INFO      server.py  Попытка запуска сервера
+2021-08-14 11:43:58,428   INFO      server.py  Попытка запуска сервера
+2021-08-14 11:43:58,433   INFO      server.py  Запущен сервер прослушивающий на 127.0.0.1 ip-адресе и 7777 порту
+2021-08-14 11:44:05,591   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 52276)
+2021-08-14 11:44:05,606   DEBUG     server.py  вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52276)>,) {}, вызов из модуля get_message
+2021-08-14 11:44:05,606   DEBUG     server.py  Получено соощение {'action': 'presence', 'time': 1628927045.592061, 'user': {'account_name': 'Guest'}}
+2021-08-14 11:44:05,606   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'presence', 'time': 1628927045.592061, 'user': {'account_name': 'Guest'}}
+2021-08-14 11:44:05,606   INFO      server.py  Сформирован ответ {'response': 200}
+2021-08-14 11:44:05,607   DEBUG     server.py  вызвана функция send_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52276)>, {'response': 200}) {}, вызов из модуля send_message
+2021-08-14 11:44:05,607   DEBUG     server.py  Закрывается соединение с слиентом ('127.0.0.1', 52276)
+2021-08-14 12:35:43,209   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 52320)
+2021-08-14 12:35:43,216   DEBUG     server.py  вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52320)>,) {}, вызов из модуля get_message
+2021-08-14 12:35:43,216   DEBUG     server.py  Получено соощение {'action': 'presence', 'time': 1628930143.2094684, 'user': {'account_name': 'Guest'}}
+2021-08-14 12:35:43,216   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'presence', 'time': 1628930143.2094684, 'user': {'account_name': 'Guest'}}
+2021-08-14 12:35:43,216   INFO      server.py  Сформирован ответ {'response': 200}
+2021-08-14 12:35:43,216   DEBUG     server.py  вызвана функция send_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52320)>, {'response': 200}) {}, вызов из модуля send_message
+2021-08-14 12:35:43,217   DEBUG     server.py  Закрывается соединение с слиентом ('127.0.0.1', 52320)
+2021-08-14 12:37:38,647   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 52324)
+2021-08-14 12:37:38,651   DEBUG     server.py  вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52324)>,) {}, вызов из модуля get_message
+2021-08-14 12:37:38,651   DEBUG     server.py  Получено соощение {'action': 'presence', 'time': 1628930258.6477468, 'user': {'account_name': 'Guest'}}
+2021-08-14 12:37:38,651   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'presence', 'time': 1628930258.6477468, 'user': {'account_name': 'Guest'}}
+2021-08-14 12:37:38,651   INFO      server.py  Сформирован ответ {'response': 200}
+2021-08-14 12:37:38,652   DEBUG     server.py  вызвана функция send_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52324)>, {'response': 200}) {}, вызов из модуля send_message
+2021-08-14 12:37:38,652   DEBUG     server.py  Закрывается соединение с слиентом ('127.0.0.1', 52324)
+2021-08-14 14:29:06,023   INFO      server.py  Попытка запуска сервера
+2021-08-14 14:29:06,026   INFO      server.py  Запущен сервер прослушивающий на 127.0.0.1 ip-адресе и 7777 порту
+2021-08-14 14:29:51,527   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 52404)
+2021-08-14 14:31:10,965   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 52406)
+2021-08-14 14:31:10,969   DEBUG     server.py  вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52404)>,) {}, вызов из модуля get_message
+2021-08-14 14:31:10,969   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'presence', 'time': 1628936991.527679, 'user': {'account_name': 'Guest'}}
+2021-08-14 14:31:10,969   DEBUG     server.py  вызвана функция send_message из функции server.start() а точнее из process_client_message с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52404)>, {'response': 200}) {}, вызов из модуля send_message
+2021-08-14 14:32:48,107   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 52408)
+2021-08-14 14:32:48,107   DEBUG     server.py  вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=7, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52406)>,) {}, вызов из модуля get_message
+2021-08-14 14:32:48,107   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'presence', 'time': 1628937070.9659426, 'user': {'account_name': 'Guest'}}
+2021-08-14 14:32:48,108   DEBUG     server.py  вызвана функция send_message из функции server.start() а точнее из process_client_message с параметрами (<socket.socket fd=7, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777)>, {'response': 200}) {}, вызов из модуля send_message
+2021-08-14 14:33:23,514   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 52410)
+2021-08-14 14:35:09,673   INFO      server.py  Попытка запуска сервера
+2021-08-14 14:35:09,677   INFO      server.py  Запущен сервер прослушивающий на 127.0.0.1 ip-адресе и 7777 порту
+2021-08-14 14:35:15,631   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 52416)
+2021-08-14 14:35:20,668   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 52418)
+2021-08-14 14:35:20,671   DEBUG     server.py  вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52416)>,) {}, вызов из модуля get_message
+2021-08-14 14:35:20,671   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'presence', 'time': 1628937315.6314497, 'user': {'account_name': 'Guest'}}
+2021-08-14 14:35:20,671   DEBUG     server.py  вызвана функция send_message из функции server.start() а точнее из process_client_message с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52416)>, {'response': 200}) {}, вызов из модуля send_message
+2021-08-14 14:36:36,243   INFO      server.py  Попытка запуска сервера
+2021-08-14 14:39:42,210   INFO      server.py  Попытка запуска сервера
+2021-08-14 14:39:42,215   INFO      server.py  Запущен сервер прослушивающий на 127.0.0.1 ip-адресе и 7777 порту
+2021-08-14 14:39:48,114   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 52724)
+2021-08-14 14:41:00,735   INFO      server.py  Попытка запуска сервера
+2021-08-14 14:41:00,739   INFO      server.py  Запущен сервер прослушивающий на 127.0.0.1 ip-адресе и 7777 порту
+2021-08-14 14:41:06,565   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 52732)
+2021-08-14 14:41:06,671   DEBUG     server.py  вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52732)>,) {}, вызов из модуля get_message
+2021-08-14 14:41:06,671   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'presence', 'time': 1628937666.565703, 'user': {'account_name': 'Guest'}}
+2021-08-14 14:41:06,672   DEBUG     server.py  вызвана функция send_message из функции server.start() а точнее из process_client_message с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52732)>, {'response': 200}) {}, вызов из модуля send_message
+2021-08-14 14:41:28,120   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 52734)
+2021-08-14 14:41:28,221   DEBUG     server.py  вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=7, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52734)>,) {}, вызов из модуля get_message
+2021-08-14 14:41:28,222   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'presence', 'time': 1628937688.1202333, 'user': {'account_name': 'Guest'}}
+2021-08-14 14:41:28,223   DEBUG     server.py  вызвана функция send_message из функции server.start() а точнее из process_client_message с параметрами (<socket.socket fd=7, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52734)>, {'response': 200}) {}, вызов из модуля send_message
+2021-08-14 14:41:37,652   INFO      server.py  ('127.0.0.1', 52734) отключился от сервера
+2021-08-14 14:45:35,115   INFO      server.py  Попытка запуска сервера
+2021-08-14 14:45:43,066   INFO      server.py  Попытка запуска сервера
+2021-08-14 14:46:26,994   INFO      server.py  Попытка запуска сервера
+2021-08-14 14:50:06,571   INFO      server.py  Попытка запуска сервера
+2021-08-14 14:50:06,578   INFO      server.py  Запущен сервер прослушивающий на 127.0.0.1 ip-адресе и 7777 порту
+2021-08-14 14:50:13,896   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 52742)
+2021-08-14 14:50:14,012   DEBUG     server.py  вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52742)>,) {}, вызов из модуля get_message
+2021-08-14 14:50:14,012   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'presence', 'time': 1628938213.8964803, 'user': {'account_name': 'Guest'}}
+2021-08-14 14:50:14,013   DEBUG     server.py  вызвана функция send_message из функции server.start() а точнее из process_client_message с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52742)>, {'response': 200}) {}, вызов из модуля send_message
+2021-08-14 14:50:21,754   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 52744)
+2021-08-14 14:50:21,855   DEBUG     server.py  вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=7, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52744)>,) {}, вызов из модуля get_message
+2021-08-14 14:50:21,856   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'presence', 'time': 1628938221.7540526, 'user': {'account_name': 'Guest'}}
+2021-08-14 14:50:21,857   DEBUG     server.py  вызвана функция send_message из функции server.start() а точнее из process_client_message с параметрами (<socket.socket fd=7, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52744)>, {'response': 200}) {}, вызов из модуля send_message
+2021-08-14 14:50:25,267   INFO      server.py  ('127.0.0.1', 52744) отключился от сервера
+2021-08-14 14:50:29,481   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 52746)
+2021-08-14 14:50:29,583   DEBUG     server.py  вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=8, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52746)>,) {}, вызов из модуля get_message
+2021-08-14 14:50:29,583   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'presence', 'time': 1628938229.481464, 'user': {'account_name': 'Guest'}}
+2021-08-14 14:50:29,584   DEBUG     server.py  вызвана функция send_message из функции server.start() а точнее из process_client_message с параметрами (<socket.socket fd=8, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52746)>, {'response': 200}) {}, вызов из модуля send_message
+2021-08-14 14:50:32,493   INFO      server.py  ('127.0.0.1', 52746) отключился от сервера
+2021-08-14 14:50:44,780   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 52748)
+2021-08-14 14:50:44,882   DEBUG     server.py  вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=7, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52748)>,) {}, вызов из модуля get_message
+2021-08-14 14:50:44,882   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'presence', 'time': 1628938244.780605, 'user': {'account_name': 'Guest'}}
+2021-08-14 14:50:44,883   DEBUG     server.py  вызвана функция send_message из функции server.start() а точнее из process_client_message с параметрами (<socket.socket fd=7, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52748)>, {'response': 200}) {}, вызов из модуля send_message
+2021-08-14 14:50:47,591   INFO      server.py  ('127.0.0.1', 52748) отключился от сервера
+2021-08-14 15:05:12,607   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 52774)
+2021-08-14 15:05:12,708   DEBUG     server.py  вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=8, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52774)>,) {}, вызов из модуля get_message
+2021-08-14 15:05:12,708   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'presence', 'time': 1628939112.6073155, 'user': {'account_name': 'Guest'}}
+2021-08-14 15:05:12,709   DEBUG     server.py  вызвана функция send_message из функции server.start() а точнее из process_client_message с параметрами (<socket.socket fd=8, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52774)>, {'response': 200}) {}, вызов из модуля send_message
+2021-08-14 15:05:14,717   DEBUG     server.py  вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=8, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52774)>,) {}, вызов из модуля get_message
+2021-08-14 15:05:14,717   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'message', 'time': 1628939114.7068784, 'user': {'account_name': 'Guest', 'message_text': '123'}}
+2021-08-14 15:05:14,719   DEBUG     server.py  вызвана функция send_message из функции server.start() а точнее из process_client_message с параметрами (<socket.socket fd=8, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52774)>, {'response': 400, 'error': 'Bad Request'}) {}, вызов из модуля send_message
+2021-08-14 15:09:39,908   INFO      server.py  ('127.0.0.1', 52742) отключился от сервера
+2021-08-14 15:09:58,442   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 52782)
+2021-08-14 15:09:58,543   DEBUG     server.py  вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=7, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52782)>,) {}, вызов из модуля get_message
+2021-08-14 15:09:58,543   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'presence', 'time': 1628939398.4428341, 'user': {'account_name': 'Guest'}}
+2021-08-14 15:09:58,544   DEBUG     server.py  вызвана функция send_message из функции server.start() а точнее из process_client_message с параметрами (<socket.socket fd=7, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52782)>, {'response': 200}) {}, вызов из модуля send_message
+2021-08-14 15:12:19,022   INFO      server.py  Попытка запуска сервера
+2021-08-14 15:12:19,025   INFO      server.py  Запущен сервер прослушивающий на 127.0.0.1 ip-адресе и 7777 порту
+2021-08-14 15:12:28,425   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 52790)
+2021-08-14 15:12:28,539   DEBUG     server.py  вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52790)>,) {}, вызов из модуля get_message
+2021-08-14 15:12:28,540   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'presence', 'time': 1628939548.4251118, 'user': {'account_name': 'Guest'}}
+2021-08-14 15:12:28,541   DEBUG     server.py  вызвана функция send_message из функции server.start() а точнее из process_client_message с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52790)>, {'response': 200}) {}, вызов из модуля send_message
+2021-08-14 15:14:56,515   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 52796)
+2021-08-14 15:14:56,616   DEBUG     server.py  вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=7, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52796)>,) {}, вызов из модуля get_message
+2021-08-14 15:14:56,617   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'presence', 'time': 1628939696.5154393, 'user': {'account_name': 'Guest'}}
+2021-08-14 15:14:56,619   DEBUG     server.py  вызвана функция send_message из функции server.start() а точнее из process_client_message с параметрами (<socket.socket fd=7, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52796)>, {'response': 200}) {}, вызов из модуля send_message
+2021-08-14 15:14:59,329   DEBUG     server.py  вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=7, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52796)>,) {}, вызов из модуля get_message
+2021-08-14 15:14:59,329   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'message', 'time': 1628939699.263585, 'user': {'account_name': 'Guest', 'message_text': '123'}}
+2021-08-14 15:14:59,331   DEBUG     server.py  вызвана функция send_message из функции server.start() а точнее из process_client_message с параметрами (<socket.socket fd=7, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52796)>, {'response': 400, 'error': 'Bad Request'}) {}, вызов из модуля send_message
+2021-08-14 16:01:22,290   DEBUG     server.py  вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=7, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52796)>,) {}, вызов из модуля get_message
+2021-08-14 16:01:22,290   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'message', 'time': 1628942482.2274897, 'user': {'account_name': 'Guest', 'message_text': '234'}}
+2021-08-14 16:01:22,292   DEBUG     server.py  вызвана функция send_message из функции server.start() а точнее из process_client_message с параметрами (<socket.socket fd=7, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52796)>, {'response': 400, 'error': 'Bad Request'}) {}, вызов из модуля send_message
+2021-08-14 16:01:26,907   INFO      server.py  ('127.0.0.1', 52790) отключился от сервера
+2021-08-14 16:01:28,530   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 52920)
+2021-08-14 16:01:28,632   DEBUG     server.py  вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=8, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52920)>,) {}, вызов из модуля get_message
+2021-08-14 16:01:28,632   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'presence', 'time': 1628942488.5308032, 'user': {'account_name': 'Guest'}}
+2021-08-14 16:01:28,634   DEBUG     server.py  вызвана функция send_message из функции server.start() а точнее из process_client_message с параметрами (<socket.socket fd=8, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52920)>, {'response': 200}) {}, вызов из модуля send_message
+2021-08-14 16:01:41,979   DEBUG     server.py  вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=7, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52796)>,) {}, вызов из модуля get_message
+2021-08-14 16:01:41,980   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'message', 'time': 1628942501.922629, 'user': {'account_name': 'Guest', 'message_text': '456'}}
+2021-08-14 16:01:41,981   DEBUG     server.py  вызвана функция send_message из функции server.start() а точнее из process_client_message с параметрами (<socket.socket fd=7, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52796)>, {'response': 400, 'error': 'Bad Request'}) {}, вызов из модуля send_message
+2021-08-14 16:11:27,240   INFO      server.py  Попытка запуска сервера
+2021-08-14 16:11:27,244   ERROR     server.py  Адрес 127.0.0.1 и порт 7777 не  могут быть использованы для запуска, потому что уже используются другой программой
+2021-08-14 16:13:20,377   INFO      server.py  Попытка запуска сервера
+2021-08-14 16:13:20,381   INFO      server.py  Запущен сервер прослушивающий на 127.0.0.1 ip-адресе и 7777 порту
+2021-08-14 16:13:49,548   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 52952)
+2021-08-14 16:13:49,668   DEBUG     server.py  вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52952)>,) {}, вызов из модуля get_message
+2021-08-14 16:13:49,669   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'presence', 'time': 1628943229.548896, 'user': {'account_name': 'Guest'}}
+2021-08-14 16:13:49,670   DEBUG     server.py  вызвана функция send_message из функции server.start() а точнее из process_client_message с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52952)>, {'response': 200}) {}, вызов из модуля send_message
+2021-08-14 16:13:57,338   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 52954)
+2021-08-14 16:13:57,442   DEBUG     server.py  вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=7, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52954)>,) {}, вызов из модуля get_message
+2021-08-14 16:13:57,442   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'presence', 'time': 1628943237.3389375, 'user': {'account_name': 'Guest'}}
+2021-08-14 16:13:57,444   DEBUG     server.py  вызвана функция send_message из функции server.start() а точнее из process_client_message с параметрами (<socket.socket fd=7, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52954)>, {'response': 200}) {}, вызов из модуля send_message
+2021-08-14 16:14:00,702   DEBUG     server.py  вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=7, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52954)>,) {}, вызов из модуля get_message
+2021-08-14 16:14:00,703   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'message', 'time': 1628943240.6943119, 'user': {'account_name': 'Guest', 'message_text': '123'}}
+2021-08-14 16:14:00,704   DEBUG     server.py  вызвана функция send_message из функции server.start() а точнее из process_client_message с параметрами (<socket.socket fd=7, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52954)>, {'response': 400, 'error': 'Bad Request'}) {}, вызов из модуля send_message
+2021-08-14 16:16:03,237   INFO      server.py  Попытка запуска сервера
+2021-08-14 16:16:03,241   INFO      server.py  Запущен сервер прослушивающий на 127.0.0.1 ip-адресе и 7777 порту
+2021-08-14 16:16:17,815   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 52958)
+2021-08-14 16:16:17,933   DEBUG     server.py  вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52958)>,) {}, вызов из модуля get_message
+2021-08-14 16:16:17,933   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'presence', 'time': 1628943377.8150158, 'user': {'account_name': 'Guest'}}
+2021-08-14 16:16:17,935   DEBUG     server.py  вызвана функция send_message из функции server.start() а точнее из process_client_message с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52958)>, {'response': 200}) {}, вызов из модуля send_message
+2021-08-14 16:16:26,434   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 52960)
+2021-08-14 16:16:26,537   DEBUG     server.py  вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=7, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52960)>,) {}, вызов из модуля get_message
+2021-08-14 16:16:26,538   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'presence', 'time': 1628943386.4341335, 'user': {'account_name': 'Guest'}}
+2021-08-14 16:16:26,539   DEBUG     server.py  вызвана функция send_message из функции server.start() а точнее из process_client_message с параметрами (<socket.socket fd=7, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52960)>, {'response': 200}) {}, вызов из модуля send_message
+2021-08-14 16:16:29,698   DEBUG     server.py  вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=7, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52960)>,) {}, вызов из модуля get_message
+2021-08-14 16:16:29,699   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'message', 'time': 1628943389.620005, 'user': {'account_name': 'Guest', 'message_text': '123'}}
+2021-08-14 16:16:29,700   DEBUG     server.py  вызвана функция send_message из функции server.start() а точнее из process_client_message с параметрами (<socket.socket fd=7, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52960)>, {'response': 400, 'error': 'Bad Request'}) {}, вызов из модуля send_message
+2021-08-14 16:19:57,441   INFO      server.py  Попытка запуска сервера
+2021-08-14 16:19:57,445   ERROR     server.py  Адрес 127.0.0.1 и порт 7777 не  могут быть использованы для запуска, потому что уже используются другой программой
+2021-08-14 16:21:20,958   INFO      server.py  Попытка запуска сервера
+2021-08-14 16:21:20,961   INFO      server.py  Запущен сервер прослушивающий на 127.0.0.1 ip-адресе и 7777 порту
+2021-08-14 16:21:25,770   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 52976)
+2021-08-14 16:21:25,885   DEBUG     server.py  вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52976)>,) {}, вызов из модуля get_message
+2021-08-14 16:21:25,885   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'presence', 'time': 1628943685.7700489, 'user': {'account_name': 'Guest'}}
+2021-08-14 16:21:25,887   DEBUG     server.py  вызвана функция send_message из функции server.start() а точнее из process_client_message с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52976)>, {'response': 200}) {}, вызов из модуля send_message
+2021-08-14 16:21:30,286   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 52978)
+2021-08-14 16:21:30,390   DEBUG     server.py  вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=7, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52978)>,) {}, вызов из модуля get_message
+2021-08-14 16:21:30,390   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'presence', 'time': 1628943690.2860672, 'user': {'account_name': 'Guest'}}
+2021-08-14 16:21:30,392   DEBUG     server.py  вызвана функция send_message из функции server.start() а точнее из process_client_message с параметрами (<socket.socket fd=7, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52978)>, {'response': 200}) {}, вызов из модуля send_message
+2021-08-14 16:21:33,653   DEBUG     server.py  вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=7, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52978)>,) {}, вызов из модуля get_message
+2021-08-14 16:21:33,653   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'message', 'time': 1628943693.6185665, 'user': {'account_name': 'Guest', 'message_text': '123'}}
+2021-08-14 16:21:33,654   DEBUG     server.py  вызвана функция send_message из функции server.start() а точнее из process_client_message с параметрами (<socket.socket fd=7, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52978)>, {'response': 400, 'error': 'Bad Request'}) {}, вызов из модуля send_message
+2021-08-14 16:24:20,173   INFO      server.py  Попытка запуска сервера
+2021-08-14 16:24:20,177   INFO      server.py  Запущен сервер прослушивающий на 127.0.0.1 ip-адресе и 7777 порту
+2021-08-14 16:24:25,303   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 52982)
+2021-08-14 16:24:25,419   DEBUG     server.py  вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52982)>,) {}, вызов из модуля get_message
+2021-08-14 16:24:25,420   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'presence', 'time': 1628943865.3031785, 'user': {'account_name': 'Guest'}}
+2021-08-14 16:24:25,421   DEBUG     server.py  вызвана функция send_message из функции server.start() а точнее из process_client_message с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52982)>, {'response': 200}) {}, вызов из модуля send_message
+2021-08-14 16:24:27,969   DEBUG     server.py  вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52982)>,) {}, вызов из модуля get_message
+2021-08-14 16:24:27,970   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'message', 'time': 1628943867.9348412, 'user': {'account_name': 'Guest', 'message_text': '123'}}
+2021-08-14 16:24:27,971   DEBUG     server.py  вызвана функция send_message из функции server.start() а точнее из process_client_message с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52982)>, {'response': 400, 'error': 'Bad Request'}) {}, вызов из модуля send_message
+2021-08-14 16:25:22,106   INFO      server.py  Попытка запуска сервера
+2021-08-14 16:25:22,111   ERROR     server.py  Адрес 127.0.0.1 и порт 7777 не  могут быть использованы для запуска, потому что уже используются другой программой
+2021-08-14 16:25:51,830   INFO      server.py  Попытка запуска сервера
+2021-08-14 16:25:51,834   INFO      server.py  Запущен сервер прослушивающий на 127.0.0.1 ip-адресе и 7777 порту
+2021-08-14 16:26:03,964   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 52988)
+2021-08-14 16:26:04,080   DEBUG     server.py  вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52988)>,) {}, вызов из модуля get_message
+2021-08-14 16:26:04,081   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'presence', 'time': 1628943963.9645944, 'user': {'account_name': 'Guest'}}
+2021-08-14 16:26:04,082   DEBUG     server.py  вызвана функция send_message из функции server.start() а точнее из process_client_message с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52988)>, {'response': 200}) {}, вызов из модуля send_message
+2021-08-14 16:26:06,803   DEBUG     server.py  вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52988)>,) {}, вызов из модуля get_message
+2021-08-14 16:26:06,803   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'message', 'time': 1628943966.7135673, 'user': {'account_name': 'Guest', 'message_text': '123'}}
+2021-08-14 16:26:06,804   DEBUG     server.py  вызвана функция send_message из функции server.start() а точнее из process_client_message с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52988)>, {'response': 400, 'error': 'Bad Request'}) {}, вызов из модуля send_message
+2021-08-14 16:27:52,370   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 52992)
+2021-08-14 16:27:52,473   DEBUG     server.py  вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=7, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52992)>,) {}, вызов из модуля get_message
+2021-08-14 16:27:52,473   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'presence', 'time': 1628944072.370665, 'user': {'account_name': 'Guest'}}
+2021-08-14 16:27:52,475   DEBUG     server.py  вызвана функция send_message из функции server.start() а точнее из process_client_message с параметрами (<socket.socket fd=7, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 52992)>, {'response': 200}) {}, вызов из модуля send_message
+2021-08-14 16:28:54,725   INFO      server.py  Попытка запуска сервера
+2021-08-14 16:28:54,728   ERROR     server.py  Адрес 127.0.0.1 и порт 7777 не  могут быть использованы для запуска, потому что уже используются другой программой
+2021-08-14 16:29:15,556   INFO      server.py  Попытка запуска сервера
+2021-08-14 16:29:15,560   ERROR     server.py  Адрес 127.0.0.1 и порт 7777 не  могут быть использованы для запуска, потому что уже используются другой программой
+2021-08-14 16:30:07,859   INFO      server.py  Попытка запуска сервера
+2021-08-14 16:30:07,863   INFO      server.py  Запущен сервер прослушивающий на 127.0.0.1 ip-адресе и 7777 порту
+2021-08-14 16:30:38,641   INFO      server.py  Попытка запуска сервера
+2021-08-14 16:30:38,645   INFO      server.py  Запущен сервер прослушивающий на 127.0.0.1 ip-адресе и 7777 порту
+2021-08-14 16:30:51,873   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 53004)
+2021-08-14 16:30:51,986   DEBUG     server.py  Вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53004)>,) {}, вызов из модуля get_message
+2021-08-14 16:30:51,987   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'presence', 'time': 1628944251.8732152, 'user': {'account_name': 'Guest'}}
+2021-08-14 16:30:51,988   DEBUG     server.py  Вызвана функция send_message из функции server.start() а точнее из process_client_message с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53004)>, {'response': 200}) {}, вызов из модуля send_message
+2021-08-14 16:30:56,350   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 53006)
+2021-08-14 16:30:56,452   DEBUG     server.py  Вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=7, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53006)>,) {}, вызов из модуля get_message
+2021-08-14 16:30:56,452   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'presence', 'time': 1628944256.3504217, 'user': {'account_name': 'Guest'}}
+2021-08-14 16:30:56,454   DEBUG     server.py  Вызвана функция send_message из функции server.start() а точнее из process_client_message с параметрами (<socket.socket fd=7, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53006)>, {'response': 200}) {}, вызов из модуля send_message
+2021-08-14 16:30:58,564   DEBUG     server.py  Вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=7, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53006)>,) {}, вызов из модуля get_message
+2021-08-14 16:30:58,564   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'message', 'time': 1628944258.5428624, 'user': {'account_name': 'Guest', 'message_text': '123'}}
+2021-08-14 16:30:58,565   DEBUG     server.py  Вызвана функция send_message из функции server.start() а точнее из process_client_message с параметрами (<socket.socket fd=7, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53006)>, {'response': 400, 'error': 'Bad Request'}) {}, вызов из модуля send_message
+2021-08-14 16:31:55,813   INFO      server.py  Попытка запуска сервера
+2021-08-14 16:31:55,816   ERROR     server.py  Адрес 127.0.0.1 и порт 7777 не  могут быть использованы для запуска, потому что уже используются другой программой
+2021-08-14 16:31:58,079   INFO      server.py  Попытка запуска сервера
+2021-08-14 16:31:58,083   ERROR     server.py  Адрес 127.0.0.1 и порт 7777 не  могут быть использованы для запуска, потому что уже используются другой программой
+2021-08-14 16:32:04,114   INFO      server.py  Попытка запуска сервера
+2021-08-14 16:32:04,119   ERROR     server.py  Адрес 127.0.0.1 и порт 7777 не  могут быть использованы для запуска, потому что уже используются другой программой
+2021-08-14 16:32:07,762   INFO      server.py  Попытка запуска сервера
+2021-08-14 16:32:07,766   ERROR     server.py  Адрес 127.0.0.1 и порт 7777 не  могут быть использованы для запуска, потому что уже используются другой программой
+2021-08-14 16:32:31,286   INFO      server.py  Попытка запуска сервера
+2021-08-14 16:32:31,290   ERROR     server.py  Адрес 127.0.0.1 и порт 7777 не  могут быть использованы для запуска, потому что уже используются другой программой
+2021-08-14 16:32:44,677   INFO      server.py  Попытка запуска сервера
+2021-08-14 16:32:44,681   ERROR     server.py  Адрес 127.0.0.1 и порт 7777 не  могут быть использованы для запуска, потому что уже используются другой программой
+2021-08-14 16:35:05,967   INFO      server.py  Попытка запуска сервера
+2021-08-14 16:35:05,971   INFO      server.py  Запущен сервер прослушивающий на 127.0.0.1 ip-адресе и 7777 порту
+2021-08-14 16:35:13,296   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 53040)
+2021-08-14 16:35:13,411   DEBUG     server.py  Вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53040)>,) {}, вызов из модуля get_message
+2021-08-14 16:35:13,411   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'presence', 'time': 1628944513.296195, 'user': {'account_name': 'Guest'}}
+2021-08-14 16:35:13,413   DEBUG     server.py  Вызвана функция send_message из функции server.start() а точнее из process_client_message с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53040)>, {'response': 200}) {}, вызов из модуля send_message
+2021-08-14 16:35:27,046   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 53042)
+2021-08-14 16:35:27,148   DEBUG     server.py  Вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=7, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53042)>,) {}, вызов из модуля get_message
+2021-08-14 16:35:27,148   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'presence', 'time': 1628944527.0463235, 'user': {'account_name': 'Guest'}}
+2021-08-14 16:35:27,150   DEBUG     server.py  Вызвана функция send_message из функции server.start() а точнее из process_client_message с параметрами (<socket.socket fd=7, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53042)>, {'response': 200}) {}, вызов из модуля send_message
+2021-08-14 16:35:29,159   DEBUG     server.py  Вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=7, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53042)>,) {}, вызов из модуля get_message
+2021-08-14 16:35:29,159   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'message', 'time': 1628944529.1183805, 'user': {'account_name': 'Guest', 'message_text': '123'}}
+2021-08-14 16:35:29,161   DEBUG     server.py  Вызвана функция send_message из функции server.start() а точнее из process_client_message с параметрами (<socket.socket fd=7, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53042)>, {'response': 400, 'error': 'Bad Request'}) {}, вызов из модуля send_message
+2021-08-14 16:35:50,167   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 53048)
+2021-08-14 16:35:50,268   DEBUG     server.py  Вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=8, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53048)>,) {}, вызов из модуля get_message
+2021-08-14 16:35:50,268   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'presence', 'time': 1628944550.1683066, 'user': {'account_name': 'Guest'}}
+2021-08-14 16:35:50,269   DEBUG     server.py  Вызвана функция send_message из функции server.start() а точнее из process_client_message с параметрами (<socket.socket fd=8, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53048)>, {'response': 200}) {}, вызов из модуля send_message
+2021-08-14 16:36:06,825   DEBUG     server.py  Вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=7, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53042)>,) {}, вызов из модуля get_message
+2021-08-14 16:36:06,826   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'message', 'time': 1628944566.76932, 'user': {'account_name': 'Guest', 'message_text': 'asd'}}
+2021-08-14 16:36:06,827   DEBUG     server.py  Вызвана функция send_message из функции server.start() а точнее из process_client_message с параметрами (<socket.socket fd=7, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53042)>, {'response': 400, 'error': 'Bad Request'}) {}, вызов из модуля send_message
+2021-08-14 16:37:37,880   INFO      server.py  Попытка запуска сервера
+2021-08-14 16:37:37,885   INFO      server.py  Запущен сервер прослушивающий на 127.0.0.1 ip-адресе и 7777 порту
+2021-08-14 16:37:44,396   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 53072)
+2021-08-14 16:37:44,513   DEBUG     server.py  Вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53072)>,) {}, вызов из модуля get_message
+2021-08-14 16:37:44,513   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'presence', 'time': 1628944664.3964598, 'user': {'account_name': 'Guest'}}
+2021-08-14 16:37:44,515   DEBUG     server.py  Вызвана функция send_message из функции server.start() а точнее из process_client_message с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53072)>, {'response': 200}) {}, вызов из модуля send_message
+2021-08-14 16:37:47,929   DEBUG     server.py  Вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53072)>,) {}, вызов из модуля get_message
+2021-08-14 16:37:47,930   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'message', 'time': 1628944667.9101202, 'user': {'account_name': 'Guest', 'message_text': '123'}}
+2021-08-14 16:37:47,931   DEBUG     server.py  Вызвана функция send_message из функции server.start() а точнее из process_client_message с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53072)>, {'response': 400, 'error': 'Bad Request'}) {}, вызов из модуля send_message
+2021-08-14 16:37:53,382   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 53074)
+2021-08-14 16:37:53,483   DEBUG     server.py  Вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=7, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53074)>,) {}, вызов из модуля get_message
+2021-08-14 16:37:53,484   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'presence', 'time': 1628944673.3823235, 'user': {'account_name': 'Guest'}}
+2021-08-14 16:37:53,486   DEBUG     server.py  Вызвана функция send_message из функции server.start() а точнее из process_client_message с параметрами (<socket.socket fd=7, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53074)>, {'response': 200}) {}, вызов из модуля send_message
+2021-08-14 16:38:08,491   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 53082)
+2021-08-14 16:38:08,592   DEBUG     server.py  Вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=8, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53082)>,) {}, вызов из модуля get_message
+2021-08-14 16:38:08,592   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'presence', 'time': 1628944688.491734, 'user': {'account_name': 'Guest'}}
+2021-08-14 16:38:08,592   DEBUG     server.py  Вызвана функция send_message из функции server.start() а точнее из process_client_message с параметрами (<socket.socket fd=8, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53082)>, {'response': 200}) {}, вызов из модуля send_message
+2021-08-14 16:38:19,225   DEBUG     server.py  Вызвана функция get_message из функции server.start() а точнее из start с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53072)>,) {}, вызов из модуля get_message
+2021-08-14 16:38:19,225   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'message', 'time': 1628944699.2044358, 'user': {'account_name': 'Guest', 'message_text': '123'}}
+2021-08-14 16:38:19,226   DEBUG     server.py  Вызвана функция send_message из функции server.start() а точнее из process_client_message с параметрами (<socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53072)>, {'response': 400, 'error': 'Bad Request'}) {}, вызов из модуля send_message
+2021-08-14 16:39:05,864   INFO      server.py  Попытка запуска сервера
+2021-08-14 16:39:14,681   INFO      server.py  Попытка запуска сервера
+2021-08-14 16:39:38,921   INFO      server.py  Попытка запуска сервера
+2021-08-14 16:39:38,926   INFO      server.py  Запущен сервер прослушивающий на 127.0.0.1 ip-адресе и 7777 порту
+2021-08-14 16:39:54,017   INFO      server.py  Попытка запуска сервера
+2021-08-14 16:39:54,021   INFO      server.py  Запущен сервер прослушивающий на 127.0.0.1 ip-адресе и 7777 порту
+2021-08-14 16:40:04,443   INFO      server.py  Попытка запуска сервера
+2021-08-14 16:40:09,694   INFO      server.py  Установлено соединение с адресом ('127.0.0.1', 53100)
+2021-08-14 16:41:35,005   DEBUG     server.py  Вызвана функция get_message из функции main() а точнее из start с параметрами (<socket.socket fd=8, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53100)>,) {}, вызов из модуля get_message
+2021-08-14 16:41:35,005   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'presence', 'time': 1628944809.6943872, 'user': {'account_name': 'Guest'}}
+2021-08-14 16:41:35,008   DEBUG     server.py  Вызвана функция send_message из функции main() а точнее из process_client_message с параметрами (<socket.socket fd=8, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53100)>, {'response': 200}) {}, вызов из модуля send_message
+2021-08-14 16:45:17,647   DEBUG     server.py  Вызвана функция get_message из функции main() а точнее из start с параметрами (<socket.socket fd=8, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53100)>,) {}, вызов из модуля get_message
+2021-08-14 16:45:17,647   DEBUG     server.py  Попытка разобрать клиентское сообщение: {'action': 'message', 'time': 1628945087.3224952, 'user': {'account_name': 'Guest', 'message_text': '123'}}
+2021-08-14 16:45:17,653   DEBUG     server.py  Вызвана функция send_message из функции main() а точнее из process_client_message с параметрами (<socket.socket fd=8, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53100)>, {'response': 400, 'error': 'Bad Request'}) {}, вызов из модуля send_message
