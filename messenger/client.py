@@ -12,11 +12,13 @@ from common.utils import get_message, send_message, create_arg_parser
 import common.errors as errors
 from decor import func_log
 from threading import Thread
+from metaclasses import ClientVerifier
 
 LOGGER = logging.getLogger('client')  # забрали логгер из конфига
 
 
-class MsgClient:
+class MsgClient(metaclass=ClientVerifier):
+    # s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # проверка метакласса
     @func_log
     def create_presence(self, account_name='Guest'):
         out = {
@@ -173,7 +175,9 @@ class MsgClient:
     def get_connect(self):
         try:
             self.transport = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            # self.transport = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) # проверка метакласса
             self.transport.connect((self.server_address, self.server_port))
+            # self.transport.listen (1) # проверка метакласса
 
             LOGGER.debug(
                 f'Подключение к серверу с адресом {self.server_address if self.server_address else "localhost"} '

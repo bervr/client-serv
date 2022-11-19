@@ -4,7 +4,7 @@ from subprocess import Popen
 import os
 import signal
 # сколько клиентов запускать
-client_count = 3
+client_count = 2
 
 
 if platform.system() == 'Windows':

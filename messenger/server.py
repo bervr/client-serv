@@ -9,6 +9,7 @@ import time
 import platform
 import subprocess
 from subprocess import Popen
+from metaclasses import ServerVerifier
 
 import chardet
 
@@ -24,7 +25,9 @@ from common.utils import get_message, send_message, create_arg_parser
 LOGGER = logging.getLogger('server')  # забрали  логгер из конфига
 
 
-class MsgServer:
+
+
+class MsgServer(metaclass=ServerVerifier):
     def __init__(self):
         self.clients = []
         self.messages = []
@@ -39,7 +42,7 @@ class MsgServer:
             LOGGER.critical(f'Невозможно запустить сервер на порту {self.listen_port}, порт занят или недопустим')
             sys.exit(1)
 
-    def kill_server(self): # todo вышибать  прецесс сервера при занятии порта по эексепшену
+    def kill_server(self): # todo вышибать  прецесс сервера при занятии порта по эксепшену
         # new_ping = subprocess.Popen(item, stdout=subprocess.PIPE)
         # for line in new_ping.stdout:
         #     result = chardet.detect(line)
@@ -160,9 +163,13 @@ class MsgServer:
         LOGGER.info('Попытка запуска сервера')
         try:
             transport = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            # transport = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) # проверка метакласса
             transport.bind((self.listen_address, self.listen_port))
             transport.listen(MAX_CONNECTIONS)
             transport.settimeout(0.1)
+            # transport.connect('192.168.22.1', '80') # проверка метакласса
+
+
         except OSError as err:
             LOGGER.error(
                 f'Адрес {self.listen_address} и порт {self.listen_port} не  могут быть использованы для запуска,'
@@ -214,7 +221,7 @@ class MsgServer:
             for one_message in self.messages:
                 try:
                     LOGGER.debug(f'Обработка сообщения {one_message}')
-                    self.process_message(one_message,to_send_data_list)
+                    self.process_message(one_message, to_send_data_list)
                 except Exception:
                     LOGGER.info(f'Соединение с {one_message[DESTINATION]} разорвано')
                     try:
