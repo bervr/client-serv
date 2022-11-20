@@ -9,9 +9,15 @@ class IsPortValid:
             raise ValueError("Порт должен быть числом")
         else:
             if new_value != value:
-                raise ValueError("Порт должен быть ЦЕЛЫМ числом")
+                # raise ValueError("Порт должен быть ЦЕЛЫМ числом")
+                print(f"Вы задали порт:{value}. Порт должен быть ЦЕЛЫМ числом. Будет установлен порт по умолчанию: 7777")
+                new_value = 7777
             if value < 0:
-                raise ValueError("Порт не может быть отрицательным")
+                # raise ValueError("Порт не может быть отрицательным")
+                print(f"Вы задали порт:{value}. Порт не может быть отрицательным. Будет установлен порт по умолчанию: "
+                      f"7777")
+                new_value = 7777
+
             instance.__dict__[self.my_attr] = new_value
 
     def __set_name__(self, owner, my_attr):

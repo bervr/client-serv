@@ -26,9 +26,9 @@ from common.utils import get_message, send_message, create_arg_parser
 LOGGER = logging.getLogger('server')  # забрали логгер из конфига
 
 
-
-
 class MsgServer(metaclass=ServerVerifier):
+    listen_port = IsPortValid()
+
     def __init__(self):
         self.clients = []
         self.messages = []
@@ -40,9 +40,13 @@ class MsgServer(metaclass=ServerVerifier):
         self.listen_port = namespace.p
 
 
-        # if not 1023 < self.listen_port < 65535:
-        #     LOGGER.critical(f'Невозможно запустить сервер на порту {self.listen_port}, порт занят или недопустим')
-        #     sys.exit(1)
+
+        if not 1023 < self.listen_port < 65535:
+            LOGGER.critical(f'Невозможно запустить сервер на порту {self.listen_port}, порт занят или недопустим')
+            sys.exit(1)
+
+    def get_runparams(self):
+        pass
 
     def kill_server(self): # todo вышибать  процесс сервера при занятии порта по эксепшену
         # new_ping = subprocess.Popen(item, stdout=subprocess.PIPE)

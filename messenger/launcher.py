@@ -51,7 +51,7 @@ while True:
         kill_processes()
         break
     elif user_answer == 's':
-        run_one(f'{enterpriter} server.py')
+        run_one(f'{enterpriter} server.py -a "127.0.0.1" -p "-7777"')
 
     elif user_answer == 'c':
         for _ in range(client_count):
