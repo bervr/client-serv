@@ -1,0 +1,37 @@
+class IsPortValid:
+    def __get__(self, instance, owner):
+        return instance.__dict__[self.my_attr]
+
+    def __set__(self, instance, value):
+        try:
+            new_value = int(value)
+        except ValueError:
+            raise ValueError("Порт должен быть числом")
+        else:
+            if new_value != value:
+                raise ValueError("Порт должен быть ЦЕЛЫМ числом")
+            if value < 0:
+                raise ValueError("Порт не может быть отрицательным")
+            instance.__dict__[self.my_attr] = new_value
+
+    def __set_name__(self, owner, my_attr):
+        self.my_attr = my_attr
+
+
+class Wr:
+    port = IsPortValid()
+
+    def __init__(self, port):
+        self.port = port
+
+    def __str__(self):
+        return f'new port is {self.port}'
+
+
+if __name__ == '__main__':
+    w = Wr(999)
+    print(w)
+
+
+
+

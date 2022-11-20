@@ -10,6 +10,7 @@ import platform
 import subprocess
 from subprocess import Popen
 from metaclasses import ServerVerifier
+from descriptors import IsPortValid
 
 import chardet
 
@@ -22,7 +23,7 @@ from common.variables import ACTION, ACCOUNT_NAME, MAX_CONNECTIONS, PRESENCE, TI
     STATUS, LIST, RESPONSE_CLIENTS, RESPONSE
 from common.utils import get_message, send_message, create_arg_parser
 
-LOGGER = logging.getLogger('server')  # забрали  логгер из конфига
+LOGGER = logging.getLogger('server')  # забрали логгер из конфига
 
 
 
@@ -38,11 +39,12 @@ class MsgServer(metaclass=ServerVerifier):
         self.listen_address = namespace.a
         self.listen_port = namespace.p
 
-        if not 1023 < self.listen_port < 65535:
-            LOGGER.critical(f'Невозможно запустить сервер на порту {self.listen_port}, порт занят или недопустим')
-            sys.exit(1)
 
-    def kill_server(self): # todo вышибать  прецесс сервера при занятии порта по эксепшену
+        # if not 1023 < self.listen_port < 65535:
+        #     LOGGER.critical(f'Невозможно запустить сервер на порту {self.listen_port}, порт занят или недопустим')
+        #     sys.exit(1)
+
+    def kill_server(self): # todo вышибать  процесс сервера при занятии порта по эксепшену
         # new_ping = subprocess.Popen(item, stdout=subprocess.PIPE)
         # for line in new_ping.stdout:
         #     result = chardet.detect(line)
