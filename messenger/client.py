@@ -80,7 +80,7 @@ class MsgClient(metaclass=ClientVerifier):
                 self.get_clients()
                 self.process_ans(get_message(self.transport))
                 continue
-            elif new_dst == '!!!':
+            elif new_dst == '!!!' or new_dst == 'exit':
                 self.user_exit()
             elif new_dst == '':
                 new_dst = 'ALL'

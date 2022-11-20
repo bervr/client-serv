@@ -1,7 +1,7 @@
 """Константы"""
 
 # Порт по умолчанию для сетевого взаимодействия
-DEFAULT_PORT = 77.77
+DEFAULT_PORT = 7777
 # DEFAULT_PORT = 0.1
 # IP адрес по умолчанию для подключения клиента
 DEFAULT_IP_ADDRESS = '127.0.0.1'
@@ -14,6 +14,7 @@ ENCODING = 'utf-8'
 # Уровень логирования
 # LOGGING_LEVEL = 'INFO'
 LOGGING_LEVEL = 'DEBUG'
+SERVER_DATABASE = 'sqlite:///msg_db.db3'
 
 
 # Прококол JIM основные ключи:
