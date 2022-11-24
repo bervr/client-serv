@@ -137,12 +137,18 @@ class ServerStorage:
             self.session.commit()
 
     def add_contact(self, user_id, contact_id):
-        new_contact = self.Contacts(user_id, contact_id)
-        self.session.add(new_contact)
-        self.session.commit()
+
+        find_contact = self.session.query(self.Contacts.user_id, self.Contacts.contact_id).filter_by(user_id=user_id)\
+                .filter_by(contact_id=contact_id).all()
+        if find_contact:
+            print('Такой контакт уже есть')
+        else:
+            new_contact = self.Contacts(user_id, contact_id)
+            self.session.add(new_contact)
+            self.session.commit()
 
     def del_contact(self, user_id, contact_id):
-        self.session.query(self.Contacts).filter_by(user_id=user_id).filter_by(contact_id=contact_id).delete()  # draft
+        self.session.query(self.Contacts).filter_by(user_id=user_id).filter_by(contact_id=contact_id).delete()
         self.session.commit()
 
     def get_user_contacts(self, user_id):
@@ -162,7 +168,6 @@ if __name__ == '__main__':
     client.user_login('pppetroff', '127.0.0.99', 22)
     # print(client.getall()))
     print(client.getactive())
-    print('1'*30)
     # client.user_logout(1)
     # print(client.getactive())
     # print(client.history_log())
@@ -172,9 +177,10 @@ if __name__ == '__main__':
     client.add_contact(1, 3)
     client.add_contact(1, 4)
     print(client.get_user_contacts(1))
-    print('2' * 30)
-    client.add_contact(1, 2)
-    client.add_contact(1, 4)
+    client.del_contact(1, 2)
+    client.del_contact(1, 4)
+    client.add_contact(1, 3)
+    client.del_contact(1, 4)
     print(client.get_user_contacts(1))
 
 
