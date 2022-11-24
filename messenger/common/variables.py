@@ -2,7 +2,6 @@
 
 # Порт по умолчанию для сетевого взаимодействия
 DEFAULT_PORT = 7777
-# DEFAULT_PORT = 0.1
 # IP адрес по умолчанию для подключения клиента
 DEFAULT_IP_ADDRESS = '127.0.0.1'
 # Максимальная очередь подключений
@@ -14,7 +13,8 @@ ENCODING = 'utf-8'
 # Уровень логирования
 # LOGGING_LEVEL = 'INFO'
 LOGGING_LEVEL = 'DEBUG'
-SERVER_DATABASE = 'sqlite:///msg_db.db3'
+SERVER_DATABASE = 'sqlite:///srv_msg_db.db3'
+CLIENT_DATABASE = 'sqlite:///cln_msg_db.db3'
 
 
 # Прококол JIM основные ключи:
