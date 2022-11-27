@@ -16,8 +16,7 @@ class ClientStorage:
         contact_id = Column(Integer, primary_key=True)
         contact_name = Column(String)
 
-        def __init__(self, contact_id, contact_name=''):
-            self.contact_id = contact_id
+        def __init__(self, contact_name):
             self.contact_name = contact_name
 
         def __repl__(self):
@@ -58,7 +57,7 @@ class ClientStorage:
         Session = sessionmaker(bind=self.engine)
         self.session = Session()
         if self.session.query(self.Contacts).filter_by(contact_id=0).all() == []:
-            me = self.Contacts(0, 'me')
+            me = self.Contacts('me')
             self.session.add(me)  # добавили себя в список контактов
             self.session.commit()
 
@@ -66,8 +65,8 @@ class ClientStorage:
         try:
             user = self.session.query(self.Contacts.contact_id).filter_by(contact_name=username).first()[0]
         except:
-            user = 0
-        if user == 0:
+            user = 1
+        if user == 1:
             history = self.session.query(self.MessageHistory.sender_id,
                                      self.MessageHistory.receiver_id,
                                      self.MessageHistory.text,
@@ -98,20 +97,20 @@ class ClientStorage:
 
     def add_contact(self, contact_name):
         try:
-            find_contact = self.session.query(self.Contacts.contact_name, self.Contacts.contact_name).filter_by(contact_name=contact_name).first()
+            find_contact = self.session.query(self.Contacts.contact_id, self.Contacts.contact_name).filter_by(contact_name=contact_name).first()
         except:
             pass
         else:
-            if find_contact[0] == 0:
-                pass
-                # print('Нельзя создать себя')
-            elif find_contact:
-                pass
-                print('Такой контакт уже есть')
-            else:
+            if not find_contact:
                 new_contact = self.Contacts(contact_name)
                 self.session.add(new_contact)
                 self.session.commit()
+            elif find_contact[0]:
+                # print('Нельзя создать себя')
+                pass
+            else:
+                # print('Такой контакт уже есть')
+                pass
 
 
     def check_contact(self, contact):
@@ -140,19 +139,19 @@ class ClientStorage:
 if __name__ == '__main__':
     client = ClientStorage('222')
 
-    client.add_contact(1, 'Uasya')
-    client.add_contact(2, 'Uova')
-    client.add_contact(0)
-    client.del_contact(0)
-    client.add_contact(3, 'Yulya')
+    # client.add_contact('Uasya')
+    # client.add_contact('Uova')
+    # client.add_contact(0)
+    # client.del_contact('Uova')
+    # client.add_contact('Yulya')
     print(client.get_user_contacts())
-    client.write_log(0, 3, 'привет')
-    client.write_log(3, 0, 'сам такой')
-    client.write_log(0, 3, 'как дела')
-    client.write_log(0, 2, 'ghbdtn')
-    client.write_log(3, 0, 'че хотел?')
-    client.write_log(0, 3, 'домашку сделала?')
-    print(client.get_history('Uova'))
+    # client.write_log(1, 3, 'привет')
+    # client.write_log(3, 1, 'сам такой')
+    # client.write_log(1, 3, 'как дела')
+    # client.write_log(1, 2, 'ghbdtn')
+    # client.write_log(3, 1, 'че хотел?')
+    # client.write_log(1, 3, 'домашку сделала?')
+    print(client.get_history('Uasya'))
 
 
 
