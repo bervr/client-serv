@@ -1,7 +1,7 @@
 from time import strftime
 
 import sqlalchemy
-from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, DateTime
+from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, DateTime, Identity
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import or_
@@ -12,8 +12,8 @@ Base = declarative_base()
 class ClientStorage:
     class Contacts(Base):
         __tablename__ = 'contacts'
-        id = Column(Integer, primary_key=True)
-        contact_id = Column(Integer, unique=True)
+        # id = Column(Integer, primary_key=True)
+        contact_id = Column(Integer, primary_key=True)
         contact_name = Column(String)
 
         def __init__(self, contact_id, contact_name=''):
@@ -96,21 +96,33 @@ class ClientStorage:
             self.session.add(user_row)
         self.session.commit()
 
-    def add_contact(self, contact_id, contact_name=''):
-        find_contact = self.session.query(self.Contacts.contact_id).filter_by(contact_id=contact_id).all()
-        if contact_id == 0:
+    def add_contact(self, contact_name):
+        try:
+            find_contact = self.session.query(self.Contacts.contact_name, self.Contacts.contact_name).filter_by(contact_name=contact_name).first()
+        except:
             pass
-            # print('Нельзя создать себя')
-        elif find_contact:
-            pass
-            # print('Такой контакт уже есть')
         else:
-            new_contact = self.Contacts(contact_id, contact_name)
-            self.session.add(new_contact)
-            self.session.commit()
+            if find_contact[0] == 0:
+                pass
+                # print('Нельзя создать себя')
+            elif find_contact:
+                pass
+                print('Такой контакт уже есть')
+            else:
+                new_contact = self.Contacts(contact_name)
+                self.session.add(new_contact)
+                self.session.commit()
 
-    def check_contact(self):
-        pass
+
+    def check_contact(self, contact):
+        if self.session.query(self.Contacts).filter_by(contact_name=contact).count():
+            return True
+        return False
+
+    def check_user(self, user):
+        if self.session.query(self.KnownUsers).filter_by(username=user).count():
+            return True
+        return False
 
     def del_contact(self, contact):
         if contact != 'me':
