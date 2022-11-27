@@ -56,7 +56,7 @@ class ClientStorage:
         Base.metadata.create_all(self.engine)
         Session = sessionmaker(bind=self.engine)
         self.session = Session()
-        if self.session.query(self.Contacts).filter_by(contact_id=0).all() == []:
+        if self.session.query(self.Contacts).filter_by(contact_name='me').all() == []:
             me = self.Contacts('me')
             self.session.add(me)  # добавили себя в список контактов
             self.session.commit()

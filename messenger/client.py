@@ -62,7 +62,6 @@ class MsgClient(metaclass=ClientVerifier):
         print(f'Вы видны всем под именем {self.client_name}')
         self.database = ClientStorage(self.client_name)  # инициализируем db
         self.database_load()
-        # self.get_clients()
         self.get_destination()  # 4
 
     def hello(self, user_name=''):  # 2
@@ -103,6 +102,13 @@ class MsgClient(metaclass=ClientVerifier):
                 LOGGER.debug('Запрошен вывод списка активных пользователей')
                 print(self.remote_users)
 
+            # обновить список пользователей с сервера.
+            elif command == 'renew':
+                LOGGER.debug('Запрошен список активных пользователей с вервера')
+                self.get_clients()
+                self.database.add_users(self.remote_users)
+                print(self.remote_users)
+
             # Список контактов
             elif command == 'contacts':
                 with database_lock:
@@ -129,6 +135,10 @@ class MsgClient(metaclass=ClientVerifier):
             with database_lock:
                 if self.database.check_contact(edit):
                     self.database.del_contact(edit)
+                    try:
+                        self.remove_contact(edit)
+                    except ServerError:
+                        LOGGER.error('Не удалось отправить информацию на сервер.')
                 else:
                     LOGGER.error('Попытка удаления несуществующего контакта.')
         elif ans == 'add':
@@ -137,17 +147,20 @@ class MsgClient(metaclass=ClientVerifier):
             if self.database.check_user(edit):
                 with database_lock:
                     self.database.add_contact(edit)
-                # with sock_lock:
-                try:
-                    self.add_contact(edit)
-                except ServerError:
-                    LOGGER.error('Не удалось отправить информацию на сервер.')
+                with sock_lock:
+                    try:
+                        self.add_contact(edit)
+                    except ServerError:
+                        LOGGER.error('Не удалось отправить информацию на сервер.')
+            else:
+                print('Нет такого пользователя')
 
     # Функция выводящяя справку по использованию.
     def print_help(self):
         print('Поддерживаемые команды:')
         print('message - отправить сообщение. Кому и текст будет запрошены отдельно.')
         print('active - показать пользователей на сервере.')
+        print('renew - запросить пользователей на сервере.')
         print('history - история сообщений')
         print('contacts - список контактов')
         print('edit - редактирование списка контактов')
@@ -211,16 +224,6 @@ class MsgClient(metaclass=ClientVerifier):
         if RESPONSE in message:
             if message[RESPONSE] == 200:
                 return RESPONSE_200
-            # elif message[RESPONSE] == 201:
-            #     LOGGER.debug("Попытка получения списка активных пользователей с сервера")
-            #     # убираем из ответного списка себя
-            #     self.remote_users = [x for x in message[LIST] if x != str(self.client_name)]
-            #     print(self.remote_users)
-            #     return
-            # elif message[RESPONSE] == 202:
-            #     LOGGER.debug(f'Получен ответ 202 и {message[LIST]}')
-            #     for contact in message[LIST]:
-            #         self.database.add_contact(contact)
             elif message[RESPONSE] == 204:
                 return RESPONSE_204
 
@@ -262,7 +265,6 @@ class MsgClient(metaclass=ClientVerifier):
         LOGGER.debug(f'Получен ответ {ans}')
         if RESPONSE in ans and ans[RESPONSE] == 201:
             self.remote_users = [x for x in ans[LIST] if x != str(self.client_name)]
-            # print(self.remote_users)
             return
         else:
             raise ServerError
@@ -348,7 +350,9 @@ class MsgClient(metaclass=ClientVerifier):
             self.database.add_users(self.remote_users)
         # Загружаем список контактов
         try:
+            print('получаем список контактов с сервера')
             self.contacts_list_request()
+            print(' получили список контактов с сервера')
         except ServerError:
             LOGGER.error('Ошибка запроса списка контактов.')
         else:

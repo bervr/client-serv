@@ -278,7 +278,7 @@ class MsgServer(threading.Thread, metaclass=ServerVerifier):
         # Если это удаление контакта
         elif ACTION in message and message[ACTION] == REMOVE_CONTACT and ACCOUNT_NAME in message and USER in message \
                 and self.names[message[USER]] == client:
-            self.database.remove_contact(message[USER], message[ACCOUNT_NAME])
+            self.database.del_contact(message[USER], message[ACCOUNT_NAME])
             send_message(client, RESPONSE_200)
 
         # если пришло сообщение добавляем его в очередь

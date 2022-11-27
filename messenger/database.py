@@ -62,9 +62,6 @@ class ServerStorage:
             self.sent = 0
             self.accepted = 0
 
-
-
-
     class ActiveUsers(Base):
         __tablename__ = 'active_users'
         id = Column(Integer, primary_key=True)
@@ -153,26 +150,49 @@ class ServerStorage:
             pass
 
 
-    def add_contact(self, user_id, contact_id):
-
-        find_contact = self.session.query(self.Contacts.user_id, self.Contacts.contact_id).filter_by(user_id=user_id)\
-                .filter_by(contact_id=contact_id).all()
-        if find_contact:
+    def add_contact(self, user, contact):
+        user = self.session.query(self.Users).filter_by(login=user).first()
+        contact = self.session.query(self.Users).filter_by(login=contact).first()
+        # Проверяем что не дубль и что контакт может существовать (полю пользователь мы доверяем)
+        if not contact or self.session.query(self.Contacts).filter_by(user_id=user.id, contact_id=contact.id).count():
             print('Такой контакт уже есть')
+            return
         else:
-            new_contact = self.Contacts(user_id, contact_id)
+            new_contact = self.Contacts(user.id, contact.id)
             self.session.add(new_contact)
             self.session.commit()
 
-    def del_contact(self, user_id, contact_id):
-        self.session.query(self.Contacts).filter_by(user_id=user_id).filter_by(contact_id=contact_id).delete()
+
+    def del_contact(self, user, contact):
+        # Получаем ID пользователей
+        user = self.session.query(self.Users).filter_by(login=user).first()
+        contact = self.session.query(self.Users).filter_by(login=contact).first()
+
+        # Проверяем что контакт может существовать (полю пользователь мы доверяем)
+        if not contact:
+            print('Нет такого котнтакта')
+            return
+        # Удаляем контакт
+        print(self.session.query(self.Contacts).
+              filter(self.Contacts.user_id == user.id, self.Contacts.contact_id == contact.id).delete())
         self.session.commit()
 
-    def get_user_contacts(self, user_id):
+
+    def get_user_contacts(self, user):
         try:
-            contacts = self.session.query(self.Contacts.user_id, self.Contacts.contact_id).filter_by(user_id=user_id).all()
+            # ищем указанного пользователя
+            user = self.session.query(self.Users).filter_by(login=user).one()
+            # contacts = self.session.query(self.Contacts.user_id,).filter_by(user_id=user_id).all()
         except:
             contacts = []
+        else:
+            # Запрашиваем его список контактов
+            query = self.session.query(self.Contacts.contact_id, self.Users.login). \
+                filter_by(contact_id=user.id). \
+                join(self.Users, self.Contacts.contact_id == self.Users.id)
+            #выбираем только имен контактов и возвращаем
+            contacts = [contact[1] for contact in query.all()]
+            print(contacts)
         return contacts
 
     def process_message(self, sender, recipient):
@@ -189,7 +209,7 @@ class ServerStorage:
 
 
 if __name__ == '__main__':
-    client = ServerStorage()
+    client = ServerStorage('test_server.db3')
     # print(client.getactive())
     client.user_login('ivanov', '127.0.0.1', 55)
     client.user_login('pppetrov', '127.0.0.1', 11)
@@ -202,7 +222,7 @@ if __name__ == '__main__':
     # print(client.history_log())
     # print(client.history_log('ivanov'))
     print(client.get_user_contacts(1))
-    client.add_contact(1, 2)
+    client.add_contact('ivanov', 'pppetrov')
     client.add_contact(1, 3)
     client.add_contact(1, 4)
     print(client.get_user_contacts(1))
@@ -210,7 +230,7 @@ if __name__ == '__main__':
     client.del_contact(1, 4)
     client.add_contact(1, 3)
     client.del_contact(1, 4)
-    print(client.get_user_contacts(1))
+    print(client.get_user_contacts('ivanov'))
 
 
 
