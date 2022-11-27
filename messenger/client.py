@@ -206,7 +206,7 @@ class MsgClient(metaclass=ClientVerifier):
         LOGGER.debug(f'Сформирован словарь сообщения: {out}')
         # Сохраняем сообщения для истории
         with database_lock:
-            self.database.write_log(self.account_name, destination, message)
+            self.database.write_log('me', destination, message)
 
         # Необходимо дождаться освобождения сокета для отправки сообщения
         # with sock_lock:

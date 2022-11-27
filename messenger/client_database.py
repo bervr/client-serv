@@ -81,7 +81,9 @@ class ClientStorage:
 
         return history
 
-    def write_log(self, sender_id, receiver_id, text, time=datetime.datetime.now()):
+    def write_log(self, sender, receiver, text, time=datetime.datetime.now()):
+        sender_id = self.session.query(self.Contacts.contact_id).filter_by(contact_name=sender)
+        receiver_id = self.session.query(self.Contacts.contact_id).filter_by(contact_name=receiver)
         new_message = self.MessageHistory(sender_id, receiver_id, text, time)
         self.session.add(new_message)
         self.session.commit()

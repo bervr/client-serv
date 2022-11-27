@@ -25,10 +25,13 @@ class ServerStorage:
         id = Column(Integer, primary_key=True)
         login = Column(String, unique=True)
         info = Column(String)
+        last_login = Column(DateTime)
 
         def __init__(self, login, info=''):
             self.login = login
             self.info = info
+            self.last_login = None
+
 
         def __repl__(self):
             return f'User{self.id}({self.login})'
@@ -107,10 +110,11 @@ class ServerStorage:
         self.session.commit()
 
     def user_login(self, username, ipaddress, port):
-        find_login = self.session.query(self.Users).filter_by(login=username)
+        find_login = self.session.query(self.Users).filter_by(login=username).count()
         # ищем пользователя с таким же логином
-        if find_login.count():  # если есть то берем его логин и записываем в историю входа и в активные
-            user = find_login.first()
+        if find_login !=0 :  # если есть то берем его логин и записываем в историю входа и в активные
+            user = self.session.query(self.Users).filter_by(login=username).first()
+            user.last_login = datetime.datetime.now()
             new_log_record = self.UserLoginHistory(user.id, ipaddress, port, datetime.datetime.now())
             new_active = self.ActiveUsers(user.id, ipaddress, port, datetime.datetime.now())
         else: # если нет то создаем нового
@@ -176,6 +180,16 @@ class ServerStorage:
         print(self.session.query(self.Contacts).
               filter(self.Contacts.user_id == user.id, self.Contacts.contact_id == contact.id).delete())
         self.session.commit()
+
+    def message_history(self):
+        query = self.session.query(
+            self.Users.name,
+            self.Users.last_login,
+            self.UsersHistory.sent,
+            self.UsersHistory.accepted
+        ).join(self.Users)
+        # Возвращаем список кортежей
+        return query.all()
 
 
     def get_user_contacts(self, user):
