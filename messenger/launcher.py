@@ -1,5 +1,6 @@
 import platform
 import subprocess
+import time
 from subprocess import Popen
 import os
 import signal
@@ -56,12 +57,13 @@ while True:
     elif user_answer == 'c':
         for _ in range(client_count):
             # print(f'{enterpriter} client.py -n user{_}')
-            run_one(f'{enterpriter} client.py -n "user{_}"')
+            run_one(f'{enterpriter} client.py -n user{_}')
 
     elif user_answer == 'a':
         run_one(f'{enterpriter} server.py')
+        time.sleep(0.5)  # ждем чтобы стартанул сервер
         for _ in range(client_count):
-            run_one(f'{enterpriter} client.py')
+            run_one(f'{enterpriter} client.py -n user{_}')
 
     elif user_answer == 'x':
         kill_processes()
