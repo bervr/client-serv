@@ -262,8 +262,12 @@ class MsgServer(threading.Thread, metaclass=ServerVerifier):
                 self.names[message[USER]] == client:
             response = RESPONSE_202
             response[LIST] = self.database.get_user_contacts(message[USER])
-            LOGGER.info(f'Клиенту {message[SENDER]} отправлен словарь контактов {response[LIST]}')
-            send_message(client, response)
+            try:
+                send_message(client, response)
+                LOGGER.info(f'Клиенту {message[SENDER]} отправлен словарь контактов {response[LIST]}')
+                return
+            except Exception as err:
+                print(1, err)
 
             # Если это добавление контакта
         elif ACTION in message and message[ACTION] == ADD_CONTACT and ACCOUNT_NAME in message and USER in message \

@@ -58,10 +58,11 @@ class MsgClient(metaclass=ClientVerifier):
                 break
             elif name == '':
                 name = input('Введите свое имя или нажмите Enter чтобы попробовать продолжить анонимно:\n')
-            answer = self.hello(name)  #  2 todo 'если при первом вводе имени выбрать занятое то потом нельзя зайти анонимно'
+            answer = self.hello(name)  #  2 todo 'если при первом вводе имени выбрать занятое то потом нельзя зайти'
         print(f'Вы видны всем под именем {self.client_name}')
-        self.database = ClientStorage(self.client_name) # инициализируем db
-        # self.database_load()
+        self.database = ClientStorage(self.client_name)  # инициализируем db
+        self.database_load()
+        # self.get_clients()
         self.get_destination()  # 4
 
     def hello(self, user_name=''):  # 2
@@ -71,7 +72,7 @@ class MsgClient(metaclass=ClientVerifier):
         LOGGER.info(f'Отправка сообщения на сервер - {message_to_server}')
         try:
             answer = self.process_ans(get_message(self.transport))
-            LOGGER.info(f'Получен ответ от сервера {answer}')
+            LOGGER.debug(f'Получен ответ от сервера {answer}')
 
         except (ValueError, json.JSONDecodeError):
             print('Не удалось декодировать сообщение сервера.')
@@ -96,6 +97,11 @@ class MsgClient(metaclass=ClientVerifier):
             # Выход. Отправляем сообщение серверу о выходе.
             elif command == 'exit':
                 self.user_exit()
+
+            # Список пользователей.
+            elif command == 'active':
+                LOGGER.debug('Запрошен вывод списка активных пользователей')
+                print(self.remote_users)
 
             # Список контактов
             elif command == 'contacts':
@@ -141,6 +147,7 @@ class MsgClient(metaclass=ClientVerifier):
     def print_help(self):
         print('Поддерживаемые команды:')
         print('message - отправить сообщение. Кому и текст будет запрошены отдельно.')
+        print('active - показать пользователей на сервере.')
         print('history - история сообщений')
         print('contacts - список контактов')
         print('edit - редактирование списка контактов')
@@ -204,14 +211,16 @@ class MsgClient(metaclass=ClientVerifier):
         if RESPONSE in message:
             if message[RESPONSE] == 200:
                 return RESPONSE_200
-            elif message[RESPONSE] == 201:
-                # убираем из ответного списка себя
-                self.remote_users = [x for x in message[LIST] if x != str(self.client_name)]
-                return
-            elif message[RESPONSE] == 202:
-                LOGGER.debug(f'Получен ответ 202 и {message[LIST]}')
-                for contact in message[LIST]:
-                    self.database.add_contact(contact)
+            # elif message[RESPONSE] == 201:
+            #     LOGGER.debug("Попытка получения списка активных пользователей с сервера")
+            #     # убираем из ответного списка себя
+            #     self.remote_users = [x for x in message[LIST] if x != str(self.client_name)]
+            #     print(self.remote_users)
+            #     return
+            # elif message[RESPONSE] == 202:
+            #     LOGGER.debug(f'Получен ответ 202 и {message[LIST]}')
+            #     for contact in message[LIST]:
+            #         self.database.add_contact(contact)
             elif message[RESPONSE] == 204:
                 return RESPONSE_204
 
@@ -249,6 +258,14 @@ class MsgClient(metaclass=ClientVerifier):
         request = self.create_presence(self.client_name)
         request[ACTION] = GETCLIENTS
         send_message(self.transport, request)
+        ans = get_message(self.transport)
+        LOGGER.debug(f'Получен ответ {ans}')
+        if RESPONSE in ans and ans[RESPONSE] == 201:
+            self.remote_users = [x for x in ans[LIST] if x != str(self.client_name)]
+            # print(self.remote_users)
+            return
+        else:
+            raise ServerError
 
     # Функция запроса списка контактов
     def contacts_list_request(self):
@@ -260,12 +277,16 @@ class MsgClient(metaclass=ClientVerifier):
         }
         LOGGER.debug(f'Сформирован запрос {req}')
         send_message(self.transport, req)
-        # ans = get_message(self.transport)
-        # LOGGER.debug(f'Получен ответ {ans}')
-        # if RESPONSE in ans and ans[RESPONSE] == 202:
-        #     return ans[LIST]
-        # else:
-        #     raise ServerError
+        ans = get_message(self.transport)
+        LOGGER.debug(f'Получен ответ {ans}')
+        if RESPONSE in ans and ans[RESPONSE] == 202:
+            for contact in ans[LIST]:
+                self.database.add_contact(contact)
+            return
+        else:
+            raise ServerError
+        return
+
 
     # Функция добавления пользователя в контакт лист
     def add_contact(self, contact):
@@ -325,13 +346,13 @@ class MsgClient(metaclass=ClientVerifier):
             LOGGER.error('Ошибка запроса списка известных пользователей.')
         else:
             self.database.add_users(self.remote_users)
-            # print(self.remote_users)
-
         # Загружаем список контактов
         try:
             self.contacts_list_request()
         except ServerError:
             LOGGER.error('Ошибка запроса списка контактов.')
+        else:
+            return
         # else:
         #     # print(contacts_list)
         #     for contact in contacts_list:
