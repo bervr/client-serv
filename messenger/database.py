@@ -182,15 +182,15 @@ class ServerStorage:
         self.session.commit()
 
     def message_history(self):
-        query = self.session.query(
-            self.Users.name,
-            self.Users.last_login,
-            self.UsersHistory.sent,
-            self.UsersHistory.accepted
-        ).join(self.Users)
+        # query = self.session.query(
+        #     self.Users.name,
+        #     self.Users.last_login,
+        #     self.UsersHistory.sent,
+        #     self.UsersHistory.accepted
+        # ).join(self.Users)
         # Возвращаем список кортежей
-        return query.all()
-
+        # return query.all()
+        return [('user1', '2022-11-28 01:49:11.843131', 9, 10)]
 
     def get_user_contacts(self, user):
         try:

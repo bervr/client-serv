@@ -242,6 +242,9 @@ class MsgClient(metaclass=ClientVerifier):
     def client_receiving(self):
         LOGGER.info('Режим работы - прием сообщений')
         while True:
+            # Отдыхаем секунду и снова пробуем захватить сокет.
+            # если не сделать тут задержку, то второй поток может достаточно долго ждать освобождения сокета.
+            time.sleep(1)
             try:
                 answer = get_message(self.transport)
                 if RESPONSE in answer:

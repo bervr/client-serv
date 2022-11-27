@@ -56,6 +56,9 @@ class ClientStorage:
         Base.metadata.create_all(self.engine)
         Session = sessionmaker(bind=self.engine)
         self.session = Session()
+        # Необходимо очистить таблицу контактов, т.к. при запуске они подгружаются с сервера.
+        self.session.query(self.Contacts).delete()
+        self.session.commit()
         if self.session.query(self.Contacts).filter_by(contact_name='me').all() == []:
             me = self.Contacts('me')
             self.session.add(me)  # добавили себя в список контактов
