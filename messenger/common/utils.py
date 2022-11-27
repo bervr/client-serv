@@ -16,6 +16,7 @@ def get_message(client):
         json_response = encoded_response.decode(ENCODING)
         response = json.loads(json_response)
         if isinstance(response, dict):
+            print(response)
             return response
         raise ValueError
     raise ValueError
@@ -28,13 +29,14 @@ def send_message(sock, message):
     sock.send(encoded_message)
 
 
-def create_arg_parser():
+def create_arg_parser(default_port, default_address):
     # LOGGER.debug('Попытка получения параметров запуска')
     try:
         parser = argparse.ArgumentParser()
-        parser.add_argument('-p', default=DEFAULT_PORT, type=int, nargs='?')
-        parser.add_argument('-a', default=DEFAULT_IP_ADDRESS, nargs='?')
+        parser.add_argument('-p', default=default_port, type=int, nargs='?')
+        parser.add_argument('-a', default=default_address, nargs='?')
         parser.add_argument('-m', default='listen', nargs='?')
+        parser.add_argument('-n', default='user', nargs='?')
         return parser
         if server_port < 1024 or server_port > 65535:
             raise ValueError

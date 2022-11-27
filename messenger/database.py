@@ -15,7 +15,6 @@ from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, DateT
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import datetime
-from common.variables import SERVER_DATABASE
 
 Base = declarative_base()
 
@@ -51,6 +50,21 @@ class ServerStorage:
         def __repl__(self):
             return f'User{self.user_id}-ip{self.ipaddress}:{self:port}-{self.login_time}'
 
+    class UsersHistory(Base):
+        __tablename__ = 'history'
+        id = Column(Integer, primary_key=True)
+        user = Column(ForeignKey('Users.id'))
+        sent = Column(Integer)
+        accepted = Column(Integer)
+
+        def __init__(self, user):
+            self.user = user
+            self.sent = 0
+            self.accepted = 0
+
+
+
+
     class ActiveUsers(Base):
         __tablename__ = 'active_users'
         id = Column(Integer, primary_key=True)
@@ -83,9 +97,10 @@ class ServerStorage:
 
 
 
-    def __init__(self):
-        self.engine = create_engine(SERVER_DATABASE,
+    def __init__(self, path):
+        self.engine = create_engine(f'sqlite:///{path}',
                                     echo=False,
+                                    pool_recycle=7200,
                                     connect_args={'check_same_thread': False}
                                     )
         Base.metadata.create_all(self.engine)
@@ -127,14 +142,16 @@ class ServerStorage:
 
         return logs.all() if name == '' else logs.filter_by(login=name).all()
 
-    def user_logout(self, user_id):
+    def user_logout(self, username):
         try:
-            get_login = self.session.query(self.ActiveUsers).filter_by(user_id=user_id).first()
+            # Запрашиваем пользователя, что покидает нас
+            user = self.session.query(self.Users).filter_by(login=username).first()
+            # Удаляем его из таблицы активных пользователей.
+            self.session.query(self.ActiveUsers).filter_by(user_id=user.id).delete()
+            self.session.commit()
         except:
             pass
-        else:
-            self.session.delete(get_login)
-            self.session.commit()
+
 
     def add_contact(self, user_id, contact_id):
 
@@ -157,6 +174,18 @@ class ServerStorage:
         except:
             contacts = []
         return contacts
+
+    def process_message(self, sender, recipient):
+        # Получаем ID отправителя и получателя
+        sender = self.session.query(self.Users).filter_by(login=sender).first().id
+        recipient = self.session.query(self.Users).filter_by(login=recipient).first().id
+        # Запрашиваем строки из истории и увеличиваем счётчики
+        sender_row = self.session.query(self.UsersHistory).filter_by(user=sender).first()
+        sender_row.sent += 1
+        recipient_row = self.session.query(self.UsersHistory).filter_by(user=recipient).first()
+        recipient_row.accepted += 1
+
+        self.session.commit()
 
 
 if __name__ == '__main__':

@@ -13,8 +13,6 @@ ENCODING = 'utf-8'
 # Уровень логирования
 # LOGGING_LEVEL = 'INFO'
 LOGGING_LEVEL = 'DEBUG'
-SERVER_DATABASE = 'sqlite:///srv_msg_db.db3'
-CLIENT_DATABASE = 'sqlite:///cln_msg_db.db3'
 
 
 # Прококол JIM основные ключи:
@@ -32,6 +30,10 @@ RESPONSE = 'response'
 ERROR = 'error'
 MESSAGE = 'message'
 GETCLIENTS = 'getclients'
+GETCONTACTS = 'get_contacts'
+ADD_CONTACT = 'add_contact'
+REMOVE_CONTACT = 'remove_contact'
+USERS_REQUEST = 'get_users'
 MESSAGE_TEXT = 'message_text'
 MESSAGE_KEY = 1
 ACCOUNT_KEY = 0
@@ -50,6 +52,8 @@ RESPONSE_400 = {
     ERROR: None
 }
 RESPONSE_204 = {RESPONSE: 204}
+RESPONSE_202 = {RESPONSE: 202}
+RESPONSE_205 = {RESPONSE: 205}
 RESPONSE_CLIENTS = {
     RESPONSE: 201
 }

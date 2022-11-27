@@ -55,7 +55,8 @@ while True:
 
     elif user_answer == 'c':
         for _ in range(client_count):
-            run_one(f'{enterpriter} client.py')
+            # print(f'{enterpriter} client.py -n user{_}')
+            run_one(f'{enterpriter} client.py -n "user{_}"')
 
     elif user_answer == 'a':
         run_one(f'{enterpriter} server.py')
