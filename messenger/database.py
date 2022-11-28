@@ -124,6 +124,8 @@ class ServerStorage:
             # и записываем в историю входа
             new_log_record = self.UserLoginHistory(new_user.id, ipaddress, port, datetime.datetime.now())
             new_active = self.ActiveUsers(new_user.id, ipaddress, port, datetime.datetime.now())
+            user_in_history = self.UsersHistory(new_user.id)
+            self.session.add(user_in_history)
         self.session.add(new_log_record)
         self.session.add(new_active)
         self.session.commit()
@@ -182,15 +184,16 @@ class ServerStorage:
         self.session.commit()
 
     def message_history(self):
-        # query = self.session.query(
-        #     self.Users.name,
-        #     self.Users.last_login,
-        #     self.UsersHistory.sent,
-        #     self.UsersHistory.accepted
-        # ).join(self.Users)
+        query = self.session.query(
+            self.Users.name,
+            self.Users.last_login,
+            self.UsersHistory.sent,
+            self.UsersHistory.accepted
+        ).join(self.Users)
         # Возвращаем список кортежей
-        # return query.all()
-        return [('user1', '2022-11-28 01:49:11.843131', 9, 10)]
+        print(query.all())
+        return query.all()
+        # return [('user1', '2022-11-28 01:49:11.843131', 9, 10)]
 
     def get_user_contacts(self, user):
         try:
@@ -202,7 +205,7 @@ class ServerStorage:
         else:
             # Запрашиваем его список контактов
             query = self.session.query(self.Contacts.contact_id, self.Users.login). \
-                filter_by(contact_id=user.id). \
+                filter_by(user_id=user.id). \
                 join(self.Users, self.Contacts.contact_id == self.Users.id)
             #выбираем только имен контактов и возвращаем
             contacts = [contact[1] for contact in query.all()]

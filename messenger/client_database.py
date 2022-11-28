@@ -102,7 +102,7 @@ class ClientStorage:
 
     def add_contact(self, contact_name):
         try:
-            find_contact = self.session.query(self.Contacts.contact_id, self.Contacts.contact_name).filter_by(contact_name=contact_name).first()
+            find_contact = self.session.query(self.Contacts).filter_by(contact_name=contact_name).first()
         except:
             pass
         else:
