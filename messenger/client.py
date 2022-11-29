@@ -122,8 +122,8 @@ class MsgClient(threading.Thread, metaclass=ClientVerifier):
             # обновить список пользователей с сервера.
             elif command == 'renew':
                 LOGGER.debug('Запрошен список активных пользователей с cервера')
-                with self.sock_lock:
-                    self.get_clients()
+                # with self.sock_lock:
+                self.get_clients()
                 with self.database_lock:
                     self.database.add_users(self.remote_users)
                 print(self.remote_users)
@@ -280,7 +280,7 @@ class MsgClient(threading.Thread, metaclass=ClientVerifier):
         LOGGER.debug('Запуск потока получения')
         LOGGER.info('Режим работы - прием сообщений')
         while True:
-            time.sleep(0.1)
+            time.sleep(1)
             with self.sock_lock:
             # Отдыхаем секунду и снова пробуем захватить сокет.
             # если не сделать тут задержку, то второй поток может достаточно долго ждать освобождения сокета.
@@ -318,8 +318,9 @@ class MsgClient(threading.Thread, metaclass=ClientVerifier):
         LOGGER.debug(f'Запрос списка известных пользователей {self.client_name}')
         request = self.create_presence(self.client_name)
         request[ACTION] = GETCLIENTS
-        send_message(self.transport, request)
-        ans = get_message(self.transport)
+        with self.sock_lock:
+            send_message(self.transport, request)
+            ans = get_message(self.transport)
         LOGGER.debug(f'Получен ответ {ans}')
         if RESPONSE in ans and ans[RESPONSE] == 201:
             LOGGER.debug(f'getclients Получен ответ  - список пользователей сервера {ans[LIST]}')
