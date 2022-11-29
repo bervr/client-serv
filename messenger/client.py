@@ -14,19 +14,30 @@ from common.utils import get_message, send_message, create_arg_parser
 import common.errors as errors
 from decor import func_log
 from common.errors import IncorrectDataReceivedError, ReqFieldMissingError, ServerError
-from threading import Lock
 from metaclasses import ClientVerifier
 from common.variables import DEFAULT_PORT, DEFAULT_IP_ADDRESS
 from client_database import ClientStorage
 
 LOGGER = logging.getLogger('client')  # забрали логгер из конфига
 
-# Объект блокировки сокета и работы с базой данных
-sock_lock = Lock()
-database_lock = Lock()
+
 
 
 class MsgClient(threading.Thread, metaclass=ClientVerifier):
+    # Объект блокировки сокета и работы с базой данных
+    
+    def __init__(self):
+        # получаем параметры из командной строки
+        # client.py -a localhost -p 8079 -m send/listen
+        self.remote_users = []
+        self.client_name = ''
+        self.get_start_params()
+        self.get_connect()
+        self.database = ''
+        self.sock_lock = threading.Lock()
+        self.database_lock = threading.Lock()
+        super(MsgClient, self).__init__()
+
     # s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # проверка метакласса
     @func_log
     def create_presence(self, account_name='Guest'):
@@ -54,7 +65,6 @@ class MsgClient(threading.Thread, metaclass=ClientVerifier):
         while True:
             if answer == '400 : Имя пользователя уже занято':
                 LOGGER.error('400 : Имя пользователя уже занято')
-                # print('400 : Имя пользователя уже занято')
                 name = input(
                     'Это имя занято. Введите свое имя или нажмите Enter чтобы попробовать продолжить анонимно:\n')
             elif answer == RESPONSE_200:
@@ -64,8 +74,10 @@ class MsgClient(threading.Thread, metaclass=ClientVerifier):
             answer = self.hello(name)  # 2 todo 'если при первом вводе имени выбрать занятое то потом нельзя зайти'
         print(f'Вы видны всем под именем {self.client_name}')
         self.database = ClientStorage(self.client_name)  # инициализируем db
+
         self.database_load()
-        self.get_destination()  # 4
+        self.start_threads()
+        # self.get_destination()  # 4
 
     def hello(self, user_name=''):  # 2
         self.add_client_name(user_name)  # 3
@@ -84,10 +96,12 @@ class MsgClient(threading.Thread, metaclass=ClientVerifier):
             return answer
 
     # функция текстовое меню
-    def get_destination(self):
+    # def get_destination(self):
+    def client_sending(self):
+        LOGGER.info('Режим работы - отправка сообщений')
         self.print_help()
         while True:
-            command = input('Введите команду: ')
+            command = input('Введите команду:\n ')
             # Если отправка сообщения - соответствующий метод
             if command == 'message':
                 self.create_message()
@@ -108,13 +122,15 @@ class MsgClient(threading.Thread, metaclass=ClientVerifier):
             # обновить список пользователей с сервера.
             elif command == 'renew':
                 LOGGER.debug('Запрошен список активных пользователей с cервера')
-                self.get_clients()
-                self.database.add_users(self.remote_users)
+                with self.sock_lock:
+                    self.get_clients()
+                with self.database_lock:
+                    self.database.add_users(self.remote_users)
                 print(self.remote_users)
 
             # Список контактов
             elif command == 'contacts':
-                with database_lock:
+                with self.database_lock:
                     contacts_list = self.database.get_user_contacts()
                 for contact in contacts_list:
                     print(contact)
@@ -136,11 +152,12 @@ class MsgClient(threading.Thread, metaclass=ClientVerifier):
         ans = input('Для удаления введите del, для добавления add: ')
         if ans == 'del':
             edit = input('Введите имя удаляемого контакта: ')
-            with database_lock:
+            with self.database_lock:
                 if self.database.check_contact(edit):
                     self.database.del_contact(edit)
                     try:
-                        self.remove_contact(edit)
+                        with self.sock_lock:
+                            self.remove_contact(edit)
                     except ServerError:
                         LOGGER.error('Не удалось отправить информацию на сервер.')
                 else:
@@ -149,17 +166,18 @@ class MsgClient(threading.Thread, metaclass=ClientVerifier):
             # Проверка на возможность такого контакта
             edit = input('Введите имя создаваемого контакта: ')
             if self.database.check_user(edit):
-                with database_lock:
+                with self.database_lock:
                     self.database.add_contact(edit)
-                with sock_lock:
-                    try:
+                # with self.sock_lock:
+                try:
+                    with self.sock_lock:
                         self.add_contact(edit)
-                    except ServerError:
-                        LOGGER.error('Не удалось отправить информацию на сервер.')
+                except ServerError:
+                    LOGGER.error('Не удалось отправить информацию на сервер.')
             else:
                 print('Нет такого пользователя')
 
-    # Функция выводящяя справку по использованию.
+    # Функция выводящая справку по использованию.
     def print_help(self):
         print('Поддерживаемые команды:')
         print('message - отправить сообщение. Кому и текст будет запрошены отдельно.')
@@ -172,12 +190,12 @@ class MsgClient(threading.Thread, metaclass=ClientVerifier):
         print('exit - выход из программы')
 
     def user_exit(self):
-        with sock_lock:
-            try:
-                send_message(self.transport, self.create_exit_message())
-                LOGGER.info(f'Отправлено сообщение о завершении сеанса на сервер')
-            except:
-                pass
+        # with self.sock_lock:
+        try:
+            send_message(self.transport, self.create_exit_message())
+            LOGGER.info(f'Отправлено сообщение о завершении сеанса на сервер')
+        except:
+            pass
         print('Завершение соединения.')
         LOGGER.info('Завершение работы по команде пользователя.')
         # Задержка необходима, чтобы успело уйти сообщение о выходе
@@ -190,7 +208,7 @@ class MsgClient(threading.Thread, metaclass=ClientVerifier):
         message = input('Введите сообщение для отправки: ')
 
         # Проверим, что получатель существует
-        with database_lock:
+        with self.database_lock:
             if not self.database.check_user(destination):
                 LOGGER.error(f'Попытка отправить сообщение незарегистрированному получателю: {destination}')
                 return
@@ -209,11 +227,11 @@ class MsgClient(threading.Thread, metaclass=ClientVerifier):
         }
         LOGGER.debug(f'Сформирован словарь сообщения: {out}')
         # Сохраняем сообщения для истории
-        with database_lock:
-            self.database.write_log('me', destination, message)
+        # with self.database_lock:
+        self.database.write_log('me', destination, message)
 
         # Необходимо дождаться освобождения сокета для отправки сообщения
-        # with sock_lock:
+        # with self.sock_lock:
         try:
             send_message(self.transport, out)
             LOGGER.info(f'Отправлено сообщение для пользователя {destination}')
@@ -223,7 +241,8 @@ class MsgClient(threading.Thread, metaclass=ClientVerifier):
                 exit(1)
             else:
                 LOGGER.error('Не удалось передать сообщение. Таймаут соединения')
-        return
+        else:
+            return
 
     def process_ans(self, message):
         if RESPONSE in message:
@@ -231,75 +250,85 @@ class MsgClient(threading.Thread, metaclass=ClientVerifier):
                 return RESPONSE_200
             elif message[RESPONSE] == 204:
                 return RESPONSE_204
-            elif message[RESPONSE] == 201:
-                LOGGER.debug(f'Получен ответ  - список пользователей сервера {message[LIST]}')
-                self.remote_users = [x for x in message[LIST] if x != str(self.client_name)]
-                return
-            elif message[RESPONSE] == 202:
-                LOGGER.debug(f'Получен ответ - список контактов {message[LIST]}')
-                for contact in message[LIST]:
-                    self.database.add_contact(contact)
-                return
+            # elif message[RESPONSE] == 201:
+            #     LOGGER.debug(f'process_ans Получен ответ  - список пользователей сервера {message[LIST]}')
+            #     self.remote_users = [x for x in message[LIST] if x != str(self.client_name)]
+            #     print(self.remote_users)
+            #     self.get_destination()
+            # elif message[RESPONSE] == 202:
+            #     LOGGER.debug(f'Получен ответ - список контактов {message[LIST]}')
+            #     for contact in message[LIST]:
+            #         self.database.add_contact(contact)
+            else:
+                raise ServerError('Ошибка связи с сервером')
+            #     return
         else:
-
             return f'400 : {message[ERROR]}'
         raise errors.ReqFieldMissingError(RESPONSE)
 
-    def client_sending(self):
-        LOGGER.info('Режим работы - отправка сообщений')
-        while True:
-            # time.sleep(1)
-            try:
-                send_message(self.transport, self.create_message())
-            except (ConnectionError, ConnectionResetError, ConnectionAbortedError):
-                LOGGER.error(f'Соединение с сервером {self.server_address} было утеряно')
-                sys.exit(1)
+    # def client_sending(self):
+    #     LOGGER.info('Режим работы - отправка сообщений')
+    #     while True:
+    #         # time.sleep(1)
+    #         try:
+    #             send_message(self.transport, self.create_message())
+    #         except (ConnectionError, ConnectionResetError, ConnectionAbortedError):
+    #             LOGGER.error(f'Соединение с сервером {self.server_address} было утеряно')
+    #             sys.exit(1)
 
-    def run(self):
-        # def client_receiving(self):
+    def client_receiving(self):
         LOGGER.debug('Запуск потока получения')
         LOGGER.info('Режим работы - прием сообщений')
         while True:
-            time.sleep(1)
-            with sock_lock:
-                # Отдыхаем секунду и снова пробуем захватить сокет.
-                # если не сделать тут задержку, то второй поток может достаточно долго ждать освобождения сокета.
-                time.sleep(1)
+            time.sleep(0.1)
+            with self.sock_lock:
+            # Отдыхаем секунду и снова пробуем захватить сокет.
+            # если не сделать тут задержку, то второй поток может достаточно долго ждать освобождения сокета.
+            # time.sleep(1)
                 try:
-                    answer = get_message(self.transport)
-                    if RESPONSE in answer:
-                        self.process_ans(answer)
-                    # elif :
-                    #     pass
-                    else:
-                        self.print_user_message(answer)
-                        # print(f'\nUser {answer[SENDER]} sent: {answer[USER][MESSAGE_TEXT]}')
-                        # LOGGER.info(f'Сообщение из чята от {answer[SENDER]}: {answer[USER][MESSAGE_TEXT]}')
+                    message = get_message(self.transport)
+                    LOGGER.debug(f'что-то пришло')
+                # Проблемы с соединением
                 except (ConnectionError, ConnectionResetError, ConnectionAbortedError):
                     LOGGER.error(f'Соединение с сервером {self.server_address} было утеряно')
                     sys.exit(1)
+                    # Принято некорректное сообщение
+                except IncorrectDataReceivedError:
+                    LOGGER.error(f'Не удалось декодировать полученное сообщение.')
+                # Вышел таймаут соединения если errno = None, иначе обрыв соединения.
+                except OSError as err:
+                    if err.errno:
+                        LOGGER.critical(f'Потеряно соединение с сервером.')
+                        break
+                else:
+                    if ACTION in message and message[ACTION] == MESSAGE and SENDER in message and DESTINATION \
+                            in message and MESSAGE_TEXT in message[USER] and message[DESTINATION] == self.client_name:
+                        print(f'\nUser {message[SENDER]} sent: {message[USER][MESSAGE_TEXT]}')
+                        LOGGER.info(f'Сообщение из чята от {message[SENDER]}: {message[USER][MESSAGE_TEXT]}')
+                # Если пакет корретно получен выводим в консоль и записываем в базу.
+                        with self.database_lock:
+                            try:
+                                self.database.write_log(message[SENDER], self.account_name, message[MESSAGE_TEXT])
+                            except:
+                                LOGGER.error('Ошибка взаимодействия с базой данных')
 
-    def print_user_message(self, answer):
-        print(f'\nUser {answer[SENDER]} sent: {answer[USER][MESSAGE_TEXT]}')
-        LOGGER.info(f'Сообщение из чята от {answer[SENDER]}: {answer[USER][MESSAGE_TEXT]}')
-        return
 
     # Функция запроса списка активных пользователей
     def get_clients(self):
         LOGGER.debug(f'Запрос списка известных пользователей {self.client_name}')
         request = self.create_presence(self.client_name)
         request[ACTION] = GETCLIENTS
-        # with sock_lock:
         send_message(self.transport, request)
         ans = get_message(self.transport)
         LOGGER.debug(f'Получен ответ {ans}')
         if RESPONSE in ans and ans[RESPONSE] == 201:
-            self.process_ans(ans)
-        else:
-            self.print_user_message(ans)
+            LOGGER.debug(f'getclients Получен ответ  - список пользователей сервера {ans[LIST]}')
+            self.remote_users = [x for x in ans[LIST] if x != str(self.client_name)]
+        # else:
+        #     self.print_user_message(ans)
 
         #     self.remote_users = [x for x in ans[LIST] if x != str(self.client_name)]
-        return
+        # return
         # else:
         #     raise ServerError
 
@@ -312,17 +341,17 @@ class MsgClient(threading.Thread, metaclass=ClientVerifier):
             USER: self.client_name
         }
         LOGGER.debug(f'Сформирован запрос {req}')
-        # with sock_lock:
+        # with self.sock_lock:
         send_message(self.transport, req)
         ans = get_message(self.transport)
         #     LOGGER.debug(f'Получен ответ {ans}')
         if RESPONSE in ans and ans[RESPONSE] == 202:
-            self.process_ans(ans)
-        else:
-            self.print_user_message(ans)
-        #     for contact in ans[LIST]:
-        #         self.database.add_contact(contact)
-        # return
+        #     self.process_ans(ans)
+        # else:
+        #     self.print_user_message(ans)
+            for contact in ans[LIST]:
+                self.database.add_contact(contact)
+        return
         # else:
         #     raise ServerError
         # return
@@ -360,13 +389,14 @@ class MsgClient(threading.Thread, metaclass=ClientVerifier):
             pass
         else:
             raise ServerError('Ошибка удаления клиента')
-        print('Удачное удаление')
+        print('Удачное удаление контакта.')
+        return
 
         # Функция выводящяя историю сообщений
 
     def print_history(self):
         ask = input('Показать историю переписки с (имя контакта): ')
-        with database_lock:
+        with self.database_lock:
             history_list = self.database.get_history(ask)
             for message in history_list:
                 print(f'\nСообщение от пользователя: {message[0]} от {message[3]}:\n{message[2]}')
@@ -396,10 +426,6 @@ class MsgClient(threading.Thread, metaclass=ClientVerifier):
             LOGGER.error('Ошибка запроса списка контактов.')
         else:
             return
-        # else:
-        #     # print(contacts_list)
-        #     for contact in contacts_list:
-        #         self.database.add_contact(contact)
 
     def get_start_params(self):
         LOGGER.debug("Попытка получить параметры запуска клиента")
@@ -436,36 +462,23 @@ class MsgClient(threading.Thread, metaclass=ClientVerifier):
             LOGGER.error(f'В ответе сервера отсутствует необходимое поле {missing_error.missing_field}')
             sys.exit(1)
 
-    def __init__(self):
-        # получаем параметры из командной строки
-        # client.py -a localhost -p 8079 -m send/listen
-        self.remote_users = []
-        self.client_name = ''
-        self.get_start_params()
-        self.get_connect()
-        self.database = ''
-        super(MsgClient, self).__init__()
 
-    # def start(self):
-    #     self.hello_user()  # # 1
-    #     self.start_threads()
-
-    # def start_threads(self):
-    #     LOGGER.debug('Запуск потока получения')
-    #     receive_thread = Thread(target=self.client_receiving, daemon=True)
-    #     # send_thread = Thread(target=self.client_sending, daemon=True)
-    #     receive_thread.start()
-    #     # send_thread.start()
-    #     receive_thread.join()
-    #     # send_thread.join()
-    #     LOGGER.debug('Поток запущен')
-    #     return
+    def start_threads(self):
+        LOGGER.debug('Запуск потока получения')
+        receive_thread = threading.Thread(target=self.client_receiving, daemon=True)
+        send_thread = threading.Thread(target=self.client_sending, daemon=True)
+        receive_thread.start()
+        send_thread.start()
+        receive_thread.join()
+        send_thread.join()
+        LOGGER.debug('Потоки запущены')
+        return
 
 
 def main():
     client = MsgClient()
-    client.daemon = True
-    client.start()
+    # client.daemon = True
+    # client.start()
     client.hello_user()
 
 
