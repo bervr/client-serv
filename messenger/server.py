@@ -150,6 +150,7 @@ def main():
                     'Ошибка',
                     'Порт должен быть от 1024 до 65536')
 
+
     # Таймер, обновляющий список клиентов 1 раз в секунду
     timer = QTimer()
     timer.timeout.connect(list_update)
@@ -162,6 +163,7 @@ def main():
     main_window.config_btn.triggered.connect(server_config)
 
     # Запускаем GUI
+
     server_app.exec_()
 
 

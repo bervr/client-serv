@@ -185,13 +185,13 @@ class ServerStorage:
 
     def message_history(self):
         query = self.session.query(
-            self.Users.name,
+            self.Users.login,
             self.Users.last_login,
             self.UsersHistory.sent,
             self.UsersHistory.accepted
-        ).join(self.Users)
+        ).join(self.Users, self.Users.id == self.UsersHistory.user)
         # Возвращаем список кортежей
-        print(query.all())
+        # print(query.all())
         return query.all()
         # return [('user1', '2022-11-28 01:49:11.843131', 9, 10)]
 
@@ -226,28 +226,29 @@ class ServerStorage:
 
 
 if __name__ == '__main__':
-    client = ServerStorage('test_server.db3')
+    client = ServerStorage('server_base.db3')
     # print(client.getactive())
-    client.user_login('ivanov', '127.0.0.1', 55)
-    client.user_login('pppetrov', '127.0.0.1', 11)
-    client.user_login('kuznetsov', '127.0.0.127', 99)
-    client.user_login('pppetroff', '127.0.0.99', 22)
-    # print(client.getall()))
-    print(client.getactive())
+    # client.user_login('ivanov', '127.0.0.1', 55)
+    # client.user_login('pppetrov', '127.0.0.1', 11)
+    # client.user_login('kuznetsov', '127.0.0.127', 99)
+    # client.user_login('pppetroff', '127.0.0.99', 22)
+    # # print(client.getall()))
+    # print(client.getactive())
     # client.user_logout(1)
     # print(client.getactive())
     # print(client.history_log())
     # print(client.history_log('ivanov'))
-    print(client.get_user_contacts(1))
-    client.add_contact('ivanov', 'pppetrov')
-    client.add_contact(1, 3)
-    client.add_contact(1, 4)
-    print(client.get_user_contacts(1))
-    client.del_contact(1, 2)
-    client.del_contact(1, 4)
-    client.add_contact(1, 3)
-    client.del_contact(1, 4)
-    print(client.get_user_contacts('ivanov'))
+    # print(client.get_user_contacts(1))
+    # client.add_contact('ivanov', 'pppetrov')
+    # client.add_contact(1, 3)
+    # client.add_contact(1, 4)
+    # print(client.get_user_contacts(1))
+    # client.del_contact(1, 2)
+    # client.del_contact(1, 4)
+    # client.add_contact(1, 3)
+    # client.del_contact(1, 4)
+    # print(client.get_user_contacts('ivanov'))
+    client.message_history()
 
 
 

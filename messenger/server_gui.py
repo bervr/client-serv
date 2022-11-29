@@ -28,6 +28,7 @@ def gui_create_model(database):
 
 # GUI - Функция реализующая заполнение таблицы историей сообщений.
 def create_stat_model(database):
+    print('забираем из базы')
     # Список записей из базы
     hist_list = database.message_history()
 
@@ -39,7 +40,7 @@ def create_stat_model(database):
         user, last_seen, sent, recvd = row
         user = QStandardItem(user)
         user.setEditable(False)
-        last_seen = QStandardItem(str(last_seen.replace(microsecond=0)))
+        last_seen = QStandardItem(str(last_seen.replace(microsecond=0))) if last_seen else QStandardItem('-')
         last_seen.setEditable(False)
         sent = QStandardItem(str(sent))
         sent.setEditable(False)
