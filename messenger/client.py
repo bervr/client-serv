@@ -1,5 +1,6 @@
 """Программа-клиент"""
 import logging
+import os
 import sys
 import json
 import socket
@@ -16,7 +17,7 @@ from decor import func_log
 from common.errors import IncorrectDataReceivedError, ReqFieldMissingError, ServerError
 from metaclasses import ClientVerifier
 from common.variables import DEFAULT_PORT, DEFAULT_IP_ADDRESS
-from client_database import ClientStorage
+from client.client_database import ClientStorage
 
 LOGGER = logging.getLogger('client')  # забрали логгер из конфига
 
@@ -61,6 +62,7 @@ class MsgClient(threading.Thread, metaclass=ClientVerifier):
         return self.client_name
 
     def hello_user(self, answer=None):  # 1
+        dir_path = os.path.dirname(os.path.realpath(__file__))
         name = self.client_name
         while True:
             if answer == '400 : Имя пользователя уже занято':
@@ -73,7 +75,9 @@ class MsgClient(threading.Thread, metaclass=ClientVerifier):
                 name = input('Введите свое имя или нажмите Enter чтобы попробовать продолжить анонимно:\n')
             answer = self.hello(name)  # 2 todo 'если при первом вводе имени выбрать занятое то потом нельзя зайти'
         print(f'Вы видны всем под именем {self.client_name}')
-        self.database = ClientStorage(self.client_name)  # инициализируем db
+        db_name_path = os.path.join('client', f'{self.client_name}.db3')
+        print(db_name_path)
+        self.database = ClientStorage(db_name_path)  # инициализируем db
 
         self.database_load()
         self.start_threads()

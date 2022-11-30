@@ -47,9 +47,9 @@ class ClientStorage:
             self.id = None
             self.username = user
 
-    def __init__(self, name):
-        self.engine = create_engine(f'sqlite:///client_{name}.db3',
-                                    pool_recycle = 7200,
+    def __init__(self, path):
+        self.engine = create_engine(f'sqlite:///{path}',
+                                    pool_recycle=7200,
                                     echo=False,
                                     connect_args={'check_same_thread': False}
                                     )
