@@ -1,6 +1,6 @@
 """Константы"""
 
-# Порт по умолчанию для сетевого ваимодействия
+# Порт по умолчанию для сетевого взаимодействия
 DEFAULT_PORT = 7777
 # IP адрес по умолчанию для подключения клиента
 DEFAULT_IP_ADDRESS = '127.0.0.1'
@@ -30,6 +30,10 @@ RESPONSE = 'response'
 ERROR = 'error'
 MESSAGE = 'message'
 GETCLIENTS = 'getclients'
+GETCONTACTS = 'get_contacts'
+ADD_CONTACT = 'add_contact'
+REMOVE_CONTACT = 'remove_contact'
+USERS_REQUEST = 'get_users'
 MESSAGE_TEXT = 'message_text'
 MESSAGE_KEY = 1
 ACCOUNT_KEY = 0
@@ -48,6 +52,8 @@ RESPONSE_400 = {
     ERROR: None
 }
 RESPONSE_204 = {RESPONSE: 204}
+RESPONSE_202 = {RESPONSE: 202}
+RESPONSE_205 = {RESPONSE: 205}
 RESPONSE_CLIENTS = {
     RESPONSE: 201
 }

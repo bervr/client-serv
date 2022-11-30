@@ -1,10 +1,11 @@
 import platform
 import subprocess
+import time
 from subprocess import Popen
 import os
 import signal
 # сколько клиентов запускать
-client_count = 3
+client_count = 2
 
 
 if platform.system() == 'Windows':
@@ -51,16 +52,18 @@ while True:
         kill_processes()
         break
     elif user_answer == 's':
-        run_one(f'{enterpriter} server.py')
+        run_one(f'{enterpriter} server.py -a "127.0.0.1" -p "-7777"')
 
     elif user_answer == 'c':
         for _ in range(client_count):
-            run_one(f'{enterpriter} client.py')
+            # print(f'{enterpriter} client.py -n user{_}')
+            run_one(f'{enterpriter} client.py -n user{_}')
 
     elif user_answer == 'a':
         run_one(f'{enterpriter} server.py')
+        time.sleep(0.5)  # ждем чтобы стартанул сервер
         for _ in range(client_count):
-            run_one(f'{enterpriter} client.py')
+            run_one(f'{enterpriter} client.py -n user{_}')
 
     elif user_answer == 'x':
         kill_processes()
