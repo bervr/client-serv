@@ -128,6 +128,10 @@ class ClientStorage:
             return True
         return False
 
+    # Функция возвращающяя список известных пользователей
+    def get_users(self):
+        return [user[0] for user in self.session.query(self.KnownUsers.username).all()]
+
     def del_contact(self, contact):
         if contact != 'me':
             self.session.query(self.Contacts).filter_by(contact_name=contact).delete()
@@ -138,7 +142,8 @@ class ClientStorage:
             contacts = self.session.query(self.Contacts.contact_id, self.Contacts.contact_name).all()
         except:
             contacts = []
-        return contacts
+        # return contacts
+        return [contact[1] for contact in contacts]
 
 
 if __name__ == '__main__':

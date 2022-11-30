@@ -16,8 +16,8 @@ from PyQt5.QtCore import QTimer
 from server_gui import MainWindow, gui_create_model, HistoryWindow, create_stat_model, ConfigWindow
 
 from common.variables import ACTION, ACCOUNT_NAME, MAX_CONNECTIONS, PRESENCE, TIME, USER, ERROR, MESSAGE_TEXT, \
-    MESSAGE, SENDER, MESSAGE_KEY, ACCOUNT_KEY, DESTINATION, RESPONSE_200, RESPONSE_400, EXIT, GETCLIENTS, \
-    STATUS, LIST, RESPONSE_CLIENTS, RESPONSE, GETCONTACTS, RESPONSE_202, ADD_CONTACT, REMOVE_CONTACT
+    MESSAGE, SENDER, DESTINATION, RESPONSE_200, RESPONSE_400, EXIT, GETCLIENTS, \
+    LIST, RESPONSE_CLIENTS, RESPONSE, GETCONTACTS, RESPONSE_202, ADD_CONTACT, REMOVE_CONTACT
 from common.utils import get_message, send_message, create_arg_parser
 
 LOGGER = logging.getLogger('server')  # забрали логгер из конфига

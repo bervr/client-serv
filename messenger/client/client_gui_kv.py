@@ -12,7 +12,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.image import Image
 
-from client import MsgClient
+from client_run import MsgClient
 import logs.conf.client_log_config
 import json
 import logging
