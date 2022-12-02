@@ -14,7 +14,7 @@ sys.path.append('..')
 from common.utils import *
 from common.utils import send_message, get_message
 from common.variables import *
-from common.errors import ServerError
+from common.errors import ServerError, IncorrectDataReceivedError
 from client_database import ClientStorage
 from main_window import ClientMainWindow
 from start_dialog import UserNameDialog
