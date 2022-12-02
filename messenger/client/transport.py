@@ -8,24 +8,31 @@ import threading
 from PyQt5.QtCore import pyqtSignal, QObject
 from PyQt5.QtWidgets import QApplication
 
+# from common.utils import send_message, get_message
+
 sys.path.append('..')
 from common.utils import *
+from common.utils import send_message, get_message
 from common.variables import *
 from common.errors import ServerError
 from client_database import ClientStorage
 from main_window import ClientMainWindow
 from start_dialog import UserNameDialog
 
-
 LOGGER = logging.getLogger('client')  # забрали логгер из конфига
+
 
 # Класс - Транспорт, отвечает за взаимодействие с сервером
 class ClientTransport(threading.Thread, QObject):
     # Сигналы новое сообщение и потеря соединения
+    # атрибуты класса становятся экземпляры pyqtsignal
     new_message = pyqtSignal(str)
     connection_lost = pyqtSignal()
 
     def __init__(self):
+        # вызываем конструкторы предков.
+        threading.Thread.__init__(self)
+        QObject.__init__(self)
         # получаем параметры из командной строки
         # client.py -a localhost -p 8079 -m send/listen
         self.remote_users = []
@@ -35,7 +42,10 @@ class ClientTransport(threading.Thread, QObject):
         self.database = ''
         self.sock_lock = threading.Lock()
         self.database_lock = threading.Lock()
-        super().__init__()
+        self.running = True
+        # Сигналы новое сообщение и потеря соединения
+
+        # super().__init__()
 
     # s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # проверка метакласса
 
@@ -50,7 +60,7 @@ class ClientTransport(threading.Thread, QObject):
         LOGGER.debug(f'Сформирован presence: {out}')
         return out
 
-
+    # console only
     def add_client_name(self, name):
         if name != '':
             self.username = name
@@ -78,25 +88,42 @@ class ClientTransport(threading.Thread, QObject):
 
         self.database_load()
         self.start_threads()
-        # self.get_destination()  # 4
+        self.get_destination()  # 4
 
-        while True:
-            if answer == '400 : Имя пользователя уже занято':
-                LOGGER.error('400 : Имя пользователя уже занято')
-                name = input(
-                    'Это имя занято. Введите свое имя или нажмите Enter чтобы попробовать продолжить анонимно:\n')
-            elif answer == RESPONSE_200:
-                break
-            elif name == '':
-                name = input('Введите свое имя или нажмите Enter чтобы попробовать продолжить анонимно:\n')
-            answer = self.hello(name)  # 2 todo 'если при первом вводе имени выбрать занятое то потом нельзя зайти'
-        print(f'Вы видны всем под именем {self.username}')
-        db_name_path = os.path.join(f'{self.username}.db3')
-        self.database = ClientStorage(db_name_path)  # инициализируем db
 
-        self.database_load()
-        self.start_threads()
-        # self.get_destination()  # 4
+    def gui_hello(self):
+        self.client_app = QApplication(sys.argv)
+        # Если имя пользователя не было указано в командной строке, то запросим его
+        if not self.username or self.username == '':
+            start_dialog = UserNameDialog()
+            self.client_app.exec_()
+            # Если пользователь ввёл имя и нажал ОК, то сохраняем ведённое и удаляем объект, иначе задаем имя по сокету
+            if start_dialog.ok_pressed:
+                self.username = start_dialog.client_name.text()
+            else:
+                self.username = self.transport.getsockname()[1]
+                # exit(0)
+            del start_dialog
+            # LOGGER.debug(f'попытка установить имя {self.username}')
+            LOGGER.info(f'установлено имя {self.username}')
+            message_to_server = self.create_presence(self.username)
+            send_message(self.transport, message_to_server)
+            LOGGER.info(f'Отправка сообщения на сервер - {message_to_server}')
+            try:
+                answer = self.process_ans(get_message(self.transport))
+                LOGGER.debug(f'Получен ответ от сервера {answer}')
+            except (ValueError, json.JSONDecodeError):
+                print('Не удалось декодировать сообщение сервера.')
+                LOGGER.critical(f'Не удалось декодировать сообщение от сервера')
+                return
+            else:
+                if answer == RESPONSE_200:
+                    LOGGER.info(f'Установлено подключение к серверу')
+                    db_name_path = os.path.join(f'{self.username}.db3')
+                    self.database = ClientStorage(db_name_path)  # инициализируем db
+                    self.database_load()
+                    self.start_threads()
+                    return
 
     def hello(self, user_name=''):  # 2
         self.add_client_name(user_name)  # 3
@@ -222,6 +249,15 @@ class ClientTransport(threading.Thread, QObject):
         self.transport.close()
         sys.exit(0)
 
+    def transport_shutdown(self):
+            self.running = False
+            try:
+                send_message(self.transport, self.create_exit_message())
+            except OSError:
+                pass
+            LOGGER.debug('Транспорт завершает работу.')
+            time.sleep(0.5)
+
     def create_message(self):
         destination = input('Введите получателя сообщения: ')
         message = input('Введите сообщение для отправки: ')
@@ -257,6 +293,7 @@ class ClientTransport(threading.Thread, QObject):
         except OSError as err:
             if err.errno:
                 LOGGER.critical('Потеряно соединение с сервером.')
+
                 exit(1)
             else:
                 LOGGER.error('Не удалось передать сообщение. Таймаут соединения')
@@ -272,6 +309,17 @@ class ClientTransport(threading.Thread, QObject):
             else:
                 raise ServerError('Ошибка связи с сервером')
             #     return
+        elif ACTION in message and message[ACTION] == MESSAGE and SENDER in message and DESTINATION \
+                in message and MESSAGE_TEXT in message[USER] and message[DESTINATION] == self.username:
+            LOGGER.info(f'Сообщение из чята от {message[SENDER]}: {message[USER][MESSAGE_TEXT]}')
+            self.new_message.emit(message[SENDER])
+            # print(f'\nUser {message[SENDER]} sent: {message[USER][MESSAGE_TEXT]}')
+            # Если пакет корретно получен выводим в консоль и записываем в базу.
+            with self.database_lock:
+                try:
+                    self.database.write_log(message[SENDER], self.account_name, message[MESSAGE_TEXT])
+                except:
+                    LOGGER.error('Ошибка взаимодействия с базой данных')
         else:
             return f'400 : {message[ERROR]}'
         raise errors.ReqFieldMissingError(RESPONSE)
@@ -279,19 +327,22 @@ class ClientTransport(threading.Thread, QObject):
     def client_receiving(self):
         LOGGER.debug('Запуск потока получения')
         LOGGER.info('Режим работы - прием сообщений')
-        while True:
+
+        while self.running:
             time.sleep(1)
             with self.sock_lock:
-            # Отдыхаем секунду и снова пробуем захватить сокет.
-            # если не сделать тут задержку, то второй поток может достаточно долго ждать освобождения сокета.
-            # time.sleep(1)
+                # Отдыхаем секунду и снова пробуем захватить сокет.
+                # если не сделать тут задержку, то второй поток может достаточно долго ждать освобождения сокета.
+                # time.sleep(1)
                 try:
+                    self.transport.settimeout(0.5)
                     message = get_message(self.transport)
                     LOGGER.debug(f'что-то пришло')
-                # Проблемы с соединением
-                except (ConnectionError, ConnectionResetError, ConnectionAbortedError):
-                    LOGGER.error(f'Соединение с сервером {self.server_address} было утеряно')
-                    sys.exit(1)
+                    # Проблемы с соединением
+                except (ConnectionError, ConnectionAbortedError, ConnectionResetError, json.JSONDecodeError, TypeError):
+                    LOGGER.debug(f'Соединение с сервером {self.server_address} было утеряно')
+                    self.running = False
+                    self.connection_lost.emit()
                     # Принято некорректное сообщение
                 except IncorrectDataReceivedError:
                     LOGGER.error(f'Не удалось декодировать полученное сообщение.')
@@ -299,19 +350,14 @@ class ClientTransport(threading.Thread, QObject):
                 except OSError as err:
                     if err.errno:
                         LOGGER.critical(f'Потеряно соединение с сервером.')
-                        break
+                        self.running = False
+                        self.connection_lost.emit()
+                        # break
                 else:
-                    if ACTION in message and message[ACTION] == MESSAGE and SENDER in message and DESTINATION \
-                            in message and MESSAGE_TEXT in message[USER] and message[DESTINATION] == self.username:
-                        print(f'\nUser {message[SENDER]} sent: {message[USER][MESSAGE_TEXT]}')
-                        LOGGER.info(f'Сообщение из чята от {message[SENDER]}: {message[USER][MESSAGE_TEXT]}')
-                # Если пакет корретно получен выводим в консоль и записываем в базу.
-                        with self.database_lock:
-                            try:
-                                self.database.write_log(message[SENDER], self.account_name, message[MESSAGE_TEXT])
-                            except:
-                                LOGGER.error('Ошибка взаимодействия с базой данных')
-
+                    LOGGER.debug(f'Принято сообщение с сервера: {message}')
+                    self.process_ans(message)
+                finally:
+                    self.transport.settimeout(5)
 
     # Функция запроса списка активных пользователей
     def get_clients(self):
@@ -347,9 +393,9 @@ class ClientTransport(threading.Thread, QObject):
         ans = get_message(self.transport)
         #     LOGGER.debug(f'Получен ответ {ans}')
         if RESPONSE in ans and ans[RESPONSE] == 202:
-        #     self.process_ans(ans)
-        # else:
-        #     self.print_user_message(ans)
+            #     self.process_ans(ans)
+            # else:
+            #     self.print_user_message(ans)
             for contact in ans[LIST]:
                 self.database.add_contact(contact)
         return
@@ -463,32 +509,25 @@ class ClientTransport(threading.Thread, QObject):
             LOGGER.error(f'В ответе сервера отсутствует необходимое поле {missing_error.missing_field}')
             sys.exit(1)
 
-
     def start_threads(self):
         LOGGER.debug('Запуск потока получения')
         receive_thread = threading.Thread(target=self.client_receiving, daemon=True)
-        send_thread = threading.Thread(target=self.client_sending, daemon=True)
+        # send_thread = threading.Thread(target=self.client_sending, daemon=True)
         receive_thread.start()
-        send_thread.start()
+        main_window = ClientMainWindow(self.database, self.transport)
+        main_window.make_connection(self)
+        main_window.setWindowTitle(f'Чат Программа alpha release - {self.username}')
+        self.client_app.exec_()
+        # send_thread.start()
         receive_thread.join()
-        send_thread.join()
+        # send_thread.join()
         LOGGER.debug('Потоки запущены')
         return
 
 
 def main():
-    client_app = QApplication(sys.argv)
-    # Если имя пользователя не было указано в командной строке, то запросим его
-    if not client_app.client_name or client_app.client_name == '':
-        start_dialog = UserNameDialog()
-        client_app.exec_()
-        # Если пользователь ввёл имя и нажал ОК, то сохраняем ведённое и удаляем объект, иначе выходим
-        if start_dialog.ok_pressed:
-            client_app.client_name = start_dialog.client_name.text()
-            del start_dialog
-        else:
-            exit(0)
-    # client = ClientTransport()
+    client = ClientTransport()
+    client.gui_hello()
     # client.daemon = True
     # client.start()
     # client.hello_user()
