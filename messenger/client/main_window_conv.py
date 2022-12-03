@@ -63,9 +63,12 @@ class Ui_MainClientWindow(object):
         self.menu_add_contact.setObjectName("menu_add_contact")
         self.menu_del_contact = QtWidgets.QAction(MainClientWindow)
         self.menu_del_contact.setObjectName("menu_del_contact")
+        self.menu_renew_contact = QtWidgets.QAction(MainClientWindow)
+        self.menu_renew_contact.setObjectName("menu_del_contact")
         self.menu.addAction(self.menu_exit)
         self.menu_2.addAction(self.menu_add_contact)
         self.menu_2.addAction(self.menu_del_contact)
+        self.menu_2.addAction(self.menu_renew_contact)
         self.menu_2.addSeparator()
         self.menubar.addAction(self.menu.menuAction())
         self.menubar.addAction(self.menu_2.menuAction())
@@ -89,4 +92,5 @@ class Ui_MainClientWindow(object):
         self.menu_exit.setText(_translate("MainClientWindow", "Выход"))
         self.menu_add_contact.setText(_translate("MainClientWindow", "Добавить контакт"))
         self.menu_del_contact.setText(_translate("MainClientWindow", "Удалить контакт"))
+        self.menu_renew_contact.setText(_translate("MainClientWindow", "Загрузить активных пользователей"))
 

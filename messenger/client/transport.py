@@ -266,8 +266,7 @@ class ClientTransport(threading.Thread, QObject):
             TIME: time.time(),
             ACCOUNT_NAME: self.username
         }
-
-    def database_load(self):
+    def user_list_update(self):
         # Загружаем список активных пользователей
         try:
             self.get_clients()
@@ -275,6 +274,9 @@ class ClientTransport(threading.Thread, QObject):
             LOGGER.error('Ошибка запроса списка известных пользователей.')
         else:
             self.database.add_users(self.remote_users)
+    def database_load(self):
+        self.user_list_update()
+
         # Загружаем список контактов
         try:
             print('получаем список контактов с сервера')

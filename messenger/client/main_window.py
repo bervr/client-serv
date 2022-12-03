@@ -43,6 +43,10 @@ class ClientMainWindow(QMainWindow):
         self.ui.btn_remove_contact.clicked.connect(self.delete_contact_window)
         self.ui.menu_del_contact.triggered.connect(self.delete_contact_window)
 
+        # Обновить контакты с сервера
+        # self.ui.btn_renew_contact.clicked.connect(self.renew_contact_window)
+        self.ui.menu_renew_contact.triggered.connect(self.transport.user_list_update)
+
         # Дополнительные требующиеся атрибуты
         self.contacts_model = None
         self.history_model = None
