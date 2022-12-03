@@ -8,13 +8,12 @@ import threading
 from PyQt5.QtCore import pyqtSignal, QObject
 from PyQt5.QtWidgets import QApplication
 
-from messenger.decor import func_log
-
-sys.path.append('../')
-from ..common.utils import *
-from ..common.utils import send_message, get_message
-from ..common.variables import *
-from ..common.errors import ServerError, IncorrectDataReceivedError, ReqFieldMissingError
+sys.path.append("../")
+from decor import func_log
+from common.utils import *
+from common.utils import send_message, get_message
+from common.variables import *
+from common.errors import ServerError, IncorrectDataReceivedError, ReqFieldMissingError
 from client_database import ClientStorage
 from main_window import ClientMainWindow
 from start_dialog import UserNameDialog
@@ -91,89 +90,6 @@ class ClientTransport(threading.Thread, QObject):
                     return
 
 
-    # функция текстовое меню
-    # def client_sending(self):
-    #     LOGGER.info('Режим работы - отправка сообщений')
-    #     self.print_help()
-    #     while True:
-    #         command = input('Введите команду:\n ')
-    #         # Если отправка сообщения - соответствующий метод
-    #         if command == 'message':
-    #             self.create_message()
-    #
-    #         # Вывод помощи
-    #         elif command == 'help':
-    #             self.print_help()
-    #
-    #         # Выход. Отправляем сообщение серверу о выходе.
-    #         elif command == 'exit':
-    #             self.user_exit()
-    #
-    #         # Список пользователей.
-    #         elif command == 'active':
-    #             LOGGER.debug('Запрошен вывод списка активных пользователей')
-    #             print(self.remote_users)
-    #
-    #         # обновить список пользователей с сервера.
-    #         elif command == 'renew':
-    #             LOGGER.debug('Запрошен список активных пользователей с cервера')
-    #             # with self.sock_lock:
-    #             self.get_clients()
-    #             with self.database_lock:
-    #                 self.database.add_users(self.remote_users)
-    #             print(self.remote_users)
-    #
-    #         # Список контактов
-    #         elif command == 'contacts':
-    #             with self.database_lock:
-    #                 contacts_list = self.database.get_user_contacts()
-    #             for contact in contacts_list:
-    #                 print(contact)
-    #
-    #         # Редактирование контактов
-    #         elif command == 'edit':
-    #             self.edit_contacts()
-    #
-    #         # история сообщений.
-    #         elif command == 'history':
-    #             self.print_history()
-    #
-    #         else:
-    #             print('Команда не распознана, попробойте снова. help - вывести поддерживаемые команды.')
-    #
-    #     # Функция изменеия контактов
-
-    # def edit_contacts(self):
-    #     ans = input('Для удаления введите del, для добавления add: ')
-    #     if ans == 'del':
-    #         edit = input('Введите имя удаляемого контакта: ')
-    #         with self.database_lock:
-    #             if self.database.check_contact(edit):
-    #                 self.database.del_contact(edit)
-    #                 try:
-    #                     with self.sock_lock:
-    #                         self.remove_contact(edit)
-    #                 except ServerError:
-    #                     LOGGER.error('Не удалось отправить информацию на сервер.')
-    #             else:
-    #                 LOGGER.error('Попытка удаления несуществующего контакта.')
-    #     elif ans == 'add':
-    #         # Проверка на возможность такого контакта
-    #         edit = input('Введите имя создаваемого контакта: ')
-    #         if self.database.check_user(edit):
-    #             with self.database_lock:
-    #                 self.database.add_contact(edit)
-    #             # with self.sock_lock:
-    #             try:
-    #                 with self.sock_lock:
-    #                     self.add_contact(edit)
-    #             except ServerError:
-    #                 LOGGER.error('Не удалось отправить информацию на сервер.')
-    #         else:
-    #             print('Нет такого пользователя')
-    #
-
-
     def transport_shutdown(self):
             self.running = False
             try:
@@ -193,10 +109,10 @@ class ClientTransport(threading.Thread, QObject):
         }
         LOGGER.debug(f'Сформирован словарь сообщения: {message_dict}')
         # Необходимо дождаться освобождения сокета для отправки сообщения
-        with self.sock_lock:
-            send_message(self.transport, message_dict)
-            self.process_ans(get_message(self.transport))
-            LOGGER.info(f'Отправлено сообщение для пользователя {destination}')
+        # with self.sock_lock:
+        send_message(self.transport, message_dict)
+            # self.process_ans(get_message(self.transport))
+        LOGGER.info(f'Отправлено сообщение для пользователя {destination}')
         return
 
     # def create_message(self):
@@ -255,13 +171,15 @@ class ClientTransport(threading.Thread, QObject):
                 in message and MESSAGE_TEXT in message[USER] and message[DESTINATION] == self.username:
             LOGGER.info(f'Сообщение из чята от {message[SENDER]}: {message[USER][MESSAGE_TEXT]}')
             self.new_message.emit(message[SENDER])
-            # print(f'\nUser {message[SENDER]} sent: {message[USER][MESSAGE_TEXT]}')
-            # Если пакет корретно получен выводим в консоль и записываем в базу.
             with self.database_lock:
                 try:
-                    self.database.write_log(message[SENDER], self.username, message[MESSAGE_TEXT])
+                    # with self.database_lock:
+                    self.database.write_log(message[SENDER], 'me', message[USER][MESSAGE_TEXT])
                 except:
                     LOGGER.error('Ошибка взаимодействия с базой данных')
+                else:
+                    LOGGER.debug('Сообщение получено')
+                return
         else:
             return f'400 : {message[ERROR]}'
         raise ReqFieldMissingError(RESPONSE)
@@ -271,7 +189,7 @@ class ClientTransport(threading.Thread, QObject):
         LOGGER.info('Режим работы - прием сообщений')
 
         while self.running:
-            time.sleep(0.5)
+            time.sleep(1)
             with self.sock_lock:
                 # Отдыхаем чуть-чуть и снова пробуем захватить сокет.
                 # если не сделать тут задержку, то второй поток может достаточно долго ждать освобождения сокета.

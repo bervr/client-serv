@@ -216,7 +216,8 @@ class ClientMainWindow(QMainWindow):
             self.messages.critical(self, 'Ошибка', 'Потеряно соединение с сервером!')
             self.close()
         else:
-            self.database.write_log(self.transport.username, self.current_chat, message_text)
+            # with self.transport.database_lock:
+            self.database.write_log('me', self.current_chat, message_text)
             logger.debug(f'Отправлено сообщение для {self.current_chat}: {message_text}')
             self.history_list_update()
 
@@ -244,6 +245,7 @@ class ClientMainWindow(QMainWindow):
                     self.add_contact(sender)
                     self.current_chat = sender
                     self.set_active_user()
+            return
 
 
     # Слот потери соединения

@@ -299,7 +299,7 @@ class MsgClient(threading.Thread, metaclass=ClientVerifier):
                 # Если пакет корретно получен выводим в консоль и записываем в базу.
                         with self.database_lock:
                             try:
-                                self.database.write_log(message[SENDER], self.account_name, message[MESSAGE_TEXT])
+                                self.database.write_log(message[SENDER], self.client_name, message[MESSAGE_TEXT])
                             except:
                                 LOGGER.error('Ошибка взаимодействия с базой данных')
 

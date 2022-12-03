@@ -61,7 +61,6 @@ while True:
             # print(f'{enterpriter} client.py -n user{_}')
             run_one(f'{enterpriter} client.py -n user{_}')
     elif user_answer == 'g':
-        print(os.path.join(gui_client, "transport.py"))
         run_one(f'{enterpriter} {os.path.join(gui_client, "transport.py")}')
 
     elif user_answer == 'a':
