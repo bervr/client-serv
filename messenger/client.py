@@ -277,6 +277,7 @@ class MsgClient(threading.Thread, metaclass=ClientVerifier):
             # если не сделать тут задержку, то второй поток может достаточно долго ждать освобождения сокета.
             # time.sleep(1)
                 try:
+                    self.transport.settimeout(1)
                     message = get_message(self.transport)
                     LOGGER.debug(f'что-то пришло')
                 # Проблемы с соединением
@@ -302,6 +303,7 @@ class MsgClient(threading.Thread, metaclass=ClientVerifier):
                                 self.database.write_log(message[SENDER], self.client_name, message[MESSAGE_TEXT])
                             except:
                                 LOGGER.error('Ошибка взаимодействия с базой данных')
+                self.transport.settimeout(5)
 
 
     # Функция запроса списка активных пользователей

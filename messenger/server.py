@@ -388,6 +388,7 @@ class MsgServer(threading.Thread, metaclass=ServerVerifier):
                         self.process_client_message(get_message(sended_from_client), sended_from_client)
                     except Exception as err:
                         print(err)
+
                         LOGGER.info(f'{sended_from_client.getpeername()} отключился от сервера')
                         new_connection = True
                         self.clients.remove(sended_from_client)

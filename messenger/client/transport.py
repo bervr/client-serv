@@ -101,61 +101,23 @@ class ClientTransport(threading.Thread, QObject):
 
     def send_message(self, destination, message):
         message_dict = {
-            ACTION: MESSAGE,
-            SENDER: self.username,
             DESTINATION: destination,
+            SENDER: self.username,
+            ACTION: MESSAGE,
             TIME: time.time(),
-            MESSAGE_TEXT: message
+            USER: {
+                ACCOUNT_NAME: self.username,
+                MESSAGE_TEXT: message
+            }
         }
         LOGGER.debug(f'Сформирован словарь сообщения: {message_dict}')
         # Необходимо дождаться освобождения сокета для отправки сообщения
-        # with self.sock_lock:
-        send_message(self.transport, message_dict)
+        with self.sock_lock:
+            send_message(self.transport, message_dict)
             # self.process_ans(get_message(self.transport))
         LOGGER.info(f'Отправлено сообщение для пользователя {destination}')
         return
 
-    # def create_message(self):
-    #     destination = input('Введите получателя сообщения: ')
-    #     message = input('Введите сообщение для отправки: ')
-    #
-    #     # Проверим, что получатель существует
-    #     with self.database_lock:
-    #         if not self.database.check_user(destination):
-    #             LOGGER.error(f'Попытка отправить сообщение незарегистрированному получателю: {destination}')
-    #             return
-    #
-    #     # if message == '!!!':
-    #     #     self.user_exit()
-    #     out = {
-    #         DESTINATION: destination,
-    #         SENDER: self.username,
-    #         ACTION: MESSAGE,
-    #         TIME: time.time(),
-    #         USER: {
-    #             ACCOUNT_NAME: self.username,
-    #             MESSAGE_TEXT: message
-    #         }
-    #     }
-    #     LOGGER.debug(f'Сформирован словарь сообщения: {out}')
-    #     # Сохраняем сообщения для истории
-    #     # with self.database_lock:
-    #     self.database.write_log('me', destination, message)
-    #
-    #     # Необходимо дождаться освобождения сокета для отправки сообщения
-    #     # with self.sock_lock:
-    #     try:
-    #         send_message(self.transport, out)
-    #         LOGGER.info(f'Отправлено сообщение для пользователя {destination}')
-    #     except OSError as err:
-    #         if err.errno:
-    #             LOGGER.critical('Потеряно соединение с сервером.')
-    #
-    #             exit(1)
-    #         else:
-    #             LOGGER.error('Не удалось передать сообщение. Таймаут соединения')
-    #     else:
-    #         return
 
     def process_ans(self, message):
         if RESPONSE in message:
@@ -243,16 +205,16 @@ class ClientTransport(threading.Thread, QObject):
             USER: self.username
         }
         LOGGER.debug(f'Сформирован запрос {req}')
-        # with self.sock_lock:
-        send_message(self.transport, req)
-        ans = get_message(self.transport)
+        with self.sock_lock:
+            send_message(self.transport, req)
+            ans = get_message(self.transport)
         #     LOGGER.debug(f'Получен ответ {ans}')
-        if RESPONSE in ans and ans[RESPONSE] == 202:
+            if RESPONSE in ans and ans[RESPONSE] == 202:
             #     self.process_ans(ans)
             # else:
             #     self.print_user_message(ans)
-            for contact in ans[LIST]:
-                self.database.add_contact(contact)
+                for contact in ans[LIST]:
+                    self.database.add_contact(contact)
             LOGGER.debug('Получен список контактов с сервера.')
         return
         # else:
@@ -296,15 +258,6 @@ class ClientTransport(threading.Thread, QObject):
                 raise ServerError('Ошибка удаления клиента')
             print('Удачное удаление контакта.')
         return
-
-        # Функция выводящяя историю сообщений
-
-    # def print_history(self):
-    #     ask = input('Показать историю переписки с (имя контакта): ')
-    #     with self.database_lock:
-    #         history_list = self.database.get_history(ask)
-    #         for message in history_list:
-    #             print(f'\nСообщение от пользователя: {message[0]} от {message[3]}:\n{message[2]}')
 
     @func_log
     def create_exit_message(self):

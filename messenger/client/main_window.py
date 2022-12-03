@@ -204,7 +204,6 @@ class ClientMainWindow(QMainWindow):
             return
         try:
             self.transport.send_message(self.current_chat, message_text)
-            pass
         except ServerError as err:
             self.messages.critical(self, 'Ошибка', err.text)
         except OSError as err:
