@@ -7,8 +7,9 @@ import json
 import threading
 from PyQt5.QtCore import pyqtSignal, QObject
 from PyQt5.QtWidgets import QApplication
-
-sys.path.append("../")
+dir_path = os.path.dirname(os.path.realpath(__file__))
+import_path = os.path.abspath(os.path.join(dir_path, os.pardir))
+sys.path.append(import_path)
 from decor import func_log
 from common.utils import *
 from common.utils import send_message, get_message
@@ -19,6 +20,7 @@ from main_window import ClientMainWindow
 from start_dialog import UserNameDialog
 
 LOGGER = logging.getLogger('client')  # забрали логгер из конфига
+
 
 # Класс - Транспорт, отвечает за взаимодействие с сервером
 class ClientTransport(threading.Thread, QObject):
@@ -54,7 +56,6 @@ class ClientTransport(threading.Thread, QObject):
         LOGGER.debug(f'Сформирован presence: {out}')
         return out
 
-
     def gui_hello(self):
         self.client_app = QApplication(sys.argv)
         # Если имя пользователя не было указано в командной строке, то запросим его
@@ -69,35 +70,34 @@ class ClientTransport(threading.Thread, QObject):
                 # exit(0)
             del start_dialog
             # LOGGER.debug(f'попытка установить имя {self.username}')
-            LOGGER.info(f'установлено имя {self.username}')
-            message_to_server = self.create_presence(self.username)
-            send_message(self.transport, message_to_server)
-            LOGGER.info(f'Отправка сообщения на сервер - {message_to_server}')
-            try:
-                answer = self.process_ans(get_message(self.transport))
-                LOGGER.debug(f'Получен ответ от сервера {answer}')
-            except (ValueError, json.JSONDecodeError):
-                print('Не удалось декодировать сообщение сервера.')
-                LOGGER.critical(f'Не удалось декодировать сообщение от сервера')
+        LOGGER.info(f'установлено имя {self.username}')
+        message_to_server = self.create_presence(self.username)
+        send_message(self.transport, message_to_server)
+        LOGGER.info(f'Отправка сообщения на сервер - {message_to_server}')
+        try:
+            answer = self.process_ans(get_message(self.transport))
+            LOGGER.debug(f'Получен ответ от сервера {answer}')
+        except (ValueError, json.JSONDecodeError):
+            # print('Не удалось декодировать сообщение сервера.')
+            LOGGER.critical(f'Не удалось декодировать сообщение от сервера')
+            return
+        else:
+            if answer == RESPONSE_200:
+                LOGGER.info(f'Установлено подключение к серверу')
+                db_name_path = os.path.join(f'{self.username}.db3')
+                self.database = ClientStorage(db_name_path)  # инициализируем db
+                self.database_load()
+                self.start_threads()
                 return
-            else:
-                if answer == RESPONSE_200:
-                    LOGGER.info(f'Установлено подключение к серверу')
-                    db_name_path = os.path.join(f'{self.username}.db3')
-                    self.database = ClientStorage(db_name_path)  # инициализируем db
-                    self.database_load()
-                    self.start_threads()
-                    return
-
 
     def transport_shutdown(self):
-            self.running = False
-            try:
-                send_message(self.transport, self.create_exit_message())
-            except OSError:
-                pass
-            LOGGER.debug('Транспорт завершает работу.')
-            time.sleep(0.5)
+        self.running = False
+        try:
+            send_message(self.transport, self.create_exit_message())
+        except OSError:
+            pass
+        LOGGER.debug('Транспорт завершает работу.')
+        time.sleep(0.5)
 
     def send_message(self, destination, message):
         message_dict = {
@@ -114,10 +114,8 @@ class ClientTransport(threading.Thread, QObject):
         # Необходимо дождаться освобождения сокета для отправки сообщения
         with self.sock_lock:
             send_message(self.transport, message_dict)
-            # self.process_ans(get_message(self.transport))
         LOGGER.info(f'Отправлено сообщение для пользователя {destination}')
         return
-
 
     def process_ans(self, message):
         if RESPONSE in message:
@@ -135,7 +133,6 @@ class ClientTransport(threading.Thread, QObject):
             self.new_message.emit(message[SENDER])
             with self.database_lock:
                 try:
-                    # with self.database_lock:
                     self.database.write_log(message[SENDER], 'me', message[USER][MESSAGE_TEXT])
                 except:
                     LOGGER.error('Ошибка взаимодействия с базой данных')
@@ -155,7 +152,6 @@ class ClientTransport(threading.Thread, QObject):
             with self.sock_lock:
                 # Отдыхаем чуть-чуть и снова пробуем захватить сокет.
                 # если не сделать тут задержку, то второй поток может достаточно долго ждать освобождения сокета.
-                # time.sleep(1)
                 try:
                     self.transport.settimeout(1)
                     message = get_message(self.transport)
@@ -208,18 +204,12 @@ class ClientTransport(threading.Thread, QObject):
         with self.sock_lock:
             send_message(self.transport, req)
             ans = get_message(self.transport)
-        #     LOGGER.debug(f'Получен ответ {ans}')
+            #     LOGGER.debug(f'Получен ответ {ans}')
             if RESPONSE in ans and ans[RESPONSE] == 202:
-            #     self.process_ans(ans)
-            # else:
-            #     self.print_user_message(ans)
                 for contact in ans[LIST]:
                     self.database.add_contact(contact)
             LOGGER.debug('Получен список контактов с сервера.')
         return
-        # else:
-        #     raise ServerError
-        # return
 
     # Функция добавления пользователя в контакт лист
     def add_contact(self, contact):
@@ -237,7 +227,7 @@ class ClientTransport(threading.Thread, QObject):
                 pass
             else:
                 raise ServerError('Ошибка создания контакта')
-            print('Удачное создание контакта.')
+            # print('Удачное создание контакта.')
         return
 
     # Функция удаления пользователя из контакт-листа
@@ -256,7 +246,7 @@ class ClientTransport(threading.Thread, QObject):
                 pass
             else:
                 raise ServerError('Ошибка удаления клиента')
-            print('Удачное удаление контакта.')
+            # print('Удачное удаление контакта.')
         return
 
     @func_log
@@ -266,6 +256,7 @@ class ClientTransport(threading.Thread, QObject):
             TIME: time.time(),
             ACCOUNT_NAME: self.username
         }
+
     def user_list_update(self):
         # Загружаем список активных пользователей
         try:
@@ -274,12 +265,11 @@ class ClientTransport(threading.Thread, QObject):
             LOGGER.error('Ошибка запроса списка известных пользователей.')
         else:
             self.database.add_users(self.remote_users)
+
     def database_load(self):
         self.user_list_update()
-
         # Загружаем список контактов
         try:
-            print('получаем список контактов с сервера')
             self.contacts_list_request()
         except ServerError:
             LOGGER.error('Ошибка запроса списка контактов.')
@@ -324,7 +314,6 @@ class ClientTransport(threading.Thread, QObject):
     def start_threads(self):
         LOGGER.debug('Запуск потока получения')
         receive_thread = threading.Thread(target=self.client_receiving, daemon=True)
-        # send_thread = threading.Thread(target=self.client_sending, daemon=True)
         receive_thread.start()
         main_window = ClientMainWindow(self.database, self)
         main_window.make_connection(self)
@@ -332,9 +321,7 @@ class ClientTransport(threading.Thread, QObject):
         self.client_app.exec_()
         # Раз графическая оболочка закрылась, закрываем транспорт
         self.transport_shutdown()
-        # send_thread.start()
         receive_thread.join()
-        # send_thread.join()
         LOGGER.debug('Потоки запущены')
         return
 
@@ -342,9 +329,6 @@ class ClientTransport(threading.Thread, QObject):
 def main():
     client = ClientTransport()
     client.gui_hello()
-    # client.daemon = True
-    # client.start()
-    # client.hello_user()
 
 
 if __name__ == '__main__':

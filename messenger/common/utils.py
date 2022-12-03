@@ -16,7 +16,6 @@ def get_message(client):
         json_response = encoded_response.decode(ENCODING)
         response = json.loads(json_response)
         if isinstance(response, dict):
-            print(response)
             return response
         raise ValueError
     raise ValueError

@@ -129,7 +129,6 @@ class ClientMainWindow(QMainWindow):
     # Функция обновляющяя контакт лист
     def clients_list_update(self):
         contacts_list = self.database.get_user_contacts()
-        print(contacts_list)
         self.contacts_model = QStandardItemModel()
         for i in sorted(contacts_list):
             item = QStandardItem(i)
@@ -239,7 +238,7 @@ class ClientMainWindow(QMainWindow):
                     self.current_chat = sender
                     self.set_active_user()
             else:
-                print('NO')
+                # print('NO')
                 # Раз нету,спрашиваем хотим ли добавить юзера в контакты.
                 if self.messages.question(self, 'Новое сообщение', \
                                           f'Получено новое сообщение от {sender}.\n Данного пользователя нет в вашем контакт-листе.\n Добавить в контакты и открыть чат с ним?',

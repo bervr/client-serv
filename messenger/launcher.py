@@ -37,19 +37,11 @@ def kill_processes():
 
             p.kill()
             p.terminate()
-            # for pid in p.stdout:   #todo
-            #     print(p.stdout)
-            #     os.kill(int(pid), signal.SIGTERM)
-            #     try:
-            #         os.kill(int(pid),0)
-            #         raise Exception("Can't kill the process")
-            #     except OSError as err:
-            #         continue
 
 
 while True:
     user_answer = input("Запустить сервер(s)\nЗапустить клиентов (c)\nЗапустить все (а)"
-                        "\nЗапустить gui клиента (g)\nЗакрыть все (x)\nВыйти(q):\n")
+                        "\nЗапустить cli клиента (cc)\nЗакрыть все (x)\nВыйти(q):\n")
     if user_answer == 'q':
         kill_processes()
         break
@@ -59,16 +51,20 @@ while True:
     elif user_answer == 'c':
         for _ in range(client_count):
             # print(f'{enterpriter} client.py -n user{_}')
-            run_one(f'{enterpriter} client.py -n user{_}')
+            # run_one(f'{enterpriter} client.py -n user{_}')
+            run_one(f'{enterpriter} {os.path.join(gui_client, "transport.py")} -n user{_}')
+
+    elif user_answer == 'cc':
+        run_one(f'{enterpriter} client.py -n user')
+
     elif user_answer == 'g':
-        run_one(f'{enterpriter} {os.path.join(gui_client, "transport.py")}')
+        run_one(f'{enterpriter} {os.path.join(gui_client, "transport.py")} -n user')
 
     elif user_answer == 'a':
         run_one(f'{enterpriter} server.py')
         time.sleep(0.5)  # ждем чтобы стартанул сервер
-        run_one(f'{enterpriter} client/transport.py')
         for _ in range(client_count):
-            run_one(f'{enterpriter} client.py -n user{_}')
+            run_one(f'{enterpriter} {os.path.join(gui_client, "transport.py")} -n user{_}')
 
     elif user_answer == 'x':
         kill_processes()
