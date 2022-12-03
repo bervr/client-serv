@@ -58,7 +58,6 @@ class ClientMainWindow(QMainWindow):
         self.set_disabled_input()
         self.show()
 
-
     # Деактивировать поля ввода
     def set_disabled_input(self):
         # Надпись  - получатель.
@@ -147,7 +146,7 @@ class ClientMainWindow(QMainWindow):
         self.add_contact(new_contact)
         item.close()
 
-    # Функция добавляющяя контакт в базы
+    # Функция добавляющая контакт в базу
     def add_contact(self, new_contact):
         try:
             self.transport.add_contact(new_contact)
@@ -217,7 +216,7 @@ class ClientMainWindow(QMainWindow):
             self.messages.critical(self, 'Ошибка', 'Потеряно соединение с сервером!')
             self.close()
         else:
-            self.database.save_message(self.current_chat, 'out', message_text)
+            self.database.write_log(self.transport.username, self.current_chat, message_text)
             logger.debug(f'Отправлено сообщение для {self.current_chat}: {message_text}')
             self.history_list_update()
 
@@ -245,6 +244,7 @@ class ClientMainWindow(QMainWindow):
                     self.add_contact(sender)
                     self.current_chat = sender
                     self.set_active_user()
+
 
     # Слот потери соединения
     # Выдаёт сообщение о ошибке и завершает работу приложения

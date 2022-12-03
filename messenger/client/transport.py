@@ -144,35 +144,35 @@ class ClientTransport(threading.Thread, QObject):
 
         # Функция изменеия контактов
 
-    def edit_contacts(self):
-        ans = input('Для удаления введите del, для добавления add: ')
-        if ans == 'del':
-            edit = input('Введите имя удаляемого контакта: ')
-            with self.database_lock:
-                if self.database.check_contact(edit):
-                    self.database.del_contact(edit)
-                    try:
-                        with self.sock_lock:
-                            self.remove_contact(edit)
-                    except ServerError:
-                        LOGGER.error('Не удалось отправить информацию на сервер.')
-                else:
-                    LOGGER.error('Попытка удаления несуществующего контакта.')
-        elif ans == 'add':
-            # Проверка на возможность такого контакта
-            edit = input('Введите имя создаваемого контакта: ')
-            if self.database.check_user(edit):
-                with self.database_lock:
-                    self.database.add_contact(edit)
-                # with self.sock_lock:
-                try:
-                    with self.sock_lock:
-                        self.add_contact(edit)
-                except ServerError:
-                    LOGGER.error('Не удалось отправить информацию на сервер.')
-            else:
-                print('Нет такого пользователя')
-
+    # def edit_contacts(self):
+    #     ans = input('Для удаления введите del, для добавления add: ')
+    #     if ans == 'del':
+    #         edit = input('Введите имя удаляемого контакта: ')
+    #         with self.database_lock:
+    #             if self.database.check_contact(edit):
+    #                 self.database.del_contact(edit)
+    #                 try:
+    #                     with self.sock_lock:
+    #                         self.remove_contact(edit)
+    #                 except ServerError:
+    #                     LOGGER.error('Не удалось отправить информацию на сервер.')
+    #             else:
+    #                 LOGGER.error('Попытка удаления несуществующего контакта.')
+    #     elif ans == 'add':
+    #         # Проверка на возможность такого контакта
+    #         edit = input('Введите имя создаваемого контакта: ')
+    #         if self.database.check_user(edit):
+    #             with self.database_lock:
+    #                 self.database.add_contact(edit)
+    #             # with self.sock_lock:
+    #             try:
+    #                 with self.sock_lock:
+    #                     self.add_contact(edit)
+    #             except ServerError:
+    #                 LOGGER.error('Не удалось отправить информацию на сервер.')
+    #         else:
+    #             print('Нет такого пользователя')
+    #
 
 
     def transport_shutdown(self):
@@ -183,6 +183,21 @@ class ClientTransport(threading.Thread, QObject):
                 pass
             LOGGER.debug('Транспорт завершает работу.')
             time.sleep(0.5)
+
+    def send_message(self, destination, message):
+        message_dict = {
+            ACTION: MESSAGE,
+            SENDER: self.username,
+            DESTINATION: destination,
+            TIME: time.time(),
+            MESSAGE_TEXT: message
+        }
+        LOGGER.debug(f'Сформирован словарь сообщения: {message_dict}')
+        # Необходимо дождаться освобождения сокета для отправки сообщения
+        with self.sock_lock:
+            send_message(self.transport, message_dict)
+            self.process_ans(get_message(self.transport))
+            LOGGER.info(f'Отправлено сообщение для пользователя {destination}')
 
     def create_message(self):
         destination = input('Введите получателя сообщения: ')
@@ -243,7 +258,7 @@ class ClientTransport(threading.Thread, QObject):
             # Если пакет корретно получен выводим в консоль и записываем в базу.
             with self.database_lock:
                 try:
-                    self.database.write_log(message[SENDER], self.account_name, message[MESSAGE_TEXT])
+                    self.database.write_log(message[SENDER], self.username, message[MESSAGE_TEXT])
                 except:
                     LOGGER.error('Ошибка взаимодействия с базой данных')
         else:
@@ -333,13 +348,14 @@ class ClientTransport(threading.Thread, QObject):
             USER: self.username,
             ACCOUNT_NAME: contact
         }
-        send_message(self.transport, req)
-        ans = get_message(self.transport)
-        if RESPONSE in ans and ans[RESPONSE] == 200:
-            pass
-        else:
-            raise ServerError('Ошибка создания контакта')
-        print('Удачное создание контакта.')
+        with self.sock_lock:
+            send_message(self.transport, req)
+            ans = get_message(self.transport)
+            if RESPONSE in ans and ans[RESPONSE] == 200:
+                pass
+            else:
+                raise ServerError('Ошибка создания контакта')
+            print('Удачное создание контакта.')
         return
 
     # Функция удаления пользователя из контакт-листа
@@ -351,13 +367,14 @@ class ClientTransport(threading.Thread, QObject):
             USER: self.username,
             ACCOUNT_NAME: contact
         }
-        send_message(self.transport, req)
-        ans = get_message(self.transport)
-        if RESPONSE in ans and ans[RESPONSE] == 200:
-            pass
-        else:
-            raise ServerError('Ошибка удаления клиента')
-        print('Удачное удаление контакта.')
+        with self.sock_lock:
+            send_message(self.transport, req)
+            ans = get_message(self.transport)
+            if RESPONSE in ans and ans[RESPONSE] == 200:
+                pass
+            else:
+                raise ServerError('Ошибка удаления клиента')
+            print('Удачное удаление контакта.')
         return
 
         # Функция выводящяя историю сообщений
@@ -434,7 +451,7 @@ class ClientTransport(threading.Thread, QObject):
         receive_thread = threading.Thread(target=self.client_receiving, daemon=True)
         # send_thread = threading.Thread(target=self.client_sending, daemon=True)
         receive_thread.start()
-        main_window = ClientMainWindow(self.database, self.transport)
+        main_window = ClientMainWindow(self.database, self)
         main_window.make_connection(self)
         main_window.setWindowTitle(f'Чат Программа alpha release - {self.username}')
         self.client_app.exec_()
