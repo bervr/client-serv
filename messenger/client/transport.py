@@ -234,6 +234,7 @@ class ClientTransport(threading.Thread, QObject):
                 LOGGER.debug('Получен список активных пользователей с сервера.')
 
     # Функция запроса списка контактов
+
     def contacts_list_request(self):
         LOGGER.debug(f'Запрос контакт листа для пользователя {self.username}')
         req = {

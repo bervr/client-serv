@@ -90,7 +90,7 @@ class ClientMainWindow(QMainWindow):
         # Записи в обратном порядке, поэтому выбираем их с конца и не более 20
         for i in range(start_index, length):
             item = list[i]
-            if item[1] == 'in':
+            if item[0] != 1:
                 mess = QStandardItem(f'Входящее от {item[3].replace(microsecond=0)}:\n {item[2]}')
                 mess.setEditable(False)
                 mess.setBackground(QBrush(QColor(255, 213, 213)))

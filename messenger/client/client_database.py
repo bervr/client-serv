@@ -85,8 +85,10 @@ class ClientStorage:
         return history
 
     def write_log(self, sender, receiver, text, time=datetime.datetime.now()):
-        sender_id = self.session.query(self.Contacts.contact_id).filter_by(contact_name=sender) if sender != 'me' else 1
-        receiver_id = self.session.query(self.Contacts.contact_id).filter_by(contact_name=receiver) if receiver != 'me' else 1
+        sender_id = self.session.query(self.Contacts.contact_id).filter_by(contact_name=sender) \
+            if sender != 'me' else 1
+        receiver_id = self.session.query(self.Contacts.contact_id).filter_by(contact_name=receiver) \
+            if receiver != 'me' else 1
         new_message = self.MessageHistory(sender_id, receiver_id, text, time)
         self.session.add(new_message)
         self.session.commit()
@@ -147,7 +149,7 @@ class ClientStorage:
 
 
 if __name__ == '__main__':
-    client = ClientStorage('222')
+    client = ClientStorage('user.db3')
 
     # client.add_contact('Uasya')
     # client.add_contact('Uova')
@@ -161,7 +163,7 @@ if __name__ == '__main__':
     # client.write_log(1, 2, 'ghbdtn')
     # client.write_log(3, 1, 'че хотел?')
     # client.write_log(1, 3, 'домашку сделала?')
-    print(client.get_history('Uasya'))
+    print(client.get_history('user'))
 
 
 
