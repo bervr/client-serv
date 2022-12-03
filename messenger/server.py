@@ -1,6 +1,5 @@
 import logging
 import os
-
 import select
 import socket
 import sys
@@ -219,7 +218,7 @@ class MsgServer(threading.Thread, metaclass=ServerVerifier):
                     with conflag_lock:
                         new_connection = True
                 else:
-                    response = RESPONSE_400
+                    response = RESPONSE_400 #todo добавить отключение неактивных reverse_ping
                     response[ERROR] = 'Имя пользователя уже занято'
                     send_message(client, response)
                     self.clients.remove(client)
