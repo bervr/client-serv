@@ -45,10 +45,6 @@ class ClientTransport(threading.Thread, QObject):
         self.running = True
         # Сигналы новое сообщение и потеря соединения
 
-        # super().__init__()
-
-    # s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # проверка метакласса
-
     def create_presence(self, account_name='Guest'):
         out = {
             ACTION: PRESENCE,
@@ -59,36 +55,6 @@ class ClientTransport(threading.Thread, QObject):
         }
         LOGGER.debug(f'Сформирован presence: {out}')
         return out
-
-    # console only
-    def add_client_name(self, name):
-        if name != '':
-            self.username = name
-        else:
-            self.username = self.transport.getsockname()[1]
-        LOGGER.info(f'установлено имя {self.username}')
-        return self.username
-
-    def hello_user(self, answer=None):  # 1
-        dir_path = os.path.dirname(os.path.realpath(__file__))
-        name = self.username
-        while True:
-            if answer == '400 : Имя пользователя уже занято':
-                LOGGER.error('400 : Имя пользователя уже занято')
-                name = input(
-                    'Это имя занято. Введите свое имя или нажмите Enter чтобы попробовать продолжить анонимно:\n')
-            elif answer == RESPONSE_200:
-                break
-            elif name == '':
-                name = input('Введите свое имя или нажмите Enter чтобы попробовать продолжить анонимно:\n')
-            answer = self.hello(name)  # 2 todo 'если при первом вводе имени выбрать занятое то потом нельзя зайти'
-        print(f'Вы видны всем под именем {self.username}')
-        db_name_path = os.path.join(f'{self.username}.db3')
-        self.database = ClientStorage(db_name_path)  # инициализируем db
-
-        self.database_load()
-        self.start_threads()
-        self.get_destination()  # 4
 
 
     def gui_hello(self):
@@ -125,24 +91,8 @@ class ClientTransport(threading.Thread, QObject):
                     self.start_threads()
                     return
 
-    def hello(self, user_name=''):  # 2
-        self.add_client_name(user_name)  # 3
-        message_to_server = self.create_presence(self.username)
-        send_message(self.transport, message_to_server)
-        LOGGER.info(f'Отправка сообщения на сервер - {message_to_server}')
-        try:
-            answer = self.process_ans(get_message(self.transport))
-            LOGGER.debug(f'Получен ответ от сервера {answer}')
-
-        except (ValueError, json.JSONDecodeError):
-            print('Не удалось декодировать сообщение сервера.')
-            LOGGER.critical(f'Не удалось декодировать сообщение от сервера')
-            return
-        else:
-            return answer
 
     # функция текстовое меню
-    # def get_destination(self):
     def client_sending(self):
         LOGGER.info('Режим работы - отправка сообщений')
         self.print_help()
@@ -223,31 +173,7 @@ class ClientTransport(threading.Thread, QObject):
             else:
                 print('Нет такого пользователя')
 
-    # Функция выводящая справку по использованию.
-    def print_help(self):
-        print('Поддерживаемые команды:')
-        print('message - отправить сообщение. Кому и текст будет запрошены отдельно.')
-        print('active - показать пользователей на сервере.')
-        print('renew - запросить пользователей на сервере.')
-        print('history - история сообщений')
-        print('contacts - список контактов')
-        print('edit - редактирование списка контактов')
-        print('help - вывести подсказки по командам')
-        print('exit - выход из программы')
 
-    def user_exit(self):
-        # with self.sock_lock:
-        try:
-            send_message(self.transport, self.create_exit_message())
-            LOGGER.info(f'Отправлено сообщение о завершении сеанса на сервер')
-        except:
-            pass
-        print('Завершение соединения.')
-        LOGGER.info('Завершение работы по команде пользователя.')
-        # Задержка необходима, чтобы успело уйти сообщение о выходе
-        time.sleep(0.5)
-        self.transport.close()
-        sys.exit(0)
 
     def transport_shutdown(self):
             self.running = False
@@ -371,13 +297,7 @@ class ClientTransport(threading.Thread, QObject):
         if RESPONSE in ans and ans[RESPONSE] == 201:
             LOGGER.debug(f'getclients Получен ответ  - список пользователей сервера {ans[LIST]}')
             self.remote_users = [x for x in ans[LIST] if x != str(self.username)]
-        # else:
-        #     self.print_user_message(ans)
-
-        #     self.remote_users = [x for x in ans[LIST] if x != str(self.username)]
-        # return
-        # else:
-        #     raise ServerError
+            LOGGER.debug('Получен список активных пользователей с сервера.')
 
     # Функция запроса списка контактов
     def contacts_list_request(self):
@@ -398,6 +318,7 @@ class ClientTransport(threading.Thread, QObject):
             #     self.print_user_message(ans)
             for contact in ans[LIST]:
                 self.database.add_contact(contact)
+            LOGGER.debug('Получен список контактов с сервера.')
         return
         # else:
         #     raise ServerError
@@ -441,12 +362,12 @@ class ClientTransport(threading.Thread, QObject):
 
         # Функция выводящяя историю сообщений
 
-    def print_history(self):
-        ask = input('Показать историю переписки с (имя контакта): ')
-        with self.database_lock:
-            history_list = self.database.get_history(ask)
-            for message in history_list:
-                print(f'\nСообщение от пользователя: {message[0]} от {message[3]}:\n{message[2]}')
+    # def print_history(self):
+    #     ask = input('Показать историю переписки с (имя контакта): ')
+    #     with self.database_lock:
+    #         history_list = self.database.get_history(ask)
+    #         for message in history_list:
+    #             print(f'\nСообщение от пользователя: {message[0]} от {message[3]}:\n{message[2]}')
 
     @func_log
     def create_exit_message(self):
@@ -468,7 +389,6 @@ class ClientTransport(threading.Thread, QObject):
         try:
             print('получаем список контактов с сервера')
             self.contacts_list_request()
-            print(' получили список контактов с сервера')
         except ServerError:
             LOGGER.error('Ошибка запроса списка контактов.')
         else:
@@ -518,6 +438,8 @@ class ClientTransport(threading.Thread, QObject):
         main_window.make_connection(self)
         main_window.setWindowTitle(f'Чат Программа alpha release - {self.username}')
         self.client_app.exec_()
+        # Раз графическая оболочка закрылась, закрываем транспорт
+        self.transport_shutdown()
         # send_thread.start()
         receive_thread.join()
         # send_thread.join()
