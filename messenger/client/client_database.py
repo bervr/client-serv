@@ -47,9 +47,9 @@ class ClientStorage:
             self.id = None
             self.username = user
 
-    def __init__(self, name):
-        self.engine = create_engine(f'sqlite:///client_{name}.db3',
-                                    pool_recycle = 7200,
+    def __init__(self, path):
+        self.engine = create_engine(f'sqlite:///{path}',
+                                    pool_recycle=7200,
                                     echo=False,
                                     connect_args={'check_same_thread': False}
                                     )
@@ -85,8 +85,10 @@ class ClientStorage:
         return history
 
     def write_log(self, sender, receiver, text, time=datetime.datetime.now()):
-        sender_id = self.session.query(self.Contacts.contact_id).filter_by(contact_name=sender)
-        receiver_id = self.session.query(self.Contacts.contact_id).filter_by(contact_name=receiver)
+        sender_id = self.session.query(self.Contacts.contact_id).filter_by(contact_name=sender) \
+            if sender != 'me' else 1
+        receiver_id = self.session.query(self.Contacts.contact_id).filter_by(contact_name=receiver) \
+            if receiver != 'me' else 1
         new_message = self.MessageHistory(sender_id, receiver_id, text, time)
         self.session.add(new_message)
         self.session.commit()
@@ -128,6 +130,10 @@ class ClientStorage:
             return True
         return False
 
+    # Функция возвращающяя список известных пользователей
+    def get_users(self):
+        return [user[0] for user in self.session.query(self.KnownUsers.username).all()]
+
     def del_contact(self, contact):
         if contact != 'me':
             self.session.query(self.Contacts).filter_by(contact_name=contact).delete()
@@ -138,11 +144,12 @@ class ClientStorage:
             contacts = self.session.query(self.Contacts.contact_id, self.Contacts.contact_name).all()
         except:
             contacts = []
-        return contacts
+        # return contacts
+        return [contact[1] for contact in contacts]
 
 
 if __name__ == '__main__':
-    client = ClientStorage('222')
+    client = ClientStorage('user.db3')
 
     # client.add_contact('Uasya')
     # client.add_contact('Uova')
@@ -156,7 +163,7 @@ if __name__ == '__main__':
     # client.write_log(1, 2, 'ghbdtn')
     # client.write_log(3, 1, 'че хотел?')
     # client.write_log(1, 3, 'домашку сделала?')
-    print(client.get_history('Uasya'))
+    print(client.get_history('user'))
 
 
 

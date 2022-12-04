@@ -1,12 +1,11 @@
 """Программа-клиент"""
 import logging
+import os
 import sys
 import json
 import socket
 import threading
 import time
-import argparse
-import logs.conf.client_log_config
 from common.variables import ACTION, PRESENCE, TIME, USER, ACCOUNT_NAME, \
     RESPONSE, ERROR, MESSAGE_TEXT, MESSAGE, EXIT, SENDER, DESTINATION, RESPONSE_200, GETCLIENTS, LIST, RESPONSE_204, \
     GETCONTACTS, ADD_CONTACT, REMOVE_CONTACT
@@ -16,7 +15,7 @@ from decor import func_log
 from common.errors import IncorrectDataReceivedError, ReqFieldMissingError, ServerError
 from metaclasses import ClientVerifier
 from common.variables import DEFAULT_PORT, DEFAULT_IP_ADDRESS
-from client_database import ClientStorage
+from client.client_database import ClientStorage
 
 LOGGER = logging.getLogger('client')  # забрали логгер из конфига
 
@@ -61,6 +60,7 @@ class MsgClient(threading.Thread, metaclass=ClientVerifier):
         return self.client_name
 
     def hello_user(self, answer=None):  # 1
+        dir_path = os.path.dirname(os.path.realpath(__file__))
         name = self.client_name
         while True:
             if answer == '400 : Имя пользователя уже занято':
@@ -73,7 +73,8 @@ class MsgClient(threading.Thread, metaclass=ClientVerifier):
                 name = input('Введите свое имя или нажмите Enter чтобы попробовать продолжить анонимно:\n')
             answer = self.hello(name)  # 2 todo 'если при первом вводе имени выбрать занятое то потом нельзя зайти'
         print(f'Вы видны всем под именем {self.client_name}')
-        self.database = ClientStorage(self.client_name)  # инициализируем db
+        db_name_path = os.path.join('client', f'{self.client_name}.db3')
+        self.database = ClientStorage(db_name_path)  # инициализируем db
 
         self.database_load()
         self.start_threads()
@@ -266,16 +267,6 @@ class MsgClient(threading.Thread, metaclass=ClientVerifier):
             return f'400 : {message[ERROR]}'
         raise errors.ReqFieldMissingError(RESPONSE)
 
-    # def client_sending(self):
-    #     LOGGER.info('Режим работы - отправка сообщений')
-    #     while True:
-    #         # time.sleep(1)
-    #         try:
-    #             send_message(self.transport, self.create_message())
-    #         except (ConnectionError, ConnectionResetError, ConnectionAbortedError):
-    #             LOGGER.error(f'Соединение с сервером {self.server_address} было утеряно')
-    #             sys.exit(1)
-
     def client_receiving(self):
         LOGGER.debug('Запуск потока получения')
         LOGGER.info('Режим работы - прием сообщений')
@@ -286,6 +277,7 @@ class MsgClient(threading.Thread, metaclass=ClientVerifier):
             # если не сделать тут задержку, то второй поток может достаточно долго ждать освобождения сокета.
             # time.sleep(1)
                 try:
+                    self.transport.settimeout(1)
                     message = get_message(self.transport)
                     LOGGER.debug(f'что-то пришло')
                 # Проблемы с соединением
@@ -308,9 +300,10 @@ class MsgClient(threading.Thread, metaclass=ClientVerifier):
                 # Если пакет корретно получен выводим в консоль и записываем в базу.
                         with self.database_lock:
                             try:
-                                self.database.write_log(message[SENDER], self.account_name, message[MESSAGE_TEXT])
+                                self.database.write_log(message[SENDER], self.client_name, message[MESSAGE_TEXT])
                             except:
                                 LOGGER.error('Ошибка взаимодействия с базой данных')
+                self.transport.settimeout(5)
 
 
     # Функция запроса списка активных пользователей

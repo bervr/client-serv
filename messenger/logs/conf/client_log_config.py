@@ -16,7 +16,7 @@ CLIENT_LOGGER = logging.getLogger('client')
 CLIENT_LOGGER.setLevel(logging.DEBUG)
 
 # создали хендлер, указали куда писать лог
-FILE_HANDLER = logging.FileHandler(PATH, encoding = "UTF-8")
+FILE_HANDLER = logging.FileHandler(PATH, encoding="UTF-8")
 
 # уровень логгирования для данного хендлера
 FILE_HANDLER.setLevel(logging.DEBUG)
