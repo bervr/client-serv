@@ -5,8 +5,8 @@ import os
 import sys
 from common.variables import MAX_PACKAGE_LENGTH, ENCODING, DEFAULT_PORT, DEFAULT_IP_ADDRESS
 
-sys.path.append(os.path.join(os.getcwd(), '..'))
-from decor import func_log, Log
+# sys.path.append(os.path.join(os.getcwd(), '..'))
+from common.decor import func_log, Log
 
 
 @Log()

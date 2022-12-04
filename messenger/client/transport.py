@@ -10,7 +10,7 @@ from PyQt5.QtWidgets import QApplication
 dir_path = os.path.dirname(os.path.realpath(__file__))
 import_path = os.path.abspath(os.path.join(dir_path, os.pardir))
 sys.path.append(import_path)
-from decor import func_log
+from common.decor import func_log
 from common.utils import *
 from common.utils import send_message, get_message
 from common.variables import *
@@ -28,6 +28,7 @@ class ClientTransport(threading.Thread, QObject):
     # атрибуты класса становятся экземпляры pyqtsignal
     new_message = pyqtSignal(str)
     connection_lost = pyqtSignal()
+    message_205 = pyqtSignal()
 
     def __init__(self):
         # вызываем конструкторы предков.
@@ -84,7 +85,7 @@ class ClientTransport(threading.Thread, QObject):
         else:
             if answer == RESPONSE_200:
                 LOGGER.info(f'Установлено подключение к серверу')
-                db_name_path = os.path.join(f'{self.username}.db3')
+                db_name_path = os.path.join('db',f'{self.username}.db3')
                 self.database = ClientStorage(db_name_path)  # инициализируем db
                 self.database_load()
                 self.start_threads()

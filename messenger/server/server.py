@@ -4,8 +4,8 @@ import select
 import socket
 import sys
 import subprocess
-from metaclasses import ServerVerifier
-from descriptors import IsPortValid
+import hmac
+import binascii
 import threading
 from database import ServerStorage
 import chardet
@@ -14,6 +14,12 @@ from PyQt5.QtWidgets import QApplication, QMessageBox
 from PyQt5.QtCore import QTimer
 from server_gui import MainWindow, gui_create_model, HistoryWindow, create_stat_model, ConfigWindow
 
+
+dir_path = os.path.dirname(os.path.realpath(__file__))
+import_path = os.path.abspath(os.path.join(dir_path, os.pardir))
+sys.path.append(import_path)
+from common.metaclasses import ServerVerifier
+from common.descriptors import IsPortValid
 from common.variables import ACTION, ACCOUNT_NAME, MAX_CONNECTIONS, PRESENCE, TIME, USER, ERROR, MESSAGE_TEXT, \
     MESSAGE, SENDER, DESTINATION, RESPONSE_200, RESPONSE_400, EXIT, GETCLIENTS, \
     LIST, RESPONSE_CLIENTS, RESPONSE, GETCONTACTS, RESPONSE_202, ADD_CONTACT, REMOVE_CONTACT
