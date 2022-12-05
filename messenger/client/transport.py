@@ -7,6 +7,11 @@ import json
 import threading
 from PyQt5.QtCore import pyqtSignal, QObject
 from PyQt5.QtWidgets import QApplication
+from Cryptodome.PublicKey import RSA
+import hmac
+import binascii
+import hashlib
+
 dir_path = os.path.dirname(os.path.realpath(__file__))
 import_path = os.path.abspath(os.path.join(dir_path, os.pardir))
 sys.path.append(import_path)
@@ -38,6 +43,8 @@ class ClientTransport(threading.Thread, QObject):
         # client.py -a localhost -p 8079 -m send/listen
         self.remote_users = []
         self.username = ''
+        self.password = ''
+        self.keys = ''
         self.get_start_params()
         self.get_connect()
         self.database = ''
@@ -59,37 +66,92 @@ class ClientTransport(threading.Thread, QObject):
 
     def gui_hello(self):
         self.client_app = QApplication(sys.argv)
-        # Если имя пользователя не было указано в командной строке, то запросим его
-        if not self.username or self.username == '':
+        # Если имя пользователя и пароль не были указаны в командной строке, то запросим их
+        if not self.username or not self.password:
             start_dialog = UserNameDialog()
             self.client_app.exec_()
             # Если пользователь ввёл имя и нажал ОК, то сохраняем ведённое и удаляем объект, иначе задаем имя по сокету
             if start_dialog.ok_pressed:
                 self.username = start_dialog.client_name.text()
+                self.password = start_dialog.client_passwd.text()
+                LOGGER.debug(f'Получено имя = {self.username}, пароль = {self.password}.')
             else:
-                self.username = self.transport.getsockname()[1]
-                # exit(0)
+                exit(0)
             del start_dialog
-            # LOGGER.debug(f'попытка установить имя {self.username}')
         LOGGER.info(f'установлено имя {self.username}')
-        message_to_server = self.create_presence(self.username)
-        send_message(self.transport, message_to_server)
-        LOGGER.info(f'Отправка сообщения на сервер - {message_to_server}')
-        try:
-            answer = self.process_ans(get_message(self.transport))
-            LOGGER.debug(f'Получен ответ от сервера {answer}')
-        except (ValueError, json.JSONDecodeError):
-            # print('Не удалось декодировать сообщение сервера.')
-            LOGGER.critical(f'Не удалось декодировать сообщение от сервера')
-            return
+        self.load_keys() # загрузили ключи
+        # запускаем аутентификацию
+
+        passwd_bytes = self.password.encode('utf-8')  # Получаем хэш пароля
+        salt = self.username.lower().encode('utf-8')  # делаем соль
+        passwd_hash = hashlib.pbkdf2_hmac('sha512', passwd_bytes, salt, 10000)
+        passwd_hash_string = binascii.hexlify(passwd_hash) # получили тоже что лежит на сервере
+
+        LOGGER.debug(f'Passwd hash ready: {passwd_hash_string}')
+
+        # Получаем публичный ключ и декодируем его из байтов
+        pubkey = self.keys.publickey().export_key().decode('ascii')
+
+        # Авторизируемся на сервере
+        with self.sock_lock:
+            presense = {
+                ACTION: PRESENCE,
+                TIME: time.time(),
+                USER: {
+                    ACCOUNT_NAME: self.username,
+                    PUBLIC_KEY: pubkey
+                }
+            }
+            LOGGER.debug(f"Отправка сообщения на сервер, пресенс = {presense}")
+            # Отправляем серверу приветственное сообщение.
+            try:
+                send_message(self.transport, presense)
+                ans = get_message(self.transport)
+                LOGGER.debug(f'Сервер вернул = {ans}.')
+                # Если сервер вернул ошибку, бросаем исключение.
+                if RESPONSE in ans:
+                    if ans[RESPONSE] == 400:
+                        raise ServerError(ans[ERROR])
+                    elif ans[RESPONSE] == 511:
+                        # Если всё нормально, то продолжаем процедуру
+                        # авторизации.
+                        ans_data = ans[DATA]
+                        hash = hmac.new(passwd_hash_string, ans_data.encode('utf-8'), 'MD5') # хешируем соленый
+                        # пароль с ответом от сервера
+                        digest = hash.digest() # преобразуем в дайджест
+                        my_ans = RESPONSE_511
+                        my_ans[DATA] = binascii.b2a_base64(
+                            digest).decode('ascii') # запихиваем в словарь 511 и шлем на сервер
+                        send_message(self.transport, my_ans)
+                        answer = self.process_ans(get_message(self.transport))
+            except (OSError, json.JSONDecodeError) as err:
+                LOGGER.critical(f'Connection error.', exc_info=err)
+                raise ServerError('Сбой соединения в процессе авторизации.')
+            except (ValueError, json.JSONDecodeError) as err:
+                LOGGER.critical(f'Не удалось декодировать сообщение от сервера', exc_info=err)
+                raise ServerError('Сбой соединения в процессе авторизации.')
+            else:
+                if answer == RESPONSE_200:
+                    LOGGER.info(f'Установлено подключение к серверу')
+                    db_name_path = os.path.join('db', f'{self.username}.db3')
+                    self.database = ClientStorage(db_name_path)  # инициализируем db
+                    self.database_load()
+                    self.start_threads()
+                    return
+
+    def load_keys(self):
+        # Загружаем ключи с файла, если же файла нет, то генерируем новую пару.
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        key_file = os.path.join(dir_path, f'{self.username}.key')
+        if not os.path.exists(key_file):
+            self.keys = RSA.generate(2048, os.urandom)
+            with open(key_file, 'wb') as key:
+                key.write(self.keys.export_key())
         else:
-            if answer == RESPONSE_200:
-                LOGGER.info(f'Установлено подключение к серверу')
-                db_name_path = os.path.join('db',f'{self.username}.db3')
-                self.database = ClientStorage(db_name_path)  # инициализируем db
-                self.database_load()
-                self.start_threads()
-                return
+            with open(key_file, 'rb') as key:
+                self.keys = RSA.import_key(key.read())
+        LOGGER.debug("Ключи загружены")
+        return
 
     def transport_shutdown(self):
         self.running = False
@@ -290,6 +352,7 @@ class ClientTransport(threading.Thread, QObject):
         LOGGER.debug(f'Адрес и порт сервера {self.server_address}:{self.server_port}')
 
     def get_connect(self):
+        connected = False
         try:
             self.transport = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             # self.transport = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) # проверка метакласса
@@ -311,6 +374,13 @@ class ClientTransport(threading.Thread, QObject):
         except ReqFieldMissingError as missing_error:
             LOGGER.error(f'В ответе сервера отсутствует необходимое поле {missing_error.missing_field}')
             sys.exit(1)
+        else:
+            connected = True
+            LOGGER.debug('Установлено подключение к серверу')
+
+        if connected: # начинаем аутентификацию
+            pass_hash = self.password.encode('utf-8')
+
 
     def start_threads(self):
         LOGGER.debug('Запуск потока получения')

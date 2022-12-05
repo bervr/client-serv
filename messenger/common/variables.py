@@ -22,6 +22,8 @@ USER = 'user'
 ACCOUNT_NAME = 'account_name'
 SENDER = 'sender'
 DESTINATION = 'destination'
+DATA = 'bin'
+PUBLIC_KEY = 'pubkey'
 
 
 # Прочие ключи, используемые в протоколе
@@ -42,6 +44,7 @@ STATUS = 'status_message'
 LIST = 'user_list'
 MYCOLOR = '0900FF'
 NOTMYCOLOR = '000000'
+PUBLIC_KEY_REQUEST = 'get_public_key'
 
 # Словари - ответы:
 # 200
@@ -56,4 +59,8 @@ RESPONSE_202 = {RESPONSE: 202}
 RESPONSE_205 = {RESPONSE: 205}
 RESPONSE_CLIENTS = {
     RESPONSE: 201
+}
+RESPONSE_511 = {
+    RESPONSE: 511,
+    DATA: None
 }

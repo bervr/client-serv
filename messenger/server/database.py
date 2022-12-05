@@ -11,7 +11,7 @@
 from time import strftime
 
 import sqlalchemy
-from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, DateTime
+from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, DateTime, Text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import datetime
@@ -26,11 +26,16 @@ class ServerStorage:
         login = Column(String, unique=True)
         info = Column(String)
         last_login = Column(DateTime)
+        pubkey = Column(Text)
+        pass_hash = Column(String)
 
-        def __init__(self, login, info=''):
+        def __init__(self, login, pass_hash, info=''):
             self.login = login
             self.info = info
             self.last_login = None
+            self.pubkey = None
+            self.passwd_hash = pass_hash
+
 
 
         def __repl__(self):
@@ -109,26 +114,23 @@ class ServerStorage:
         self.session.query(self.ActiveUsers).delete() # очищаем таблицу активных юзеров при старте
         self.session.commit()
 
-    def user_login(self, username, ipaddress, port):
-        find_login = self.session.query(self.Users).filter_by(login=username).count()
+    def user_login(self, username, ipaddress, port, pubkey=None):
+        find_login = self.session.query(self.Users).filter_by(login=username)
         # ищем пользователя с таким же логином
-        if find_login !=0 :  # если есть то берем его логин и записываем в историю входа и в активные
-            user = self.session.query(self.Users).filter_by(login=username).first()
+        if find_login.count():  # если есть то берем его логин и записываем в историю входа и в активные
+            user = find_login.first()
             user.last_login = datetime.datetime.now()
+            # проверяем не изменился ли ключ, если изменился то обновляем
+            if user.pubkey != pubkey:
+                user.pubkey = pubkey
             new_log_record = self.UserLoginHistory(user.id, ipaddress, port, datetime.datetime.now())
             new_active = self.ActiveUsers(user.id, ipaddress, port, datetime.datetime.now())
-        else: # если нет то создаем нового
-            new_user = self.Users(username)
-            self.session.add(new_user)
-            self.session.commit()  # коммитим чтобы был объект на который сошлется foreignkey
-            # и записываем в историю входа
-            new_log_record = self.UserLoginHistory(new_user.id, ipaddress, port, datetime.datetime.now())
-            new_active = self.ActiveUsers(new_user.id, ipaddress, port, datetime.datetime.now())
-            user_in_history = self.UsersHistory(new_user.id)
-            self.session.add(user_in_history)
-        self.session.add(new_log_record)
-        self.session.add(new_active)
-        self.session.commit()
+            self.session.add(new_log_record)
+            self.session.add(new_active)
+            self.session.commit() # все записали
+        else: # если нет то бросаем исключение
+            raise ValueError('Пользователь не зарегистрирован.')
+
 
     def getactive(self):
         active_users = self.session.query(self.Users.login, self.ActiveUsers.ipaddress, self.ActiveUsers.port,
@@ -155,7 +157,6 @@ class ServerStorage:
         except:
             pass
 
-
     def add_contact(self, user, contact):
         user = self.session.query(self.Users).filter_by(login=user).first()
         contact = self.session.query(self.Users).filter_by(login=contact).first()
@@ -167,7 +168,6 @@ class ServerStorage:
             new_contact = self.Contacts(user.id, contact.id)
             self.session.add(new_contact)
             self.session.commit()
-
 
     def del_contact(self, user, contact):
         # Получаем ID пользователей
@@ -223,6 +223,12 @@ class ServerStorage:
         recipient_row.accepted += 1
 
         self.session.commit()
+
+    def get_pubkey(self, user):
+        pass
+
+    def get_hash(self, user):
+        pass
 
 
 if __name__ == '__main__':
