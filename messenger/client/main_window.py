@@ -47,6 +47,7 @@ class ClientMainWindow(QMainWindow):
         # self.ui.btn_renew_contact.clicked.connect(self.renew_contact_window)
         self.ui.menu_renew_contact.triggered.connect(self.transport.user_list_update)
 
+
         # Дополнительные требующиеся атрибуты
         self.contacts_model = None
         self.history_model = None
@@ -257,9 +258,25 @@ class ClientMainWindow(QMainWindow):
         self.messages.warning(self, 'Сбой соединения', 'Потеряно соединение с сервером. ')
         self.close()
 
+    @pyqtSlot()
+    def sig_205(self):
+        '''
+        Слот выполняющий обновление баз данных по команде сервера.
+        '''
+        if self.current_chat and not self.database.check_user(
+                self.current_chat):
+            self.messages.warning(
+                self,
+                'Сочувствую',
+                'К сожалению собеседник был удалён с сервера.')
+            self.set_disabled_input()
+            self.current_chat = None
+        self.clients_list_update()
+
     def make_connection(self, trans_obj):
         trans_obj.new_message.connect(self.message)
         trans_obj.connection_lost.connect(self.connection_lost)
+        trans_obj.message_205.connect(self.sig_205)
 
 if __name__ == '__main__':
     from client_database import ClientStorage

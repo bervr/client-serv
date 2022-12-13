@@ -14,41 +14,41 @@ class RegisterUser(QDialog):
         self.server = server
 
         self.setWindowTitle('Регистрация')
-        self.setFixedSize(175, 183)
+        self.setFixedSize(600, 400)
         self.setModal(True)
         self.setAttribute(Qt.WA_DeleteOnClose)
 
         self.label_username = QLabel('Введите имя пользователя:', self)
         self.label_username.move(10, 10)
-        self.label_username.setFixedSize(150, 15)
+        self.label_username.setFixedSize(350, 40)
 
         self.client_name = QLineEdit(self)
-        self.client_name.setFixedSize(154, 20)
-        self.client_name.move(10, 30)
+        self.client_name.setFixedSize(350, 40)
+        self.client_name.move(10, 50)
 
         self.label_passwd = QLabel('Введите пароль:', self)
-        self.label_passwd.move(10, 55)
-        self.label_passwd.setFixedSize(150, 15)
+        self.label_passwd.move(10, 90)
+        self.label_passwd.setFixedSize(350, 40)
 
         self.client_passwd = QLineEdit(self)
-        self.client_passwd.setFixedSize(154, 20)
-        self.client_passwd.move(10, 75)
+        self.client_passwd.setFixedSize(350, 40)
+        self.client_passwd.move(10, 130)
         self.client_passwd.setEchoMode(QLineEdit.Password)
         self.label_conf = QLabel('Введите подтверждение:', self)
-        self.label_conf.move(10, 100)
-        self.label_conf.setFixedSize(150, 15)
+        self.label_conf.move(10, 180)
+        self.label_conf.setFixedSize(250, 40)
 
         self.client_conf = QLineEdit(self)
-        self.client_conf.setFixedSize(154, 20)
-        self.client_conf.move(10, 120)
+        self.client_conf.setFixedSize(350, 40)
+        self.client_conf.move(10, 230)
         self.client_conf.setEchoMode(QLineEdit.Password)
 
         self.btn_ok = QPushButton('Сохранить', self)
-        self.btn_ok.move(10, 150)
+        self.btn_ok.move(10, 300)
         self.btn_ok.clicked.connect(self.save_data)
 
         self.btn_cancel = QPushButton('Выход', self)
-        self.btn_cancel.move(90, 150)
+        self.btn_cancel.move(180, 300)
         self.btn_cancel.clicked.connect(self.close)
 
         self.messages = QMessageBox()
@@ -83,7 +83,7 @@ class RegisterUser(QDialog):
                 binascii.hexlify(passwd_hash))
             self.messages.information(
                 self, 'Успех', 'Пользователь успешно зарегистрирован.')
-            # Рассылаем клиентам сообщение о необходимости обновить справичники
+            # Рассылаем клиентам сообщение о необходимости обновить справочники
             self.server.service_update_lists()
             self.close()
 

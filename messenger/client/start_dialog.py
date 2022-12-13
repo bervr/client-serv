@@ -10,7 +10,7 @@ class UserNameDialog(QDialog):
         self.ok_pressed = False
 
         self.setWindowTitle('Привет!')
-        self.setFixedSize(400, 200)
+        self.setFixedSize(400, 250)
 
         self.label = QLabel('Введите имя пользователя:', self)
         self.label.move(10, 10)
@@ -20,19 +20,28 @@ class UserNameDialog(QDialog):
         self.client_name.setFixedSize(300, 30)
         self.client_name.move(10, 70)
 
+        self.label_passwd = QLabel('Введите пароль:', self)
+        self.label_passwd.move(10, 100)
+        self.label_passwd.setFixedSize(300, 30)
+
+        self.client_passwd = QLineEdit(self)
+        self.client_passwd.setFixedSize(300, 30)
+        self.client_passwd.move(10, 140)
+        self.client_passwd.setEchoMode(QLineEdit.Password)
+
         self.btn_ok = QPushButton('Начать', self)
-        self.btn_ok.move(10, 140)
+        self.btn_ok.move(10, 180)
         self.btn_ok.clicked.connect(self.click)
 
         self.btn_cancel = QPushButton('Выход', self)
-        self.btn_cancel.move(140, 140)
+        self.btn_cancel.move(140, 180)
         self.btn_cancel.clicked.connect(qApp.exit)
 
         self.show()
 
-    # Обработчик кнопки ОК, если поле вводе не пустое, ставим флаг и завершаем приложение.
+    # Обработчик кнопки ОК, если поля ввода не пустые, ставим флаг и завершаем приложение.
     def click(self):
-        if self.client_name.text():
+        if self.client_name.text() and self.client_passwd.text():
             self.ok_pressed = True
             qApp.exit()
 

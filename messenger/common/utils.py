@@ -15,6 +15,7 @@ def get_message(client):
     if isinstance(encoded_response, bytes):
         json_response = encoded_response.decode(ENCODING)
         response = json.loads(json_response)
+        # print(response)
         if isinstance(response, dict):
             return response
         raise ValueError
@@ -36,6 +37,7 @@ def create_arg_parser(default_port, default_address):
         parser.add_argument('-a', default=default_address, nargs='?')
         parser.add_argument('-m', default='listen', nargs='?')
         parser.add_argument('-n', default='', nargs='?')
+        parser.add_argument('-w', default='', nargs='?')
         return parser
         if server_port < 1024 or server_port > 65535:
             raise ValueError

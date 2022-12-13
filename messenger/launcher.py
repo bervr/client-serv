@@ -50,7 +50,7 @@ while True:
 
     elif user_answer == 'c':
         for _ in range(client_count):
-            run_one(f'{enterpriter} {os.path.join(path_client, "transport.py")} -n user{_}')
+            run_one(f'{enterpriter} {os.path.join(path_client, "transport.py")} -n user{_} -w 12345')
 
     elif user_answer == 'cc':
         run_one(f'{enterpriter} {os.path.join(path_client, "client.py")} -n user')
@@ -62,7 +62,7 @@ while True:
         run_one(f'{enterpriter} {os.path.join(path_server, "server.py")} -a "127.0.0.1" -p "7777"')
         time.sleep(0.5)  # ждем чтобы стартанул сервер
         for _ in range(client_count):
-            run_one(f'{enterpriter} {os.path.join(path_client, "transport.py")} -n user{_}')
+            run_one(f'{enterpriter} {os.path.join(path_client, "transport.py")} -n user{_} -w 12345')
 
     elif user_answer == 'x':
         kill_processes()

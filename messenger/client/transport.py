@@ -24,6 +24,8 @@ from client_database import ClientStorage
 from main_window import ClientMainWindow
 from start_dialog import UserNameDialog
 
+
+
 LOGGER = logging.getLogger('client')  # забрали логгер из конфига
 
 
@@ -42,8 +44,8 @@ class ClientTransport(threading.Thread, QObject):
         # получаем параметры из командной строки
         # client.py -a localhost -p 8079 -m send/listen
         self.remote_users = []
-        self.username = ''
-        self.password = ''
+        self.username = None
+        self.password = None
         self.keys = ''
         self.get_start_params()
         self.get_connect()
@@ -79,7 +81,7 @@ class ClientTransport(threading.Thread, QObject):
                 exit(0)
             del start_dialog
         LOGGER.info(f'установлено имя {self.username}')
-        self.load_keys() # загрузили ключи
+        self.load_keys()  # загрузили ключи
         # запускаем аутентификацию
 
         passwd_bytes = self.password.encode('utf-8')  # Получаем хэш пароля
@@ -118,10 +120,11 @@ class ClientTransport(threading.Thread, QObject):
                         ans_data = ans[DATA]
                         hash = hmac.new(passwd_hash_string, ans_data.encode('utf-8'), 'MD5') # хешируем соленый
                         # пароль с ответом от сервера
-                        digest = hash.digest() # преобразуем в дайджест
+                        digest = hash.digest()  # преобразуем в дайджест
                         my_ans = RESPONSE_511
                         my_ans[DATA] = binascii.b2a_base64(
-                            digest).decode('ascii') # запихиваем в словарь 511 и шлем на сервер
+                            digest).decode('ascii')  # запихиваем в словарь 511 и шлем на сервер
+                        LOGGER.debug(f"Отправляем на сервер подтверждение - {my_ans}")
                         send_message(self.transport, my_ans)
                         answer = self.process_ans(get_message(self.transport))
             except (OSError, json.JSONDecodeError) as err:
@@ -133,11 +136,11 @@ class ClientTransport(threading.Thread, QObject):
             else:
                 if answer == RESPONSE_200:
                     LOGGER.info(f'Установлено подключение к серверу')
-                    db_name_path = os.path.join('db', f'{self.username}.db3')
+                    db_name_path = os.path.join(dir_path, 'db', f'{self.username}.db3')
                     self.database = ClientStorage(db_name_path)  # инициализируем db
-                    self.database_load()
-                    self.start_threads()
-                    return
+        self.database_load()
+        self.start_threads()
+        return
 
     def load_keys(self):
         # Загружаем ключи с файла, если же файла нет, то генерируем новую пару.
@@ -175,8 +178,8 @@ class ClientTransport(threading.Thread, QObject):
         }
         LOGGER.debug(f'Сформирован словарь сообщения: {message_dict}')
         # Необходимо дождаться освобождения сокета для отправки сообщения
-        with self.sock_lock:
-            send_message(self.transport, message_dict)
+        # with self.sock_lock:
+        send_message(self.transport, message_dict)
         LOGGER.info(f'Отправлено сообщение для пользователя {destination}')
         return
 
@@ -187,6 +190,10 @@ class ClientTransport(threading.Thread, QObject):
                 # return
             elif message[RESPONSE] == 204:
                 return RESPONSE_204
+            elif message[RESPONSE] == 205:
+                self.user_list_update()
+                self.contacts_list_update()
+                self.message_205.emit()
             else:
                 raise ServerError('Ошибка связи с сервером')
             #     return
@@ -246,6 +253,7 @@ class ClientTransport(threading.Thread, QObject):
         request = self.create_presence(self.username)
         request[ACTION] = GETCLIENTS
         with self.sock_lock:
+            LOGGER.debug(f'отправка сообщения на сервер {request}')
             send_message(self.transport, request)
             ans = get_message(self.transport)
             LOGGER.debug(f'Получен ответ {ans}')
@@ -253,6 +261,8 @@ class ClientTransport(threading.Thread, QObject):
                 LOGGER.debug(f'getclients Получен ответ  - список пользователей сервера {ans[LIST]}')
                 self.remote_users = [x for x in ans[LIST] if x != str(self.username)]
                 LOGGER.debug('Получен список активных пользователей с сервера.')
+        return
+
 
     # Функция запроса списка контактов
 
@@ -323,7 +333,7 @@ class ClientTransport(threading.Thread, QObject):
     def user_list_update(self):
         # Загружаем список активных пользователей
         try:
-            self.get_clients()
+            self.get_clients()  # сообщаем что не нужно еще раз блокировать сокет
         except ServerError:
             LOGGER.error('Ошибка запроса списка известных пользователей.')
         else:
@@ -347,6 +357,7 @@ class ClientTransport(threading.Thread, QObject):
         self.server_address = namespace.a
         self.server_port = namespace.p
         self.username = namespace.n
+        self.password = namespace.w
 
         client_mode = namespace.m
         LOGGER.debug(f'Адрес и порт сервера {self.server_address}:{self.server_port}')

@@ -61,15 +61,19 @@ class MainWindow(QMainWindow):
         exitAction = QAction('Выход', self)
         exitAction.setShortcut('Ctrl+Q')
         exitAction.triggered.connect(qApp.quit)
-
         # Кнопка обновить список клиентов
         self.refresh_button = QAction('Обновить список', self)
-
         # Кнопка настроек сервера
         self.config_btn = QAction('Настройки сервера', self)
 
         # Кнопка вывести историю сообщений
         self.show_history_button = QAction('История клиентов', self)
+
+        # Кнопка регистрации пользователя
+        self.register_btn = QAction('Регистрация пользователя', self)
+
+        # Кнопка удаления пользователя
+        self.remove_btn = QAction('Удаление пользователя', self)
 
         # Статусбар
         # dock widget
@@ -81,6 +85,8 @@ class MainWindow(QMainWindow):
         self.toolbar.addAction(self.refresh_button)
         self.toolbar.addAction(self.show_history_button)
         self.toolbar.addAction(self.config_btn)
+        self.toolbar.addAction(self.register_btn)
+        self.toolbar.addAction(self.remove_btn)
 
         # Настройки геометрии основного окна
         # Размер окна фиксирован потому что так быстрее.
@@ -99,6 +105,30 @@ class MainWindow(QMainWindow):
 
         # Последним параметром отображаем окно.
         self.show()
+
+
+    def create_users_model(self):
+        '''Метод заполняющий таблицу активных пользователей.'''
+        list_users = self.database.active_users_list()
+        list = QStandardItemModel()
+        list.setHorizontalHeaderLabels(
+            ['Имя Клиента', 'IP Адрес', 'Порт', 'Время подключения'])
+        for row in list_users:
+            user, ip, port, time = row
+            user = QStandardItem(user)
+            user.setEditable(False)
+            ip = QStandardItem(ip)
+            ip.setEditable(False)
+            port = QStandardItem(str(port))
+            port.setEditable(False)
+            # Уберём милисекунды из строки времени, т.к. такая точность не
+            # требуется.
+            time = QStandardItem(str(time.replace(microsecond=0)))
+            time.setEditable(False)
+            list.appendRow([user, ip, port, time])
+        self.active_clients_table.setModel(list)
+        self.active_clients_table.resizeColumnsToContents()
+        self.active_clients_table.resizeRowsToContents()
 
 
 # Класс окна с историей пользователей
@@ -202,7 +232,7 @@ class ConfigWindow(QDialog):
         self.save_btn = QPushButton('Сохранить', self)
         self.save_btn.move(90 , 520)
 
-        # Кнапка закрытия окна
+        # Кнопка закрытия окна
         self.close_button = QPushButton('Закрыть', self)
         self.close_button.move(275, 520)
         self.close_button.clicked.connect(self.close)
