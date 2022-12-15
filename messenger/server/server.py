@@ -508,7 +508,14 @@ class MsgServer(threading.Thread, metaclass=ServerVerifier):
             self.messages.clear()
 
     def remove_client(self, client):
+        LOGGER.info(f'Клиент {client.getpeername()} отключился от сервера.')
+        for name in self.names:
+            if self.names[name] == client:
+                self.database.user_logout(name)
+                del self.names[name]
+                break
         self.clients.remove(client)
+        client.close()
         return
 
     def reg_user(self):

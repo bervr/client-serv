@@ -119,6 +119,9 @@ class ClientStorage:
                 # print('Такой контакт уже есть')
                 pass
 
+    def contacts_clear(self):
+        '''Метод очищающий таблицу со списком контактов.'''
+        self.session.query(self.Contacts).delete()
 
     def check_contact(self, contact):
         if self.session.query(self.Contacts).filter_by(contact_name=contact).count():

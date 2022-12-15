@@ -192,7 +192,7 @@ class ClientTransport(threading.Thread, QObject):
                 return RESPONSE_204
             elif message[RESPONSE] == 205:
                 self.user_list_update()
-                self.contacts_list_update()
+                self.contacts_list_request()
                 self.message_205.emit()
             else:
                 raise ServerError('Ошибка связи с сервером')
@@ -248,25 +248,30 @@ class ClientTransport(threading.Thread, QObject):
                     self.transport.settimeout(5)
 
     # Функция запроса списка активных пользователей
-    def get_clients(self):
+    def get_clients(self, lock=False):
         LOGGER.debug(f'Запрос списка известных пользователей {self.username}')
         request = self.create_presence(self.username)
         request[ACTION] = GETCLIENTS
-        with self.sock_lock:
-            LOGGER.debug(f'отправка сообщения на сервер {request}')
-            send_message(self.transport, request)
-            ans = get_message(self.transport)
-            LOGGER.debug(f'Получен ответ {ans}')
-            if RESPONSE in ans and ans[RESPONSE] == 201:
-                LOGGER.debug(f'getclients Получен ответ  - список пользователей сервера {ans[LIST]}')
-                self.remote_users = [x for x in ans[LIST] if x != str(self.username)]
-                LOGGER.debug('Получен список активных пользователей с сервера.')
+        if lock:
+            self.sock_lock.acquire()
+        # with self.sock_lock:
+        LOGGER.debug(f'отправка сообщения на сервер {request}')
+        send_message(self.transport, request)
+        ans = get_message(self.transport)
+        LOGGER.debug(f'Получен ответ {ans}')
+        if RESPONSE in ans and ans[RESPONSE] == 201:
+            LOGGER.debug(f'getclients Получен ответ  - список пользователей сервера {ans[LIST]}')
+            self.remote_users = [x for x in ans[LIST] if x != str(self.username)]
+            LOGGER.debug('Получен список активных пользователей с сервера.')
+        if lock:
+            self.sock_lock.release()
         return
 
 
     # Функция запроса списка контактов
 
-    def contacts_list_request(self):
+    def contacts_list_request(self, lock=False):
+        self.database.contacts_clear()
         LOGGER.debug(f'Запрос контакт листа для пользователя {self.username}')
         req = {
             ACTION: GETCONTACTS,
@@ -274,14 +279,17 @@ class ClientTransport(threading.Thread, QObject):
             USER: self.username
         }
         LOGGER.debug(f'Сформирован запрос {req}')
-        with self.sock_lock:
-            send_message(self.transport, req)
-            ans = get_message(self.transport)
-            #     LOGGER.debug(f'Получен ответ {ans}')
-            if RESPONSE in ans and ans[RESPONSE] == 202:
-                for contact in ans[LIST]:
-                    self.database.add_contact(contact)
-            LOGGER.debug('Получен список контактов с сервера.')
+        if lock:
+            self.sock_lock.acquire()
+        send_message(self.transport, req)
+        ans = get_message(self.transport)
+        #     LOGGER.debug(f'Получен ответ {ans}')
+        if RESPONSE in ans and ans[RESPONSE] == 202:
+            for contact in ans[LIST]:
+                self.database.add_contact(contact)
+        LOGGER.debug('Получен список контактов с сервера.')
+        if lock:
+            self.sock_lock.release()
         return
 
     # Функция добавления пользователя в контакт лист
@@ -330,20 +338,21 @@ class ClientTransport(threading.Thread, QObject):
             ACCOUNT_NAME: self.username
         }
 
-    def user_list_update(self):
+    def user_list_update(self, lock=False):
         # Загружаем список активных пользователей
         try:
-            self.get_clients()  # сообщаем что не нужно еще раз блокировать сокет
+            self.get_clients(lock)  # сообщаем что не нужно еще раз блокировать сокет
         except ServerError:
             LOGGER.error('Ошибка запроса списка известных пользователей.')
         else:
             self.database.add_users(self.remote_users)
 
     def database_load(self):
-        self.user_list_update()
+        self.user_list_update(True)
         # Загружаем список контактов
         try:
-            self.contacts_list_request()
+            # with self.sock_lock:
+            self.contacts_list_request(True)
         except ServerError:
             LOGGER.error('Ошибка запроса списка контактов.')
         else:
