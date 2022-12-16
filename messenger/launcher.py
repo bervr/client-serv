@@ -15,10 +15,10 @@ else:
     enterpriter = 'gnome-terminal -- python3'
 process = []
 
-gui_client = os.path.join(dir_path, 'client')
+path_client = os.path.join(dir_path, 'client')
+path_server = os.path.join(dir_path, 'server')
 
 def run_one(that: str):
-    # print(that)
     if platform.system() == 'Windows':
         process.append(Popen(that, creationflags=CREATE_NEW_CONSOLE))
     else:
@@ -46,25 +46,23 @@ while True:
         kill_processes()
         break
     elif user_answer == 's':
-        run_one(f'{enterpriter} server.py -a "127.0.0.1" -p "-7777"')
+        run_one(f'{enterpriter} {os.path.join(path_server, "server.py")} -a "127.0.0.1" -p "-7777"')
 
     elif user_answer == 'c':
         for _ in range(client_count):
-            # print(f'{enterpriter} client.py -n user{_}')
-            # run_one(f'{enterpriter} client.py -n user{_}')
-            run_one(f'{enterpriter} {os.path.join(gui_client, "transport.py")} -n user{_}')
+            run_one(f'{enterpriter} {os.path.join(path_client, "transport.py")} -n user{_} -w 12345')
 
     elif user_answer == 'cc':
-        run_one(f'{enterpriter} client.py -n user')
+        run_one(f'{enterpriter} {os.path.join(path_client, "client.py")} -n user')
 
     elif user_answer == 'g':
-        run_one(f'{enterpriter} {os.path.join(gui_client, "transport.py")} -n user')
+        run_one(f'{enterpriter} {os.path.join(path_client, "transport.py")} -n user')
 
     elif user_answer == 'a':
-        run_one(f'{enterpriter} server.py')
+        run_one(f'{enterpriter} {os.path.join(path_server, "server.py")} -a "127.0.0.1" -p "7777"')
         time.sleep(0.5)  # ждем чтобы стартанул сервер
         for _ in range(client_count):
-            run_one(f'{enterpriter} {os.path.join(gui_client, "transport.py")} -n user{_}')
+            run_one(f'{enterpriter} {os.path.join(path_client, "transport.py")} -n user{_} -w 12345')
 
     elif user_answer == 'x':
         kill_processes()

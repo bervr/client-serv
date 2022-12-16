@@ -6,16 +6,20 @@ import json
 import socket
 import threading
 import time
+
+dir_path = os.path.dirname(os.path.realpath(__file__))
+import_path = os.path.abspath(os.path.join(dir_path, os.pardir))
+sys.path.append(import_path)
 from common.variables import ACTION, PRESENCE, TIME, USER, ACCOUNT_NAME, \
     RESPONSE, ERROR, MESSAGE_TEXT, MESSAGE, EXIT, SENDER, DESTINATION, RESPONSE_200, GETCLIENTS, LIST, RESPONSE_204, \
     GETCONTACTS, ADD_CONTACT, REMOVE_CONTACT
 from common.utils import get_message, send_message, create_arg_parser
 import common.errors as errors
-from decor import func_log
+from common.decor import func_log
 from common.errors import IncorrectDataReceivedError, ReqFieldMissingError, ServerError
-from metaclasses import ClientVerifier
+from common.metaclasses import ClientVerifier
 from common.variables import DEFAULT_PORT, DEFAULT_IP_ADDRESS
-from client.client_database import ClientStorage
+from client_database import ClientStorage
 
 LOGGER = logging.getLogger('client')  # забрали логгер из конфига
 
@@ -60,7 +64,7 @@ class MsgClient(threading.Thread, metaclass=ClientVerifier):
         return self.client_name
 
     def hello_user(self, answer=None):  # 1
-        dir_path = os.path.dirname(os.path.realpath(__file__))
+        # dir_path = os.path.dirname(os.path.realpath(__file__))
         name = self.client_name
         while True:
             if answer == '400 : Имя пользователя уже занято':
@@ -73,7 +77,7 @@ class MsgClient(threading.Thread, metaclass=ClientVerifier):
                 name = input('Введите свое имя или нажмите Enter чтобы попробовать продолжить анонимно:\n')
             answer = self.hello(name)  # 2 todo 'если при первом вводе имени выбрать занятое то потом нельзя зайти'
         print(f'Вы видны всем под именем {self.client_name}')
-        db_name_path = os.path.join('client', f'{self.client_name}.db3')
+        db_name_path = os.path.join('db', f'{self.client_name}.db3')
         self.database = ClientStorage(db_name_path)  # инициализируем db
 
         self.database_load()
