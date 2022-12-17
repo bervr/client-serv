@@ -1,4 +1,5 @@
 class IsPortValid:
+    """Класс-дескриптор, проверяющий, что заданный порт является целым положительным числом"""
     def __get__(self, instance, owner):
         return instance.__dict__[self.my_attr]
 

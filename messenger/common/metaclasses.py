@@ -2,10 +2,12 @@ import dis
 import socket
 
 
-# ServerVerifier, выполняет базовую проверку класса «Сервер»:
-# отсутствие вызовов connect для сокетов;
-# использование сокетов для работы по TCP
 class ServerVerifier(type):
+    """
+    Метакласс ServerVerifier, выполняет базовую проверку класса «Сервер»:
+    отсутствие вызовов connect для сокетов и использование сокетов для работы по TCP
+    """
+
     def __new__(cls, name, bases, dict):
         new_class = super(ServerVerifier, cls).__new__(cls, name, bases, dict)
         for func in new_class.__dict__:
@@ -22,14 +24,15 @@ class ServerVerifier(type):
         return new_class
 
 
-
-# метакласс ClientVerifier, выполняет базовую проверку класса «Клиент»
-# (для некоторых проверок уместно использовать модуль dis):
-# отсутствие вызовов accept и listen для сокетов;
-# использование сокетов для работы по TCP;
-# отсутствие создания сокетов на уровне классов, то есть отсутствие конструкций такого вида: class Client: s = socket()
-
 class ClientVerifier(type):
+    """
+    Метакласс ClientVerifier, выполняет базовую проверку класса «Клиент»
+    отсутствие вызовов accept и listen для сокетов;
+    использование сокетов для работы по TCP;
+    отсутствие создания сокетов на уровне классов, то есть отсутствие конструкций такого вида:
+    class Client: s = socket(). Для проверок используется модуль dis:
+    """
+
     def __new__(cls, name, bases, dict):
         client_class = super(ClientVerifier, cls).__new__(cls, name, bases, dict)
         for func, value in client_class.__dict__.items():
