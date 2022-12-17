@@ -1,0 +1,508 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>messenger.server package &#8212; client-server messenger 2.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="messenger.common package" href="messenger.common.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="messenger-server-package">
+<h1>messenger.server package<a class="headerlink" href="#messenger-server-package" title="Permalink to this headline">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="module-messenger.server.add_user">
+<span id="messenger-server-add-user-module"></span><h2>messenger.server.add_user module<a class="headerlink" href="#module-messenger.server.add_user" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="messenger.server.add_user.RegisterUser">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">messenger.server.add_user.</span></span><span class="sig-name descname"><span class="pre">RegisterUser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">server</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#messenger.server.add_user.RegisterUser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">PyQt5.QtWidgets.QDialog</span></code></p>
+<p>Класс диалог регистрации пользователя на сервере.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="messenger.server.add_user.RegisterUser.save_data">
+<span class="sig-name descname"><span class="pre">save_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messenger.server.add_user.RegisterUser.save_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Метод проверки правильности ввода и сохранения в базу нового пользователя.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-messenger.server.database">
+<span id="messenger-server-database-module"></span><h2>messenger.server.database module<a class="headerlink" href="#module-messenger.server.database" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="messenger.server.database.ServerStorage">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">messenger.server.database.</span></span><span class="sig-name descname"><span class="pre">ServerStorage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#messenger.server.database.ServerStorage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Класс хранилища сервера</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="messenger.server.database.ServerStorage.ActiveUsers">
+<em class="property"><span class="pre">class</span> </em><span class="sig-name descname"><span class="pre">ActiveUsers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ipaddress</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">login_time</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#messenger.server.database.ServerStorage.ActiveUsers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.orm.decl_api.Base</span></code></p>
+<p>Таблица подключеных пользователей</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="messenger.server.database.ServerStorage.ActiveUsers.id">
+<span class="sig-name descname"><span class="pre">id</span></span><a class="headerlink" href="#messenger.server.database.ServerStorage.ActiveUsers.id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="messenger.server.database.ServerStorage.ActiveUsers.ipaddress">
+<span class="sig-name descname"><span class="pre">ipaddress</span></span><a class="headerlink" href="#messenger.server.database.ServerStorage.ActiveUsers.ipaddress" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="messenger.server.database.ServerStorage.ActiveUsers.login_time">
+<span class="sig-name descname"><span class="pre">login_time</span></span><a class="headerlink" href="#messenger.server.database.ServerStorage.ActiveUsers.login_time" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="messenger.server.database.ServerStorage.ActiveUsers.port">
+<span class="sig-name descname"><span class="pre">port</span></span><a class="headerlink" href="#messenger.server.database.ServerStorage.ActiveUsers.port" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="messenger.server.database.ServerStorage.ActiveUsers.user_id">
+<span class="sig-name descname"><span class="pre">user_id</span></span><a class="headerlink" href="#messenger.server.database.ServerStorage.ActiveUsers.user_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="messenger.server.database.ServerStorage.Contacts">
+<em class="property"><span class="pre">class</span> </em><span class="sig-name descname"><span class="pre">Contacts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contact_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#messenger.server.database.ServerStorage.Contacts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.orm.decl_api.Base</span></code></p>
+<p>Таблица контактов</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="messenger.server.database.ServerStorage.Contacts.contact_id">
+<span class="sig-name descname"><span class="pre">contact_id</span></span><a class="headerlink" href="#messenger.server.database.ServerStorage.Contacts.contact_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="messenger.server.database.ServerStorage.Contacts.id">
+<span class="sig-name descname"><span class="pre">id</span></span><a class="headerlink" href="#messenger.server.database.ServerStorage.Contacts.id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="messenger.server.database.ServerStorage.Contacts.user_id">
+<span class="sig-name descname"><span class="pre">user_id</span></span><a class="headerlink" href="#messenger.server.database.ServerStorage.Contacts.user_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="messenger.server.database.ServerStorage.UserLoginHistory">
+<em class="property"><span class="pre">class</span> </em><span class="sig-name descname"><span class="pre">UserLoginHistory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ipaddress</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">login_time</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#messenger.server.database.ServerStorage.UserLoginHistory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.orm.decl_api.Base</span></code></p>
+<p>Таблица истории входов</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="messenger.server.database.ServerStorage.UserLoginHistory.id">
+<span class="sig-name descname"><span class="pre">id</span></span><a class="headerlink" href="#messenger.server.database.ServerStorage.UserLoginHistory.id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="messenger.server.database.ServerStorage.UserLoginHistory.ipaddress">
+<span class="sig-name descname"><span class="pre">ipaddress</span></span><a class="headerlink" href="#messenger.server.database.ServerStorage.UserLoginHistory.ipaddress" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="messenger.server.database.ServerStorage.UserLoginHistory.login_time">
+<span class="sig-name descname"><span class="pre">login_time</span></span><a class="headerlink" href="#messenger.server.database.ServerStorage.UserLoginHistory.login_time" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="messenger.server.database.ServerStorage.UserLoginHistory.port">
+<span class="sig-name descname"><span class="pre">port</span></span><a class="headerlink" href="#messenger.server.database.ServerStorage.UserLoginHistory.port" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="messenger.server.database.ServerStorage.UserLoginHistory.user_id">
+<span class="sig-name descname"><span class="pre">user_id</span></span><a class="headerlink" href="#messenger.server.database.ServerStorage.UserLoginHistory.user_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="messenger.server.database.ServerStorage.Users">
+<em class="property"><span class="pre">class</span> </em><span class="sig-name descname"><span class="pre">Users</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">login</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">passwd_hash</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#messenger.server.database.ServerStorage.Users" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.orm.decl_api.Base</span></code></p>
+<p>Таблица пользователя</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="messenger.server.database.ServerStorage.Users.id">
+<span class="sig-name descname"><span class="pre">id</span></span><a class="headerlink" href="#messenger.server.database.ServerStorage.Users.id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="messenger.server.database.ServerStorage.Users.info">
+<span class="sig-name descname"><span class="pre">info</span></span><a class="headerlink" href="#messenger.server.database.ServerStorage.Users.info" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="messenger.server.database.ServerStorage.Users.last_login">
+<span class="sig-name descname"><span class="pre">last_login</span></span><a class="headerlink" href="#messenger.server.database.ServerStorage.Users.last_login" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="messenger.server.database.ServerStorage.Users.login">
+<span class="sig-name descname"><span class="pre">login</span></span><a class="headerlink" href="#messenger.server.database.ServerStorage.Users.login" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="messenger.server.database.ServerStorage.Users.passwd_hash">
+<span class="sig-name descname"><span class="pre">passwd_hash</span></span><a class="headerlink" href="#messenger.server.database.ServerStorage.Users.passwd_hash" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="messenger.server.database.ServerStorage.Users.pubkey">
+<span class="sig-name descname"><span class="pre">pubkey</span></span><a class="headerlink" href="#messenger.server.database.ServerStorage.Users.pubkey" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="messenger.server.database.ServerStorage.UsersHistory">
+<em class="property"><span class="pre">class</span> </em><span class="sig-name descname"><span class="pre">UsersHistory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#messenger.server.database.ServerStorage.UsersHistory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.orm.decl_api.Base</span></code></p>
+<p>Таблица счетчик отправленых и полученых сообщений</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="messenger.server.database.ServerStorage.UsersHistory.accepted">
+<span class="sig-name descname"><span class="pre">accepted</span></span><a class="headerlink" href="#messenger.server.database.ServerStorage.UsersHistory.accepted" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="messenger.server.database.ServerStorage.UsersHistory.id">
+<span class="sig-name descname"><span class="pre">id</span></span><a class="headerlink" href="#messenger.server.database.ServerStorage.UsersHistory.id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="messenger.server.database.ServerStorage.UsersHistory.sent">
+<span class="sig-name descname"><span class="pre">sent</span></span><a class="headerlink" href="#messenger.server.database.ServerStorage.UsersHistory.sent" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="messenger.server.database.ServerStorage.UsersHistory.user">
+<span class="sig-name descname"><span class="pre">user</span></span><a class="headerlink" href="#messenger.server.database.ServerStorage.UsersHistory.user" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="messenger.server.database.ServerStorage.add_contact">
+<span class="sig-name descname"><span class="pre">add_contact</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contact</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#messenger.server.database.ServerStorage.add_contact" title="Permalink to this definition">¶</a></dt>
+<dd><p>Метод добавления контакта пользователя</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="messenger.server.database.ServerStorage.add_user">
+<span class="sig-name descname"><span class="pre">add_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">passwd_hash</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#messenger.server.database.ServerStorage.add_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Метод регистрации пользователя.
+Принимает имя и хэш пароля, создаёт запись в таблице статистики.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="messenger.server.database.ServerStorage.check_user">
+<span class="sig-name descname"><span class="pre">check_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#messenger.server.database.ServerStorage.check_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Метод проверяющий существование пользователя.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="messenger.server.database.ServerStorage.del_contact">
+<span class="sig-name descname"><span class="pre">del_contact</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contact</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#messenger.server.database.ServerStorage.del_contact" title="Permalink to this definition">¶</a></dt>
+<dd><p>Метод удаления контакта пользователя</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="messenger.server.database.ServerStorage.get_hash">
+<span class="sig-name descname"><span class="pre">get_hash</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#messenger.server.database.ServerStorage.get_hash" title="Permalink to this definition">¶</a></dt>
+<dd><p>Метод получения хэша пароля пользователя.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="messenger.server.database.ServerStorage.get_pubkey">
+<span class="sig-name descname"><span class="pre">get_pubkey</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#messenger.server.database.ServerStorage.get_pubkey" title="Permalink to this definition">¶</a></dt>
+<dd><p>Метод получения публичного ключа пользователя.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="messenger.server.database.ServerStorage.get_user_contacts">
+<span class="sig-name descname"><span class="pre">get_user_contacts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#messenger.server.database.ServerStorage.get_user_contacts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Метод получения контактов пользователя</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="messenger.server.database.ServerStorage.getactive">
+<span class="sig-name descname"><span class="pre">getactive</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messenger.server.database.ServerStorage.getactive" title="Permalink to this definition">¶</a></dt>
+<dd><p>Метод возвращающий активных пользователей</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="messenger.server.database.ServerStorage.getall">
+<span class="sig-name descname"><span class="pre">getall</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messenger.server.database.ServerStorage.getall" title="Permalink to this definition">¶</a></dt>
+<dd><p>Метод возвращающий всех пользователй</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="messenger.server.database.ServerStorage.history_log">
+<span class="sig-name descname"><span class="pre">history_log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#messenger.server.database.ServerStorage.history_log" title="Permalink to this definition">¶</a></dt>
+<dd><p>Метод возвращающий историю входов</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="messenger.server.database.ServerStorage.message_history">
+<span class="sig-name descname"><span class="pre">message_history</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messenger.server.database.ServerStorage.message_history" title="Permalink to this definition">¶</a></dt>
+<dd><p>Метод возвращающий данные по отправленным и принятым сообщениям пользователя</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="messenger.server.database.ServerStorage.process_message">
+<span class="sig-name descname"><span class="pre">process_message</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sender</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recipient</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#messenger.server.database.ServerStorage.process_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Метод обновляющий счетчики отправленных и полученых сообщений</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="messenger.server.database.ServerStorage.remove_user">
+<span class="sig-name descname"><span class="pre">remove_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#messenger.server.database.ServerStorage.remove_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Метод удаляющий пользователя из базы.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="messenger.server.database.ServerStorage.user_login">
+<span class="sig-name descname"><span class="pre">user_login</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ipaddress</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pubkey</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#messenger.server.database.ServerStorage.user_login" title="Permalink to this definition">¶</a></dt>
+<dd><p>Метод логина пользователя, проверяет что такой пользователь есть (если нет - создает)
+и записывает данные в активные и историю входов</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="messenger.server.database.ServerStorage.user_logout">
+<span class="sig-name descname"><span class="pre">user_logout</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#messenger.server.database.ServerStorage.user_logout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Метод обрабатывающий выход пользователя. Удаляет из таблицы активных</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="messenger.server.database.ServerStorage.users_list">
+<span class="sig-name descname"><span class="pre">users_list</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messenger.server.database.ServerStorage.users_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Метод возвращающий список известных пользователей со временем последнего входа.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-messenger.server.remove_user">
+<span id="messenger-server-remove-user-module"></span><h2>messenger.server.remove_user module<a class="headerlink" href="#module-messenger.server.remove_user" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="messenger.server.remove_user.DelUserDialog">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">messenger.server.remove_user.</span></span><span class="sig-name descname"><span class="pre">DelUserDialog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">server</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#messenger.server.remove_user.DelUserDialog" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">PyQt5.QtWidgets.QDialog</span></code></p>
+<p>Класс - диалог выбора контакта для удаления.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="messenger.server.remove_user.DelUserDialog.all_users_fill">
+<span class="sig-name descname"><span class="pre">all_users_fill</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messenger.server.remove_user.DelUserDialog.all_users_fill" title="Permalink to this definition">¶</a></dt>
+<dd><p>Метод заполняющий список пользователей.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="messenger.server.remove_user.DelUserDialog.remove_user">
+<span class="sig-name descname"><span class="pre">remove_user</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messenger.server.remove_user.DelUserDialog.remove_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Метод - обработчик удаления пользователя.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="messenger-server-server-module">
+<h2>messenger.server.server module<a class="headerlink" href="#messenger-server-server-module" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="module-messenger.server.server_gui">
+<span id="messenger-server-server-gui-module"></span><h2>messenger.server.server_gui module<a class="headerlink" href="#module-messenger.server.server_gui" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="messenger.server.server_gui.ConfigWindow">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">messenger.server.server_gui.</span></span><span class="sig-name descname"><span class="pre">ConfigWindow</span></span><a class="headerlink" href="#messenger.server.server_gui.ConfigWindow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">PyQt5.QtWidgets.QDialog</span></code></p>
+<p>Класс окна настроек</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="messenger.server.server_gui.ConfigWindow.initUI">
+<span class="sig-name descname"><span class="pre">initUI</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messenger.server.server_gui.ConfigWindow.initUI" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="messenger.server.server_gui.HistoryWindow">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">messenger.server.server_gui.</span></span><span class="sig-name descname"><span class="pre">HistoryWindow</span></span><a class="headerlink" href="#messenger.server.server_gui.HistoryWindow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">PyQt5.QtWidgets.QDialog</span></code></p>
+<p>Класс окна с историей пользователей</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="messenger.server.server_gui.HistoryWindow.initUI">
+<span class="sig-name descname"><span class="pre">initUI</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messenger.server.server_gui.HistoryWindow.initUI" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="messenger.server.server_gui.MainWindow">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">messenger.server.server_gui.</span></span><span class="sig-name descname"><span class="pre">MainWindow</span></span><a class="headerlink" href="#messenger.server.server_gui.MainWindow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">PyQt5.QtWidgets.QMainWindow</span></code></p>
+<p>Класс основного окна сервера</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="messenger.server.server_gui.MainWindow.create_users_model">
+<span class="sig-name descname"><span class="pre">create_users_model</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messenger.server.server_gui.MainWindow.create_users_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Метод заполняющий таблицу активных пользователей.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="messenger.server.server_gui.MainWindow.initUI">
+<span class="sig-name descname"><span class="pre">initUI</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messenger.server.server_gui.MainWindow.initUI" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="messenger.server.server_gui.create_stat_model">
+<span class="sig-prename descclassname"><span class="pre">messenger.server.server_gui.</span></span><span class="sig-name descname"><span class="pre">create_stat_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#messenger.server.server_gui.create_stat_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>GUI - Функция реализующая заполнение таблицы историей сообщений.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="messenger.server.server_gui.gui_create_model">
+<span class="sig-prename descclassname"><span class="pre">messenger.server.server_gui.</span></span><span class="sig-name descname"><span class="pre">gui_create_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#messenger.server.server_gui.gui_create_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>GUI - Создание таблицы QModel, для отображения в окне программы.</p>
+</dd></dl>
+
+</section>
+<section id="module-messenger.server.stat_window">
+<span id="messenger-server-stat-window-module"></span><h2>messenger.server.stat_window module<a class="headerlink" href="#module-messenger.server.stat_window" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="messenger.server.stat_window.StatWindow">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">messenger.server.stat_window.</span></span><span class="sig-name descname"><span class="pre">StatWindow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#messenger.server.stat_window.StatWindow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">PyQt5.QtWidgets.QDialog</span></code></p>
+<p>Класс - окно со статистикой пользователей</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="messenger.server.stat_window.StatWindow.create_stat_model">
+<span class="sig-name descname"><span class="pre">create_stat_model</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messenger.server.stat_window.StatWindow.create_stat_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Метод реализующий заполнение таблицы статистикой сообщений.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="messenger.server.stat_window.StatWindow.initUI">
+<span class="sig-name descname"><span class="pre">initUI</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messenger.server.stat_window.StatWindow.initUI" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-messenger.server">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-messenger.server" title="Permalink to this headline">¶</a></h2>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">client-server messenger</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">client-serv</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="messenger.html">messenger package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="messenger.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="messenger.client.html">messenger.client package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="messenger.common.html">messenger.common package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">messenger.server package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="messenger.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="messenger.html#module-messenger.launcher">messenger.launcher module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="messenger.html#module-messenger">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">client-serv</a><ul>
+  <li><a href="messenger.html">messenger package</a><ul>
+      <li>Previous: <a href="messenger.common.html" title="previous chapter">messenger.common package</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Aleksandr Filippov.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.2.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/messenger.server.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
