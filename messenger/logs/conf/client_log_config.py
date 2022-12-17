@@ -1,6 +1,8 @@
+"""Настройки логирования клиента"""
 import logging
 import os
 import sys
+
 sys.path.append(os.path.join(os.getcwd(), '../..'))
 from common.variables import LOGGING_LEVEL
 
