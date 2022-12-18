@@ -4,7 +4,7 @@ import unittest
 
 sys.path.append(os.path.join(os.getcwd(), '..'))
 from common.variables import ACTION, ACCOUNT_NAME, RESPONSE, PRESENCE, TIME, USER, ERROR
-from client import MsgClient
+from dst_client.client import MsgClient
 
 
 class Time:

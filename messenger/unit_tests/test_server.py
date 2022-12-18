@@ -4,7 +4,7 @@ import unittest
 
 sys.path.append(os.path.join(os.getcwd(), '..'))
 from common.variables import RESPONSE, ERROR
-from server import MsgServer
+from dst_server.server import MsgServer
 
 
 class TestServer(unittest.TestCase):
