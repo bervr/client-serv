@@ -7,14 +7,13 @@ import subprocess
 import hmac
 import binascii
 import threading
-from database import ServerStorage
 import chardet
 import configparser
+
 from PyQt5.QtWidgets import QApplication, QMessageBox
 from PyQt5.QtCore import QTimer
+
 from server_gui import MainWindow, gui_create_model, HistoryWindow, create_stat_model, ConfigWindow
-
-
 dir_path = os.path.dirname(os.path.realpath(__file__))
 import_path = os.path.abspath(os.path.join(dir_path, os.pardir))
 sys.path.append(import_path)
@@ -27,7 +26,7 @@ from common.variables import ACTION, ACCOUNT_NAME, MAX_CONNECTIONS, PRESENCE, TI
 from common.utils import get_message, send_message, create_arg_parser
 from add_user import RegisterUser
 from remove_user import DelUserDialog
-from stat_window import StatWindow
+from database import ServerStorage
 
 LOGGER = logging.getLogger('server')  # забрали логгер из конфига
 
@@ -69,6 +68,10 @@ def console(server):  # консольный вариант сервера
 
 
 def main():
+    """
+    Функция оркестратор запуска сервера. Получает параметры запуска из файла конфигаи
+    стратует потоки обработки сообщений и графики
+    """
     # Загрузка файла конфигурации сервера
     config = configparser.ConfigParser()
     dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -102,9 +105,11 @@ def main():
     main_window.active_clients_table.resizeColumnsToContents()
     main_window.active_clients_table.resizeRowsToContents()
 
-    # Функция обновляющая список подключённых, проверяет флаг подключения, и
-    # если надо обновляет список
     def list_update():
+        """
+        Метод обновляющий список подключённых, проверяет флаг подключения, и
+        если надо обновляет список
+        """
         global new_connection
         # new_connection = True
         if new_connection:
@@ -114,8 +119,8 @@ def main():
             with conflag_lock:
                 new_connection = False
 
-    # Функция создающая окно со статистикой клиентов
     def show_statistics():
+        """Метод создающий окно со статистикой клиентов"""
         global stat_window
         stat_window = HistoryWindow()
         stat_window.history_table.setModel(create_stat_model(database))
@@ -123,8 +128,9 @@ def main():
         stat_window.history_table.resizeRowsToContents()
         stat_window.show()
 
-    # Функция создающяя окно с настройками сервера.
+
     def server_config():
+        """Метод создающий окно с настройками сервера"""
         global config_window
         # Создаём окно и заносим в него текущие параметры
         config_window = ConfigWindow()
@@ -134,8 +140,8 @@ def main():
         config_window.ip.insert(config['SETTINGS']['Listen_Address'])
         config_window.save_btn.clicked.connect(save_server_config)
 
-    # Функция сохранения настроек
     def save_server_config():
+        """Метод сохранения настроек"""
         global config_window
         message = QMessageBox()
         config['SETTINGS']['Database_path'] = config_window.db_path.text()
@@ -160,12 +166,10 @@ def main():
                     'Порт должен быть от 1024 до 65536')
 
 
-
     # Таймер, обновляющий список клиентов 1 раз в секунду
     timer = QTimer()
     timer.timeout.connect(list_update)
     timer.start(1000)
-
 
     # Связываем кнопки с процедурами
     main_window.refresh_button.triggered.connect(list_update)
@@ -180,6 +184,7 @@ def main():
 
 
 class MsgServer(threading.Thread, metaclass=ServerVerifier):
+    """Основной класс работы с сообщениями сервера"""
     # дескриптор порта
     listen_port = IsPortValid()
 
@@ -196,6 +201,7 @@ class MsgServer(threading.Thread, metaclass=ServerVerifier):
         super(MsgServer, self).__init__()
 
     def kill_server(self):  # todo вышибать  процесс сервера при занятии порта по эксепшену
+        """Метод выключения сервера. Фильтрует процессы по порту и убивает"""
         # new_ping = subprocess.Popen(item, stdout=subprocess.PIPE)
         # for line in new_ping.stdout:
         #     result = chardet.detect(line)
@@ -343,7 +349,7 @@ class MsgServer(threading.Thread, metaclass=ServerVerifier):
                 f'на сервере остались {self.names.keys()} ')
 
     def autorize_user(self, message, client):
-        '''Метод реализующий авторизцию пользователей.'''
+        """Метод реализующий авторизцию пользователей."""
         # Если имя пользователя уже занято-то возвращаем 400
         LOGGER.debug(f'Start auth process for {message[USER]}')
         if message[USER][ACCOUNT_NAME] in self.names.keys():
@@ -427,7 +433,7 @@ class MsgServer(threading.Thread, metaclass=ServerVerifier):
                 client.close()
 
     def service_update_lists(self):
-        ''' Метод реализующий отправки сервисного сообщения 205 клиентам. '''
+        """ Метод реализующий отправки сервисного сообщения 205 клиентам. """
         for client in self.names:
             try:
                 send_message(self.names[client], RESPONSE_205)
@@ -435,6 +441,7 @@ class MsgServer(threading.Thread, metaclass=ServerVerifier):
                 self.remove_client(self.names[client])
 
     def run(self):
+        """Метод запуска поотка обработки сообщения"""
         global new_connection
         LOGGER.info('Попытка запуска сервера')
         try:
@@ -508,6 +515,7 @@ class MsgServer(threading.Thread, metaclass=ServerVerifier):
             self.messages.clear()
 
     def remove_client(self, client):
+        """Метод удаления клиента"""
         LOGGER.info(f'Клиент {client.getpeername()} отключился от сервера.')
         for name in self.names:
             if self.names[name] == client:
@@ -519,13 +527,13 @@ class MsgServer(threading.Thread, metaclass=ServerVerifier):
         return
 
     def reg_user(self):
-        '''Метод создающий окно регистрации пользователя.'''
+        """Метод создающий окно регистрации пользователя."""
         global reg_window
         reg_window = RegisterUser(self.database, self)
         reg_window.show()
 
     def rem_user(self):
-        '''Метод создающий окно удаления пользователя.'''
+        """Метод создающий окно удаления пользователя."""
         global rem_window
         rem_window = DelUserDialog(self.database, self)
         rem_window.show()

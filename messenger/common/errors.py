@@ -1,14 +1,17 @@
 class NonDictInputError(Exception):
+    """Исключение - аргумент функции не является словарем"""
     def __str__(self):
         return 'Аргумент функции должен быть словарем'
 
 
 class IncorrectDataReceivedError(Exception):
+    """Исключение - некорректное сообщение"""
     def __str__(self):
         return 'Принято некорректное сообщение от удаленного компьютера'
 
 
 class ReqFieldMissingError(Exception):
+    """Исключение - в запросе отсутствует обязательное поле"""
     def __init__(self, missing_field):
         self.missing_field = missing_field
 

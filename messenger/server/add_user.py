@@ -1,7 +1,8 @@
-from PyQt5.QtWidgets import QDialog, QPushButton, QLineEdit, QApplication, QLabel, QMessageBox
-from PyQt5.QtCore import Qt
 import hashlib
 import binascii
+
+from PyQt5.QtWidgets import QDialog, QPushButton, QLineEdit, QApplication, QLabel, QMessageBox
+from PyQt5.QtCore import Qt
 
 
 class RegisterUser(QDialog):

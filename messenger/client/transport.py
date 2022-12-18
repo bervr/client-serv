@@ -5,12 +5,13 @@ import time
 import logging
 import json
 import threading
-from PyQt5.QtCore import pyqtSignal, QObject
-from PyQt5.QtWidgets import QApplication
-from Cryptodome.PublicKey import RSA
 import hmac
 import binascii
 import hashlib
+
+from PyQt5.QtCore import pyqtSignal, QObject
+from PyQt5.QtWidgets import QApplication
+from Cryptodome.PublicKey import RSA
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 import_path = os.path.abspath(os.path.join(dir_path, os.pardir))
@@ -24,13 +25,11 @@ from client_database import ClientStorage
 from main_window import ClientMainWindow
 from start_dialog import UserNameDialog
 
-
-
 LOGGER = logging.getLogger('client')  # забрали логгер из конфига
 
 
-# Класс - Транспорт, отвечает за взаимодействие с сервером
 class ClientTransport(threading.Thread, QObject):
+    """Основной класс клиента, отвечает за взаимодействие с сервером и все остальные вызовы"""
     # Сигналы новое сообщение и потеря соединения
     # атрибуты класса становятся экземпляры pyqtsignal
     new_message = pyqtSignal(str)
@@ -56,6 +55,7 @@ class ClientTransport(threading.Thread, QObject):
         # Сигналы новое сообщение и потеря соединения
 
     def create_presence(self, account_name='Guest'):
+        """Метод формирования приветственного сообщения"""
         out = {
             ACTION: PRESENCE,
             TIME: time.time(),
@@ -67,6 +67,11 @@ class ClientTransport(threading.Thread, QObject):
         return out
 
     def gui_hello(self):
+        """
+        Запускающий метод, проверяет стартовые параметры, запраивает логопас если их нет,
+        запускает аутентификацию, инициализирует базу данных,
+        создает ключи и стартует потоки обмена сообщениями с сервером
+        """
         self.client_app = QApplication(sys.argv)
         # Если имя пользователя и пароль не были указаны в командной строке, то запросим их
         if not self.username or not self.password:
@@ -87,7 +92,7 @@ class ClientTransport(threading.Thread, QObject):
         passwd_bytes = self.password.encode('utf-8')  # Получаем хэш пароля
         salt = self.username.lower().encode('utf-8')  # делаем соль
         passwd_hash = hashlib.pbkdf2_hmac('sha512', passwd_bytes, salt, 10000)
-        passwd_hash_string = binascii.hexlify(passwd_hash) # получили тоже что лежит на сервере
+        passwd_hash_string = binascii.hexlify(passwd_hash)  # получили тоже что лежит на сервере
 
         LOGGER.debug(f'Passwd hash ready: {passwd_hash_string}')
 
@@ -118,7 +123,7 @@ class ClientTransport(threading.Thread, QObject):
                         # Если всё нормально, то продолжаем процедуру
                         # авторизации.
                         ans_data = ans[DATA]
-                        hash = hmac.new(passwd_hash_string, ans_data.encode('utf-8'), 'MD5') # хешируем соленый
+                        hash = hmac.new(passwd_hash_string, ans_data.encode('utf-8'), 'MD5')  # хешируем соленый
                         # пароль с ответом от сервера
                         digest = hash.digest()  # преобразуем в дайджест
                         my_ans = RESPONSE_511
@@ -143,7 +148,7 @@ class ClientTransport(threading.Thread, QObject):
         return
 
     def load_keys(self):
-        # Загружаем ключи с файла, если же файла нет, то генерируем новую пару.
+        """Метод загрузки ключей из файла, если же файла нет, то генерирует новую пару."""
         dir_path = os.path.dirname(os.path.realpath(__file__))
         key_file = os.path.join(dir_path, f'{self.username}.key')
         if not os.path.exists(key_file):
@@ -157,6 +162,7 @@ class ClientTransport(threading.Thread, QObject):
         return
 
     def transport_shutdown(self):
+        """Метод остановки клиента"""
         self.running = False
         try:
             send_message(self.transport, self.create_exit_message())
@@ -166,6 +172,7 @@ class ClientTransport(threading.Thread, QObject):
         time.sleep(0.5)
 
     def send_message(self, destination, message):
+        """Метод отправки сообщения клиенту (на сервер, не р2р)"""
         message_dict = {
             DESTINATION: destination,
             SENDER: self.username,
@@ -184,6 +191,7 @@ class ClientTransport(threading.Thread, QObject):
         return
 
     def process_ans(self, message):
+        """Метод обработчик входящих сообщений с сервера"""
         if RESPONSE in message:
             if message[RESPONSE] == 200:
                 return RESPONSE_200
@@ -214,6 +222,7 @@ class ClientTransport(threading.Thread, QObject):
         raise ReqFieldMissingError(RESPONSE)
 
     def client_receiving(self):
+        """Метод принимающий сообщения от сервера, работает в отдельном потоке"""
         LOGGER.debug('Запуск потока получения')
         LOGGER.info('Режим работы - прием сообщений')
 
@@ -247,8 +256,8 @@ class ClientTransport(threading.Thread, QObject):
                 finally:
                     self.transport.settimeout(5)
 
-    # Функция запроса списка активных пользователей
     def get_clients(self, lock=False):
+        """Метод запроса списка активных пользователей"""
         LOGGER.debug(f'Запрос списка известных пользователей {self.username}')
         request = self.create_presence(self.username)
         request[ACTION] = GETCLIENTS
@@ -267,10 +276,8 @@ class ClientTransport(threading.Thread, QObject):
             self.sock_lock.release()
         return
 
-
-    # Функция запроса списка контактов
-
     def contacts_list_request(self, lock=False):
+        """Метод запроса списка контактов"""
         self.database.contacts_clear()
         LOGGER.debug(f'Запрос контакт листа для пользователя {self.username}')
         req = {
@@ -292,8 +299,8 @@ class ClientTransport(threading.Thread, QObject):
             self.sock_lock.release()
         return
 
-    # Функция добавления пользователя в контакт лист
     def add_contact(self, contact):
+        """Метод добавления пользователя в контакт лист"""
         LOGGER.debug(f'Создание контакта {contact}')
         req = {
             ACTION: ADD_CONTACT,
@@ -311,8 +318,8 @@ class ClientTransport(threading.Thread, QObject):
             # print('Удачное создание контакта.')
         return
 
-    # Функция удаления пользователя из контакт-листа
     def remove_contact(self, contact):
+        """Метод удаления пользователя из контакт-листа"""
         LOGGER.debug(f'Создание контакта {contact}')
         req = {
             ACTION: REMOVE_CONTACT,
@@ -332,6 +339,7 @@ class ClientTransport(threading.Thread, QObject):
 
     @func_log
     def create_exit_message(self):
+        """Метод формирующий сообщение о выходе ля отправки на сервер"""
         return {
             ACTION: EXIT,
             TIME: time.time(),
@@ -339,6 +347,7 @@ class ClientTransport(threading.Thread, QObject):
         }
 
     def user_list_update(self, lock=False):
+        """Метод получения активных пользователей с сервера"""
         # Загружаем список активных пользователей
         try:
             self.get_clients(lock)  # сообщаем что не нужно еще раз блокировать сокет
@@ -348,6 +357,10 @@ class ClientTransport(threading.Thread, QObject):
             self.database.add_users(self.remote_users)
 
     def database_load(self):
+        """
+        Метод стартовой загрузки клиентской базы данных.
+        Загружает активыных пользователй и список контактов текущего пользователя с сервера
+        """
         self.user_list_update(True)
         # Загружаем список контактов
         try:
@@ -359,6 +372,7 @@ class ClientTransport(threading.Thread, QObject):
             return
 
     def get_start_params(self):
+        """Метод получения стартовых параметров из командной строки"""
         LOGGER.debug("Попытка получить параметры запуска клиента")
         parser = create_arg_parser(DEFAULT_PORT, DEFAULT_IP_ADDRESS)
         namespace = parser.parse_args(sys.argv[1:])
@@ -372,6 +386,7 @@ class ClientTransport(threading.Thread, QObject):
         LOGGER.debug(f'Адрес и порт сервера {self.server_address}:{self.server_port}')
 
     def get_connect(self):
+        """Метод сосздающий сокет подключения к серверу"""
         connected = False
         try:
             self.transport = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -398,11 +413,11 @@ class ClientTransport(threading.Thread, QObject):
             connected = True
             LOGGER.debug('Установлено подключение к серверу')
 
-        if connected: # начинаем аутентификацию
+        if connected:  # начинаем аутентификацию
             pass_hash = self.password.encode('utf-8')
 
-
     def start_threads(self):
+        """Метод запускающий потоки получения и основного окна программы"""
         LOGGER.debug('Запуск потока получения')
         receive_thread = threading.Thread(target=self.client_receiving, daemon=True)
         receive_thread.start()

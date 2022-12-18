@@ -6,8 +6,8 @@ from PyQt5.QtCore import Qt
 import os
 
 
-# GUI - Создание таблицы QModel, для отображения в окне программы.
 def gui_create_model(database):
+    """GUI - Создание таблицы QModel, для отображения в окне программы."""
     list_users = database.getactive()
     list = QStandardItemModel()
     list.setHorizontalHeaderLabels(['Имя Клиента', 'IP Адрес', 'Порт', 'Время подключения'])
@@ -26,8 +26,8 @@ def gui_create_model(database):
     return list
 
 
-# GUI - Функция реализующая заполнение таблицы историей сообщений.
 def create_stat_model(database):
+    """GUI - Функция реализующая заполнение таблицы историей сообщений."""
     print('забираем из базы')
     # Список записей из базы
     hist_list = database.message_history()
@@ -50,8 +50,9 @@ def create_stat_model(database):
     return list
 
 
-# Класс основного окна
 class MainWindow(QMainWindow):
+    """Класс основного окна сервера"""
+
     def __init__(self):
         super().__init__()
         self.initUI()
@@ -106,9 +107,8 @@ class MainWindow(QMainWindow):
         # Последним параметром отображаем окно.
         self.show()
 
-
     def create_users_model(self):
-        '''Метод заполняющий таблицу активных пользователей.'''
+        """Метод заполняющий таблицу активных пользователей."""
         list_users = self.database.active_users_list()
         list = QStandardItemModel()
         list.setHorizontalHeaderLabels(
@@ -131,8 +131,8 @@ class MainWindow(QMainWindow):
         self.active_clients_table.resizeRowsToContents()
 
 
-# Класс окна с историей пользователей
 class HistoryWindow(QDialog):
+    """Класс окна с историей пользователей"""
     def __init__(self):
         super().__init__()
         self.initUI()
@@ -157,8 +157,9 @@ class HistoryWindow(QDialog):
         self.show()
 
 
-# Класс окна настроек
 class ConfigWindow(QDialog):
+    """Класс окна настроек"""
+
     def __init__(self):
         super().__init__()
         self.initUI()
@@ -183,8 +184,8 @@ class ConfigWindow(QDialog):
         self.db_path_select = QPushButton('Обзор...', self)
         self.db_path_select.move(300, 100)
 
-        # Функция обработчик открытия окна выбора папки
         def open_file_dialog():
+            """Метод обработчик открытия окна выбора папки"""
             global dialog
             dialog = QFileDialog(self)
             path = dialog.getExistingDirectory()
@@ -230,7 +231,7 @@ class ConfigWindow(QDialog):
 
         # Кнопка сохранения настроек
         self.save_btn = QPushButton('Сохранить', self)
-        self.save_btn.move(90 , 520)
+        self.save_btn.move(90, 520)
 
         # Кнопка закрытия окна
         self.close_button = QPushButton('Закрыть', self)
@@ -241,7 +242,6 @@ class ConfigWindow(QDialog):
 
 
 if __name__ == '__main__':
-
     app = QApplication(sys.argv)
     ex = HistoryWindow()
     # # ex = MainWindow()

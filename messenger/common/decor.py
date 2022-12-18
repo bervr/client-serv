@@ -2,8 +2,6 @@ import inspect
 import logging
 import sys
 import traceback
-import logs.conf.server_log_config
-import logs.conf.client_log_config
 
 
 if sys.argv[0].find('client.py') == -1:
@@ -13,6 +11,7 @@ else:
 
 
 def func_log(in_function):
+    """функция декоратор логирующая вызовы функций"""
     def wrapper(*args, **kwargs):
         result = in_function(*args, **kwargs)
         LOGGER.debug(f"Вызвана функция {in_function.__name__} "
@@ -20,12 +19,12 @@ def func_log(in_function):
                      f"а точнее из {inspect.stack()[1][3]} с параметрами {args} {kwargs},"
                      f" вызов из модуля {in_function.__name__}", stacklevel=2)
         return result
-
     return wrapper
 
 
 class Log:
     def __call__(self, in_function):
+        """функция декоратор логирующая вызовы методов"""
         def wrapper(*args, **kwargs):
             result = in_function(*args, **kwargs)
             LOGGER.debug(f"Вызвана функция {in_function.__name__} "
@@ -33,5 +32,4 @@ class Log:
                          f"а точнее из {inspect.stack()[1][3]} с параметрами {args} {kwargs},"
                          f" вызов из модуля {in_function.__name__}", stacklevel=2)
             return result
-
         return wrapper

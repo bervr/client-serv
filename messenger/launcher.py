@@ -1,9 +1,10 @@
+"""Лаунчер для оттладки - быстрого запуска и остановки всего окружения"""
 import platform
 import subprocess
 import time
 from subprocess import Popen
 import os
-import signal
+
 # сколько клиентов запускать
 client_count = 2
 
@@ -38,33 +39,33 @@ def kill_processes():
             p.kill()
             p.terminate()
 
+if __name__ =="__main__":
+    while True:
+        user_answer = input("Запустить сервер(s)\nЗапустить клиентов (c)\nЗапустить все (а)"
+                            "\nЗапустить cli клиента (cc)\nЗакрыть все (x)\nВыйти(q):\n")
+        if user_answer == 'q':
+            kill_processes()
+            break
+        elif user_answer == 's':
+            run_one(f'{enterpriter} {os.path.join(path_server, "server.py")} -a "127.0.0.1" -p "-7777"')
 
-while True:
-    user_answer = input("Запустить сервер(s)\nЗапустить клиентов (c)\nЗапустить все (а)"
-                        "\nЗапустить cli клиента (cc)\nЗакрыть все (x)\nВыйти(q):\n")
-    if user_answer == 'q':
-        kill_processes()
-        break
-    elif user_answer == 's':
-        run_one(f'{enterpriter} {os.path.join(path_server, "server.py")} -a "127.0.0.1" -p "-7777"')
+        elif user_answer == 'c':
+            for _ in range(client_count):
+                run_one(f'{enterpriter} {os.path.join(path_client, "transport.py")} -n user{_} -w 12345')
 
-    elif user_answer == 'c':
-        for _ in range(client_count):
-            run_one(f'{enterpriter} {os.path.join(path_client, "transport.py")} -n user{_} -w 12345')
+        elif user_answer == 'cc':
+            run_one(f'{enterpriter} {os.path.join(path_client, "client.py")} -n user')
 
-    elif user_answer == 'cc':
-        run_one(f'{enterpriter} {os.path.join(path_client, "client.py")} -n user')
+        elif user_answer == 'g':
+            run_one(f'{enterpriter} {os.path.join(path_client, "transport.py")} -n user')
 
-    elif user_answer == 'g':
-        run_one(f'{enterpriter} {os.path.join(path_client, "transport.py")} -n user')
+        elif user_answer == 'a':
+            run_one(f'{enterpriter} {os.path.join(path_server, "server.py")} -a "127.0.0.1" -p "7777"')
+            time.sleep(0.5)  # ждем чтобы стартанул сервер
+            for _ in range(client_count):
+                run_one(f'{enterpriter} {os.path.join(path_client, "transport.py")} -n user{_} -w 12345')
 
-    elif user_answer == 'a':
-        run_one(f'{enterpriter} {os.path.join(path_server, "server.py")} -a "127.0.0.1" -p "7777"')
-        time.sleep(0.5)  # ждем чтобы стартанул сервер
-        for _ in range(client_count):
-            run_one(f'{enterpriter} {os.path.join(path_client, "transport.py")} -n user{_} -w 12345')
-
-    elif user_answer == 'x':
-        kill_processes()
+        elif user_answer == 'x':
+            kill_processes()
 
 
